@@ -1,0 +1,663 @@
+# BOREALIS parameter register — the truth for numbers (07 §2 D10).
+# Seeded from seed/register.csv (Sep 24 Class 2 change included).
+# Edit a row: change value, set changed: and checked: to today, commit as
+#   ID: old → new · reason · name
+# A MEASURED row must carry conditions: range_m, power_dbm, attenuation_db,
+# bandwidth_khz, temperature_c, evidence (path under evidence/), or the build fails.
+- id: SYS-01
+  name: Manchester chip rate
+  subsystem: firmware
+  value: 100
+  unit: kchip/s
+  tag: DECIDED
+  owner: batu
+  feeds_into: [ SYS-02, RX-03, GS-01 ]
+  source: 01 §3.1
+  track: core
+  changed: 2026-09-08
+  checked: 2026-09-12
+  note: ""
+
+- id: SYS-02
+  name: Coded bit rate
+  subsystem: firmware
+  value: 50
+  unit: kbps
+  tag: DECIDED
+  owner: batu
+  feeds_into: [ SYS-03, GS-02 ]
+  source: 01 §3.1
+  track: core
+  changed: 2026-09-08
+  checked: 2026-09-12
+  note: Manchester halves chip rate
+
+- id: SYS-03
+  name: Image payload rate
+  subsystem: firmware
+  value: ~40
+  unit: kbps
+  tag: MODELED
+  owner: batu
+  feeds_into: [ GS-01 ]
+  source: 01 §3.1
+  track: core
+  changed: 2026-09-08
+  checked: 2026-09-12
+  note: SSDV 205 of 256 bytes are payload
+
+- id: SYS-04
+  name: C1 stationary link range
+  subsystem: optics
+  value: ">=1000"
+  unit: m
+  tag: DECIDED
+  owner: berky
+  feeds_into: [ LNK-01, LNK-02 ]
+  source: 01 §3.1
+  track: core
+  changed: 2026-09-08
+  checked: 2026-09-12
+  note: Does not close on paper at Class 2 power (see LNK-02)
+
+- id: SYS-05
+  name: C2 tracking link range
+  subsystem: optics
+  value: 300 (200-500)
+  unit: m
+  tag: DECIDED
+  owner: berky
+  feeds_into: [ LNK-03, TRK-03 ]
+  source: 01 §3.1
+  track: core
+  changed: 2026-09-08
+  checked: 2026-09-12
+  note: Same on-axis power as C1 at 200 mrad (see LNK-03)
+
+- id: SYS-06
+  name: C3 indoor demo range
+  subsystem: optics
+  value: 50-80
+  unit: m
+  tag: DECIDED
+  owner: berky
+  feeds_into: [ TX-09 ]
+  source: 01 §3.1
+  track: core
+  changed: 2026-09-08
+  checked: 2026-09-12
+  note: ""
+
+- id: TX-01
+  name: Campus laser wavelength
+  subsystem: transmitter
+  value: 660 (was 850)
+  unit: nm
+  tag: DECIDED
+  owner: berky
+  feeds_into: [ OPT-03, OPT-06, RX-01, SAF-02, TX-03, TX-09, FLT-01 ]
+  source: coordinator review 2026-09-24
+  track: core
+  changed: 2026-09-24
+  checked: 2026-09-24
+  note: Class 2 baseline; not yet in 01/02/05
+
+- id: TX-02
+  name: Campus laser on-state power
+  subsystem: transmitter
+  value: <=1 (was <=200)
+  unit: mW
+  tag: DECIDED
+  owner: berky
+  feeds_into: [ LNK-01, TX-04, SAF-01, RX-04 ]
+  source: coordinator review 2026-09-24
+  track: core
+  changed: 2026-09-24
+  checked: 2026-09-24
+  note: Confirm with EHS whether the Class 2 limit applies to on-state or average power under Manchester (3 dB difference)
+
+- id: TX-03
+  name: Diode wavelength drift
+  subsystem: transmitter
+  value: 0.3
+  unit: nm/K
+  tag: ASSUMED
+  owner: berky
+  feeds_into: [ OPT-03 ]
+  source: 02 A1
+  track: core
+  changed: 2026-09-12
+  checked: 2026-09-12
+  note: Value was for 850 nm diodes; take from the chosen 660 nm datasheet
+
+- id: TX-04
+  name: Laser driver set current
+  subsystem: transmitter
+  value: TBD
+  unit: mA
+  tag: TBD
+  owner: shabazz
+  feeds_into: [ PWR-02 ]
+  source: 02 A4
+  track: core
+  changed: 2026-09-12
+  checked: 2026-09-12
+  note: A 1 mW diode needs far less current than a 200 mW one; driver topology may simplify
+
+- id: TX-05
+  name: Driver rise/fall time
+  subsystem: transmitter
+  value: <1
+  unit: µs
+  tag: TARGET
+  owner: shabazz
+  feeds_into: [ RX-03 ]
+  source: 02 A4
+  track: core
+  changed: 2026-09-12
+  checked: 2026-09-12
+  note: Measure with fast photodiode
+
+- id: TX-06
+  name: Narrow beam divergence (full angle)
+  subsystem: transmitter
+  value: 60 (±1.72°)
+  unit: mrad
+  tag: TARGET
+  owner: berky
+  feeds_into: [ LNK-01, TRK-05 ]
+  source: 01 §4
+  track: core
+  changed: 2026-09-08
+  checked: 2026-09-12
+  note: Narrowing the beam is one way to recover margin but shrinks pointing tolerance
+
+- id: TX-07
+  name: Wide beam divergence (full angle)
+  subsystem: transmitter
+  value: 200 (±5.73°)
+  unit: mrad
+  tag: TARGET
+  owner: berky
+  feeds_into: [ LNK-03, PWR-01 ]
+  source: 01 §4
+  track: core
+  changed: 2026-09-08
+  checked: 2026-09-12
+  note: ""
+
+- id: TX-08
+  name: Diffuser insertion loss
+  subsystem: transmitter
+  value: 0
+  unit: dB
+  tag: ASSUMED
+  owner: berky
+  feeds_into: [ LNK-03 ]
+  source: 05 §4
+  track: core
+  changed: 2026-09-12
+  checked: 2026-09-12
+  note: Measure before/after; directly cuts C2 margin
+
+- id: TX-09
+  name: Indoor attenuation to mimic 1 km
+  subsystem: transmitter
+  value: 26.0 @50 m / 21.9 @80 m
+  unit: dB
+  tag: MODELED
+  owner: berky
+  feeds_into: [ SYS-06 ]
+  source: 01 §5.3
+  track: core
+  changed: 2026-09-24
+  checked: 2026-09-24
+  note: At 1 mW almost no attenuation is needed; re-derive after C1 target is settled
+
+- id: OPT-01
+  name: Telescope aperture
+  subsystem: optics
+  value: 130
+  unit: mm
+  tag: DECIDED
+  owner: berky
+  feeds_into: [ LNK-01, OPT-04 ]
+  source: 01 §7.3
+  track: core
+  changed: 2026-09-12
+  checked: 2026-09-12
+  note: Capture -53.3 dB at 1 km in a 60 m spot
+
+- id: OPT-02
+  name: Telescope focal length
+  subsystem: optics
+  value: 650-750
+  unit: mm
+  tag: TBD
+  owner: berky
+  feeds_into: [ OPT-05, OPT-07 ]
+  source: 02 C1
+  track: core
+  changed: 2026-09-12
+  checked: 2026-09-12
+  note: Set by chosen OTA
+
+- id: OPT-03
+  name: Receiver bandpass filter
+  subsystem: optics
+  value: 850/40 (must change)
+  unit: nm
+  tag: DECIDED
+  owner: berky
+  feeds_into: [ LNK-04, RX-01 ]
+  source: 02 C3
+  track: core
+  changed: 2026-09-24
+  checked: 2026-09-24
+  note: An 850 nm filter blocks 660 nm light; pick a filter matched to the 660 nm diode
+
+- id: OPT-04
+  name: Telescope + gear mass
+  subsystem: optics
+  value: <=3.5
+  unit: kg
+  tag: TARGET
+  owner: berky
+  feeds_into: [ TRK-01 ]
+  source: 02 C1
+  track: core
+  changed: 2026-09-12
+  checked: 2026-09-12
+  note: Weigh everything on the mount
+
+- id: OPT-05
+  name: Receiver field of view
+  subsystem: optics
+  value: 3.6-7
+  unit: mrad
+  tag: MODELED
+  owner: berky
+  feeds_into: [ TRK-03 ]
+  source: 05 §4
+  track: core
+  changed: 2026-09-12
+  checked: 2026-09-12
+  note: Measure by angular scan
+
+- id: OPT-06
+  name: Guide camera
+  subsystem: optics
+  value: mono IR-pass (candidate)
+  unit: "-"
+  tag: DECIDED
+  owner: matei
+  feeds_into: [ TRK-05 ]
+  source: 02 C6
+  track: core
+  changed: 2026-09-24
+  checked: 2026-09-12
+  note: 660 nm is visible; IR-pass window no longer required; re-check false bright sources
+
+- id: OPT-07
+  name: Boresight parallax 1 km vs 50 m
+  subsystem: optics
+  value: 3.8
+  unit: mrad
+  tag: MODELED
+  owner: berky
+  feeds_into: [ TRK-05 ]
+  source: 01 §7.3
+  track: core
+  changed: 2026-09-08
+  checked: 2026-09-12
+  note: Recalibrate per range
+
+- id: RX-01
+  name: Detector responsivity
+  subsystem: receiver
+  value: 0.5 @850 nm
+  unit: A/W
+  tag: ASSUMED
+  owner: bilal
+  feeds_into: [ LNK-02, RX-04 ]
+  source: 05 §4
+  track: core
+  changed: 2026-09-12
+  checked: 2026-09-12
+  note: Silicon responds less at 660 nm; take from datasheet then measure
+
+- id: RX-02
+  name: PIN receiver sensitivity @50 kbps
+  subsystem: receiver
+  value: -50
+  unit: dBm
+  tag: TARGET
+  owner: bilal
+  feeds_into: [ LNK-02, LNK-03 ]
+  source: 05 §4
+  track: core
+  changed: 2026-09-12
+  checked: 2026-09-12
+  note: Replace with measured BER curve
+
+- id: RX-03
+  name: Receiver bandwidth
+  subsystem: receiver
+  value: ~100
+  unit: kHz
+  tag: TARGET
+  owner: bilal
+  feeds_into: [ RX-04 ]
+  source: 02 B2
+  track: core
+  changed: 2026-09-12
+  checked: 2026-09-12
+  note: Follows chip rate SYS-01
+
+- id: RX-04
+  name: TIA feedback resistor
+  subsystem: receiver
+  value: 120
+  unit: kΩ
+  tag: DECIDED
+  owner: bilal
+  feeds_into: [ RX-05 ]
+  source: 02 B2
+  track: core
+  changed: 2026-09-12
+  checked: 2026-09-12
+  note: Signal ~23 dB lower at 1 mW; gain/stability trade must be redone
+
+- id: RX-05
+  name: Photodiode capacitance (BPW34 @3 V)
+  subsystem: receiver
+  value: 25
+  unit: pF
+  tag: VERIFIED
+  owner: bilal
+  feeds_into: [ RX-04 ]
+  source: 02 B1
+  track: core
+  changed: 2026-09-12
+  checked: 2026-09-12
+  note: Datasheet value; drives TIA stability
+
+- id: TRK-01
+  name: Mount payload capacity (AZ-GTi)
+  subsystem: tracking
+  value: 5
+  unit: kg
+  tag: VERIFIED
+  owner: matei
+  feeds_into: [ OPT-04 ]
+  source: 02 C4
+  track: core
+  changed: 2026-09-12
+  checked: 2026-09-12
+  note: ""
+
+- id: TRK-02
+  name: Mount command latency
+  subsystem: tracking
+  value: <150
+  unit: ms
+  tag: TARGET
+  owner: matei
+  feeds_into: [ TRK-03 ]
+  source: 05 §4
+  track: core
+  changed: 2026-09-12
+  checked: 2026-09-12
+  note: Prove in October (Rung 5)
+
+- id: TRK-03
+  name: Residual tracking error @0.3°/s
+  subsystem: tracking
+  value: <2
+  unit: mrad
+  tag: TARGET
+  owner: matei
+  feeds_into: [ OPT-05, GS-01 ]
+  source: 05 §4
+  track: core
+  changed: 2026-09-12
+  checked: 2026-09-12
+  note: Must stay inside receiver FOV
+
+- id: TRK-04
+  name: Guide loop rate
+  subsystem: tracking
+  value: 10
+  unit: Hz
+  tag: DECIDED
+  owner: matei
+  feeds_into: [ GS-01 ]
+  source: 01 §3.1
+  track: core
+  changed: 2026-09-08
+  checked: 2026-09-12
+  note: ""
+
+- id: TRK-05
+  name: Acquisition seed error
+  subsystem: tracking
+  value: ±2
+  unit: deg
+  tag: DECIDED
+  owner: matei
+  feeds_into: [ TRK-04 ]
+  source: 01 §3.1
+  track: core
+  changed: 2026-09-08
+  checked: 2026-09-12
+  note: Guide field ~3°
+
+- id: PWR-01
+  name: C2 carrier speed
+  subsystem: power
+  value: walking (0.27°/s at 300 m)
+  unit: "-"
+  tag: DECIDED
+  owner: shabazz
+  feeds_into: [ TRK-02, TRK-03 ]
+  source: 01 §3.1
+  track: core
+  changed: 2026-09-08
+  checked: 2026-09-12
+  note: "C3 indoor: 0.2 m/s over ±0.5 m"
+
+- id: PWR-02
+  name: Campus field power
+  subsystem: power
+  value: TBD
+  unit: W
+  tag: TBD
+  owner: shabazz
+  feeds_into: []
+  source: 02 C7
+  track: core
+  changed: 2026-09-12
+  checked: 2026-09-12
+  note: Mount + laptop + camera + TX
+
+- id: LNK-01
+  name: C1 received power at 1 km (on-state)
+  subsystem: optics
+  value: -58.8 (was -35.8)
+  unit: dBm
+  tag: MODELED
+  owner: berky
+  feeds_into: [ LNK-02 ]
+  source: 01 §5.1 minus 23 dB
+  track: core
+  changed: 2026-09-24
+  checked: 2026-09-24
+  note: Same beam and losses; 1 mW is 23 dB below 200 mW
+
+- id: LNK-02
+  name: C1 margin at 1 km
+  subsystem: optics
+  value: ≈ -9 (was ~+14)
+  unit: dB
+  tag: MODELED
+  owner: berky
+  feeds_into: [ SYS-04 ]
+  source: 01 §5.1
+  track: core
+  changed: 2026-09-24
+  checked: 2026-09-24
+  note: Link does not close on paper; worse once lower 660 nm responsivity is included
+
+- id: LNK-03
+  name: C2 margin at 300 m / 200 mrad
+  subsystem: optics
+  value: ≈ -9 (was ~+14) minus diffuser loss
+  unit: dB
+  tag: MODELED
+  owner: berky
+  feeds_into: [ SYS-05 ]
+  source: 01 §5.2
+  track: core
+  changed: 2026-09-24
+  checked: 2026-09-24
+  note: Same spot size as C1 so same on-axis power
+
+- id: LNK-04
+  name: Atmosphere + RX optics + obstruction
+  subsystem: optics
+  value: 4.5
+  unit: dB
+  tag: ASSUMED
+  owner: berky
+  feeds_into: [ LNK-01 ]
+  source: 01 §5.1
+  track: core
+  changed: 2026-09-08
+  checked: 2026-09-12
+  note: Replace with outdoor runs vs range
+
+- id: SAF-01
+  name: Campus laser class
+  subsystem: safety
+  value: Class 2 (was 3B)
+  unit: "-"
+  tag: DECIDED
+  owner: berky
+  feeds_into: [ SAF-02, SAF-03 ]
+  source: coordinator review 2026-09-24
+  track: core
+  changed: 2026-09-24
+  checked: 2026-09-24
+  note: No EHS permission needed per coordinator; outdoor projection still assessed under CAR 601.21
+
+- id: SAF-02
+  name: Protective eyewear
+  subsystem: safety
+  value: OD 4+ @800-900 nm (spec for 850)
+  unit: "-"
+  tag: DECIDED
+  owner: berky
+  feeds_into: [ BUD-01 ]
+  source: 02 H7
+  track: core
+  changed: 2026-09-24
+  checked: 2026-09-12
+  note: Existing spec does not match 660 nm; confirm Class 2 requirement with EHS
+
+- id: SAF-03
+  name: Class 3B upgrade decision
+  subsystem: safety
+  value: November (gated on EHS registration with Zhang as PI)
+  unit: "-"
+  tag: DECIDED
+  owner: berky
+  feeds_into: [ TX-01, TX-02 ]
+  source: coordinator review 2026-09-24
+  track: core
+  changed: 2026-09-24
+  checked: 2026-09-24
+  note: ""
+
+- id: BUD-01
+  name: Campus budget
+  subsystem: safety
+  value: ~700 (was ~4600 incl. flight)
+  unit: CAD
+  tag: DECIDED
+  owner: berky
+  feeds_into: []
+  source: coordinator review 2026-09-24
+  track: core
+  changed: 2026-09-24
+  checked: 2026-09-24
+  note: No used parts from eBay/Kijiji/FB Marketplace
+
+- id: GS-01
+  name: Acceptance panel metrics
+  subsystem: ground
+  value: pre/post-FEC BER; loss; goodput; outage; reacq time; tracking error
+  unit: "-"
+  tag: DECIDED
+  owner: open
+  feeds_into: []
+  source: 01 §7.5
+  track: core
+  changed: 2026-09-08
+  checked: 2026-09-12
+  note: ""
+
+- id: GS-02
+  name: C1 acceptance BER
+  subsystem: ground
+  value: <=1e-5 post-FEC over >=1e7 bits
+  unit: "-"
+  tag: DECIDED
+  owner: open
+  feeds_into: []
+  source: 01 §14
+  track: core
+  changed: 2026-09-08
+  checked: 2026-09-12
+  note: ""
+
+- id: FLT-01
+  name: Flight laser (E-track)
+  subsystem: flight
+  value: 2 W / 850 nm / Class 4
+  unit: "-"
+  tag: DECIDED
+  owner: berky
+  feeds_into: [ FLT-02, OPT-03 ]
+  source: 01 §5.4
+  track: flight
+  changed: 2026-09-07
+  checked: 2026-09-12
+  note: "Campus now 660 nm and flight 850 nm: filter and detector work will not transfer directly"
+
+- id: FLT-02
+  name: APD sensitivity @50 / 5 kbps (E-track)
+  subsystem: flight
+  value: -60 / -65
+  unit: dBm
+  tag: TARGET
+  owner: bilal
+  feeds_into: []
+  source: 05 §4
+  track: flight
+  changed: 2026-09-07
+  checked: 2026-09-12
+  note: ""
+
+- id: FLT-03
+  name: Payload mass (E-track)
+  subsystem: flight
+  value: 860 of 1100
+  unit: g
+  tag: MODELED
+  owner: shabazz
+  feeds_into: []
+  source: 05 §4
+  track: flight
+  changed: 2026-09-07
+  checked: 2026-09-12
+  note: ""
