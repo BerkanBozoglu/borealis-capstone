@@ -1,0 +1,647 @@
+# Component register, one row per part, copied from docs/02_COMPONENT_REGISTER.md.
+# status: candidate | ordered | received | bench-verified | integrated | flight-qualified
+# Every part was seeded as candidate, as 02 states. TBD in 02 stays TBD here.
+# superseded_by: register ids that have changed a Rev D.2 statement in this entry.
+
+# ---------- A. Campus transmitter (02 A) ----------
+- id: A1
+  name: Laser diode, campus
+  subsystem: transmitter
+  track: core
+  cite: 02 A1
+  role: The light source for Path B on campus. Class 3B by design (≤200 mW on-state at 850 nm).
+  status: candidate
+  chosen_part: TBD
+  candidates: "850 nm single-emitter diodes 100–200 mW (TO-can); avoid 808 nm pump diodes for campus (outside 850/40 filter). Vendor examples to verify at order time: Ushio/Oclaro 850 nm class, Thorlabs L850-series, Laser Components."
+  downstream: "center wavelength at 20 °C and drift (≈0.3 nm/K) → filter passband (A6/C3); emitter size and raw divergence (fast/slow axis) → collimator choice (A2); threshold and operating current → driver (A4); rise/fall at 100 kHz gate → eye opening; package (TO-18/TO-5/C-mount) → mount and heatsinking."
+  gotchas: "datasheet \"typical\" wavelength has ±10 nm part-to-part spread — measure each diode's spectrum or at least check with the filter in the path; ESD-sensitive; never power without current limit; invisible beam."
+  fields:
+    - {name: Chosen part, value: TBD}
+    - {name: Wavelength@20°C, value: TBD nm}
+    - {name: Emitter size, value: TBD µm}
+    - {name: Ith/Iop, value: TBD mA}
+    - {name: Max on-state power used, value: TBD mW}
+    - {name: Measured, value: none}
+  superseded_by: [TX-01, TX-02, SAF-01]
+
+- id: A2
+  name: Collimating optic (narrow beam, 60 mrad)
+  subsystem: transmitter
+  track: core
+  cite: 02 A2
+  role: Turns the diode's raw cone (tens of degrees) into a ~60 mrad full-angle beam for C1/C3.
+  status: candidate
+  chosen_part: TBD
+  candidates: "aspheric lens f = 4–8 mm, NA 0.5 class, in an adjustable barrel (Thorlabs C-series asphere + adjustable mount, or equivalent)."
+  downstream: "focal length and NA (fast axis of a diode can be ~30° full → NA ≥0.28 to collect it); AR coating for 850 nm; adjustable focus barrel so divergence can be set by defocus; beam ellipticity."
+  gotchas: "defocus does not fix astigmatism/ellipticity; measure the far-field pattern in both axes (see 04 §2.3); the \"20 mrad natural\" estimate is one axis only."
+  fields:
+    - {name: Chosen lens, value: TBD}
+    - {name: f, value: TBD mm}
+    - {name: NA, value: TBD}
+    - {name: Measured divergence X/Y, value: TBD/TBD mrad}
+  superseded_by: [TX-01]
+
+- id: A3
+  name: Engineered diffuser (wide beam, 200 mrad) — C2
+  subsystem: transmitter
+  track: core
+  cite: 02 A3
+  role: Spreads the collimated beam to ~200 mrad full angle so transmitter orientation error up to ±5.7° stays inside the beam on the moving carrier.
+  status: candidate
+  chosen_part: TBD
+  candidates: "engineered/holographic diffusers 10–12° (Thorlabs ED1-series, RPC Photonics, Edmund)."
+  downstream: "divergence angle (e.g., 10°/12° full), transmission efficiency (insertion loss), profile shape (top-hat preferred), 850 nm suitability."
+  gotchas: "insertion loss and profile are unmeasured — they directly change the C2 link budget; uniformity at the edge decides the real usable pointing allowance."
+  fields:
+    - {name: Chosen diffuser, value: TBD}
+    - {name: Nominal angle, value: TBD°}
+    - {name: Measured transmission, value: TBD dB}
+    - {name: Measured full-angle at 50%, value: TBD mrad}
+  superseded_by: [TX-01]
+
+- id: A4
+  name: Laser driver, campus
+  subsystem: transmitter
+  track: core
+  cite: 02 A4
+  role: Constant-current source for A1, gated on/off by a TTL signal at 100 kchip/s from the STM32.
+  status: candidate
+  chosen_part: TBD
+  candidates: "discrete op-amp + MOSFET current sink from a low rail (choose rail ≈ Vf + 1 V to keep sink dissipation small); iC-Haus iC-HG class driver; commercial TTL-modulated laser driver modules."
+  downstream: "compliance voltage vs diode Vf; current limit; rise/fall time (<1 µs for clean 10 µs chips); overshoot on turn-on (can exceed diode max — protect); enable/interlock input; key-switch in the supply path."
+  gotchas: "a linear sink from 12 V at 2.5 A dissipates ~25 W (flight-relevant, but the lesson applies at 200 mW scale too); switching transients couple into the receiver bench tests; verify modulation depth (fully off between chips) with a fast photodiode on the bench."
+  fields:
+    - {name: Topology, value: TBD}
+    - {name: Rail, value: TBD V}
+    - {name: I set, value: TBD mA}
+    - {name: Measured rise/fall, value: TBD ns}
+    - {name: Overshoot, value: TBD %}
+  superseded_by: [TX-02, TX-04]
+
+- id: A5
+  name: "Transmitter mechanical: sight, mount, carrier"
+  subsystem: transmitter
+  track: core
+  cite: 02 A5
+  role: Repeatable aiming (mechanical sight aligned on an approved reference), tripod for C1, fixtured cart mount for C2 (rigid, aimed once, moved along a straight path), visible LED beside the aperture for location identification, key switch, beam-stop/shutter for the interruption demo.
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: ""
+  gotchas: "no unassessed aiming laser (LSO); the visible LED shows *where* the TX is, not where the IR beam points; the car mount is optional and only after mount rate capability is proven."
+  fields:
+    - {name: Sight type, value: TBD}
+    - {name: Cart, value: TBD}
+    - {name: Shutter, value: TBD}
+  superseded_by: [TX-01]
+
+- id: A6
+  name: Calibrated attenuator stage (C3 and all short-range tests)
+  subsystem: transmitter
+  track: core
+  cite: 02 A6
+  role: Reproduce the 1 km received power indoors (26.0 dB at 50 m; 21.9 dB at 80 m) and prevent receiver saturation at short range.
+  status: candidate
+  chosen_part: TBD
+  candidates: "absorptive ND filters (OD 1–3 stack) in a locked holder at the transmitter; calibrated at 850 nm with the optical power meter (H1)."
+  downstream: ""
+  gotchas: "ND filter OD is wavelength-dependent; stacking reflective ND filters causes etalon effects — use absorptive; calibrate to measured detector power on the day, not to a table."
+  fields:
+    - {name: Filter set, value: TBD}
+    - {name: Measured OD@850, value: TBD}
+  superseded_by: [TX-01, TX-09]
+
+# ---------- B. Receiver, campus (02 B) ----------
+- id: B1
+  name: PIN photodiode
+  subsystem: receiver
+  track: core
+  cite: 02 B1
+  role: Photons → current. Campus detector; also the receiver-board development device.
+  status: candidate
+  chosen_part: TBD
+  candidates: "Vishay BPW34 (cheap, large area) [datasheet VERIFIED]; alternatives with larger area or lower C (BPW34S, SFH 2xx, Hamamatsu S1223) if FOV or bandwidth needs it."
+  downstream: "responsivity at 850 nm (≈0.5 A/W [ASSUMED]); active area (sets FOV = area / focal length — BPW34 7.5 mm² → ~2.7 mm side → ~3.6 mrad at 750 mm FL); capacitance (BPW34: 70 pF at 0 V, 25 pF at 3 V reverse) → TIA stability/bandwidth; dark current."
+  gotchas: "package window and lens change acceptance angle — measure it; reverse-bias for lower C; 850 nm response of \"visible\" diodes varies."
+  fields:
+    - {name: Chosen, value: TBD}
+    - {name: Active area, value: TBD mm²}
+    - {name: C at bias, value: TBD pF}
+    - {name: Measured responsivity, value: TBD A/W}
+    - {name: Measured angular acceptance, value: TBD mrad ×/y}
+  superseded_by: [TX-01, RX-01]
+
+- id: B2
+  name: Transimpedance amplifier
+  subsystem: receiver
+  track: core
+  cite: 02 B2
+  role: Current → voltage; the noise-critical stage.
+  status: candidate
+  chosen_part: TBD
+  candidates: "TI OPA657 (gain-of-7 stable — needs a designed feedback network, not just a big Cf) [datasheet VERIFIED]; OPA818; LTC6268; ADA4817."
+  downstream: "Rf (120 kΩ baseline → 132 nA → 15.9 mV at 1 km); required bandwidth ~100 kHz (100 kchip/s); feedback capacitor for stability against Cd; op-amp noise (voltage, current), GBW, minimum stable gain."
+  gotchas: "oscillation with 25–70 pF at the input; DC background can saturate the TIA before AC coupling removes it (use a DC-restoring/bias path or lower Rf gain setting); 6.4 V output at 50 m without attenuation — overload; switchable gain requires stability verification per setting."
+  fields:
+    - {name: Op-amp, value: TBD}
+    - {name: Rf, value: TBD kΩ}
+    - {name: Cf, value: TBD pF}
+    - {name: Measured −3 dB BW, value: TBD kHz}
+    - {name: Measured input-referred noise, value: TBD pA/√Hz}
+    - {name: Overload recovery, value: TBD µs}
+  superseded_by: [TX-02, RX-04]
+
+- id: B3
+  name: Post-amp, AC coupling, comparator/slicer
+  subsystem: receiver
+  track: core
+  cite: 02 B3
+  role: Turns the analog waveform into clean chips for the MCU timer.
+  status: candidate
+  chosen_part: TBD
+  candidates: "rail-to-rail op-amp gain stage; fast comparator (TLV3501-class) with hysteresis."
+  downstream: "high-pass corner (Manchester allows AC coupling; corner well below 25 kHz spectral content ~ few hundred Hz); comparator hysteresis; optional AGC or peak-detect threshold."
+  gotchas: ""
+  fields:
+    - {name: Fields, value: TBD}
+
+- id: B4
+  name: Receiver PCB
+  subsystem: receiver
+  track: core
+  cite: 02 B4
+  role: Board hosting B1–B3 plus optional APD bias (D-section). Three revisions budgeted.
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: ""
+  gotchas: "guard rings and short input traces at the TIA; shield; separate analog/digital grounds; test points for received-power measurement; connector to the STM32 timer input."
+  fields:
+    - {name: Rev, value: A}
+    - {name: Fab, value: TBD}
+
+- id: B5
+  name: RX microcontroller and decode path
+  subsystem: receiver
+  track: core
+  cite: 02 B5
+  role: Timer capture of chips → clock recovery → frame sync (SSDV sync/header) → RS decode (in SSDV) → packets over USB to Ground Control.
+  status: candidate
+  chosen_part: TBD
+  candidates: "STM32H743 (WeAct or Nucleo) or STM32F4-class for the ground side."
+  downstream: ""
+  gotchas: ""
+  fields:
+    - {name: Board, value: TBD}
+    - {name: Firmware repo, value: TBD}
+
+# ---------- C. Optical front end and mount (02 C) ----------
+- id: C1
+  name: Telescope (OTA)
+  subsystem: optics
+  track: core
+  cite: 02 C1
+  role: The photon bucket; ~130 mm aperture (capture −53.3 dB at 1 km, 60 m spot).
+  status: candidate
+  chosen_part: TBD
+  candidates: "used 130 mm f/5 Newtonian OTA (~650 mm FL, ~3–3.5 kg); 114–150 mm alternatives if mass/FL fit better."
+  downstream: "aperture; focal length (sets FOV and focus shift: 11.4 mm at 50 m for 750 mm); mass (≤3.5 kg to leave margin on the 5 kg mount); focuser travel (must cover finite-object focus); central obstruction (Newtonian)."
+  gotchas: "8\" Dob exceeds mount capacity; Newtonian pointed near the Sun is a fire/detector hazard — solar exclusion in software; dew."
+  fields:
+    - {name: Chosen OTA, value: TBD}
+    - {name: Aperture, value: TBD mm}
+    - {name: FL, value: TBD mm}
+    - {name: Mass, value: TBD kg}
+    - {name: Focuser travel, value: TBD mm}
+
+- id: C2
+  name: Field stop and detector mount
+  subsystem: optics
+  track: core
+  cite: 02 C2
+  role: Limits sky background reaching the detector; holds B1 at the focal plane; allows focus and boresight calibration at each range.
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: ""
+  gotchas: ""
+  fields:
+    - {name: Fields, value: TBD}
+
+- id: C3
+  name: Bandpass filter
+  subsystem: optics
+  track: core
+  cite: 02 C3
+  role: Rejects sky/background outside the laser line.
+  status: candidate
+  chosen_part: TBD
+  candidates: "850/40 nm interference filter (Thorlabs FB850-40, Edmund, or Chinese equivalents)."
+  downstream: "center 850 nm, FWHM 40 nm (holds diode drift 838–856 nm), transmission >80% at 850, size to fit the detector path (1.25\" or 25 mm)."
+  gotchas: "interference filters shift blue at angle — mount near-normal; verify transmission at the actual diode wavelength."
+  fields:
+    - {name: Chosen, value: TBD}
+    - {name: Measured T@diode λ, value: TBD %}
+  superseded_by: [OPT-03, TX-01]
+
+- id: C4
+  name: Mount
+  subsystem: tracking
+  track: core
+  cite: 02 C4
+  role: Motorized alt-az pointing and rate-mode tracking.
+  status: candidate
+  chosen_part: AZ-GTi, TBD purchase
+  candidates: "Sky-Watcher AZ-GTi [chosen candidate]; OnStep DIY conversion of a Dob (Path 2, more schedule)."
+  downstream: "5 kg (11 lb) payload [VERIFIED]; WiFi SynScan protocol; dual encoders; slew/rate command capability and latency [to prove]; backlash."
+  gotchas: "capacity ≠ tracking accuracy; commanding repeated GoTos is not a control strategy — use rate commands; zenith singularity; tripod stiffness in wind."
+  fields:
+    - {name: Chosen, value: "AZ-GTi, TBD purchase"}
+    - {name: Protocol library, value: TBD}
+    - {name: Measured command latency, value: TBD ms}
+    - {name: Measured backlash az/el, value: TBD arcmin}
+
+- id: C5
+  name: Guide scope
+  subsystem: tracking
+  track: core
+  cite: 02 C5
+  role: Wide-field acquisition and tracking sensor path, separate from the data receiver so the APD/PIN path stays lossless.
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: "~50 mm aperture, short FL (~200 mm) for ~3° field with the chosen camera; co-aligned; rigid to the OTA (boresight stability)."
+  gotchas: ""
+  fields:
+    - {name: Chosen, value: TBD}
+    - {name: FL, value: TBD mm}
+    - {name: Measured field, value: TBD°}
+
+- id: C6
+  name: Guide camera
+  subsystem: tracking
+  track: core
+  cite: 02 C6
+  role: Sees the 850 nm source as a dot; feeds centroid at ≥10 fps.
+  status: candidate
+  chosen_part: TBD
+  candidates: "IMX290/IMX462-class mono astro cameras (ZWO ASI120MM-S / ASI290MM, SVBONY SV305M Pro — verify window)."
+  downstream: "monochrome, IR-transmitting window (no IR-cut), sensitivity at 850 nm, frame rate, USB."
+  gotchas: "some colour/IR-cut variants block 850 nm; exposure/saturation at short range; false bright sources (streetlights)."
+  fields:
+    - {name: Chosen, value: TBD}
+    - {name: Window, value: "IR-pass?"}
+    - {name: Measured detection SNR at 300 m, value: TBD}
+  superseded_by: [TX-01, OPT-06]
+
+- id: C7
+  name: Dew control, adapters, tripod power
+  subsystem: optics
+  track: core
+  cite: 02 C7
+  role: Dew heater strip + shield (outdoor), adapters, field power for mount/laptop/camera.
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: ""
+  gotchas: ""
+  fields:
+    - {name: Fields, value: TBD}
+
+# ---------- D. Receiver, flight (02 D) ----------
+- id: D1
+  name: Avalanche photodiode
+  subsystem: flight
+  track: flight
+  cite: 02 D1
+  role: Flight detector; internal gain 20–50× buys ~10–15 dB before amplifier noise.
+  status: candidate
+  chosen_part: TBD
+  candidates: "Excelitas C30902-class; Hamamatsu near-IR series (verify 850 nm curves); Thorlabs APD130A packaged module (~US$1,495 — only if a lab lends one)."
+  downstream: "wavelength-optimized for 850 nm (responsivity at 850 at the operating gain); breakdown/operating voltage (part-specific — S8664 class ~400 V; near-IR-optimized parts 150–250 V); excess noise factor F(M); active area (FOV); capacitance."
+  gotchas: "one wiring mistake at bias kills it — current-limit the supply; long lead time (order one in September from the extension allowance, second at design approval); gain and noise must be computed from the actual part's curves."
+  fields:
+    - {name: Chosen, value: TBD}
+    - {name: Vbr, value: TBD V}
+    - {name: Vop for M=, value: TBD}
+    - {name: R(850)@M, value: TBD A/W}
+    - {name: Area, value: TBD mm}
+    - {name: Measured sensitivity @50 kbps/@5 kbps, value: TBD dBm}
+
+- id: D2
+  name: Bias supply
+  subsystem: flight
+  track: flight
+  cite: 02 D2
+  role: Stable, current-limited high voltage for D1 with temperature compensation (gain drifts with T).
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: ""
+  gotchas: ""
+  fields:
+    - {name: Fields, value: TBD}
+
+# ---------- E. Flight payload (02 E) ----------
+- id: E1
+  name: Flight computer
+  subsystem: flight
+  track: flight
+  cite: 02 E1
+  role: Flight computer — FreeRTOS; DCMI for camera; timers/DMA for modulation; SDMMC logging; IWDG watchdog.
+  status: candidate
+  chosen_part: TBD
+  candidates: "STM32H743 (WeAct or Nucleo) [candidate]."
+  downstream: ""
+  gotchas: "DCMI overrun behavior; cache/DMA coherence; SD write stalls."
+  fields:
+    - {name: Board, value: TBD}
+
+- id: E2
+  name: Camera
+  subsystem: flight
+  track: flight
+  cite: 02 E2
+  role: Flight camera.
+  status: candidate
+  chosen_part: TBD
+  candidates: "OV5640 module (native JPEG)."
+  downstream: ""
+  gotchas: ""
+  fields:
+    - {name: Fields, value: TBD}
+
+- id: E3
+  name: GNSS
+  subsystem: flight
+  track: flight
+  cite: 02 E3
+  role: GNSS — configure airborne <2g via VALSET (CFG-NAVSPG-DYNMODEL), read back every boot, re-assert after brownout; 80 km ceiling in airborne mode [VERIFIED integration manual].
+  status: candidate
+  chosen_part: TBD
+  candidates: "u-blox MAX-M10S breakout (Uputronics-class)."
+  downstream: ""
+  gotchas: ""
+  fields:
+    - {name: Module, value: TBD}
+    - {name: Firmware ver, value: TBD}
+    - {name: Config verified, value: "no"}
+
+- id: E4
+  name: RF link
+  subsystem: flight
+  track: flight
+  cite: 02 E4
+  role: RF link — ISED-certified 915 MHz LoRa, 500 kHz BW or FHSS mode for RSS-247; authorized antenna. Ground side same module + Yagi.
+  status: candidate
+  chosen_part: TBD
+  candidates: "ISED-certified 915 MHz LoRa modules (e.g., certified RFM95W-based or Ebyte/RAK modules with ISED ID), 500 kHz BW or FHSS mode for RSS-247; authorized antenna. Ground side: same module + Yagi."
+  downstream: ""
+  gotchas: "single-channel 125 kHz LoRa is not automatically compliant; 433 MHz is amateur band (licence)."
+  fields:
+    - {name: Module, value: TBD}
+    - {name: ISED cert, value: TBD}
+    - {name: Mode, value: TBD}
+
+- id: E5
+  name: Sensors
+  subsystem: flight
+  track: flight
+  cite: 02 E5
+  role: MS5611 barometer (10–1200 mbar) — not BME280 (300–1100 hPa); IMU + magnetometer (ICM-20948 class) for gimbal fusion and heading; PT1000 or thermistor for exterior (−60 °C) — not DS18B20 (−55 °C limit).
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: ""
+  gotchas: ""
+  fields:
+    - {name: Fields, value: TBD}
+
+- id: E6
+  name: Flight laser diode (2 W)
+  subsystem: flight
+  track: flight
+  cite: 02 E6
+  role: Flight laser diode, 2 W.
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: "850 nm (not 808 — filter), multimode C-mount class, Vf ~2 V at 2–2.5 A, 0.3 nm/K drift, raw divergence ~8°×33°; thermal path to a heat plate."
+  gotchas: ""
+  fields:
+    - {name: Chosen, value: TBD}
+    - {name: λ@20 °C, value: TBD}
+    - {name: Iop, value: TBD A}
+
+- id: E7
+  name: Flight laser driver
+  subsystem: flight
+  track: flight
+  cite: 02 E7
+  role: "Buck pre-regulator to ~Vf+0.5–1 V, then current sink; TTL gate; fail-off interlocks (command expiry 5 s, GNSS-invalid inhibit, >1 km AGL, physical arming plug, independent hardware enable line, stuck-on detection); measured battery-input power."
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: ""
+  gotchas: ""
+  fields:
+    - {name: Fields, value: TBD}
+
+- id: E8
+  name: Gimbal (pan/tilt)
+  subsystem: flight
+  track: flight
+  cite: 02 E8
+  role: Pan/tilt gimbal for station-directed pointing.
+  status: candidate
+  chosen_part: TBD
+  candidates: "brushless 2-axis with open-source controller (STorM32/SimpleBGC class), own IMU at 500 Hz, tilt range ≥±45°, pan for station-directed pointing; cable management."
+  downstream: ""
+  gotchas: "±10° swing and 50° jet excursions; cold-motor behavior unverified; heading from magnetometer needs calibration near motors."
+  fields:
+    - {name: Fields, value: TBD}
+
+- id: E9
+  name: Power
+  subsystem: flight
+  track: flight
+  cite: 02 E9
+  role: "8× Energizer L91 (Li-FeS₂) [datasheet VERIFIED: ~1.6 Ah at 250 mA at −40 °C; ~0 at 1 A]; keep warm; low per-cell drain (consider parallel strings); heater film 1 W; energy budget by mode (~17–20 Wh need) vs measured pack capacity at temperature."
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: ""
+  gotchas: ""
+  fields:
+    - {name: Pack config, value: TBD}
+    - {name: Measured cold capacity, value: TBD Wh}
+
+- id: E10
+  name: Structure and thermal
+  subsystem: flight
+  track: flight
+  cite: 02 E10
+  role: 15 mm EPP shell; aluminum plate coupling diode to battery; rigging, swivel, parachute, radar reflector; mass ≤1.1 kg all-in (860 g budget, unweighed).
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: ""
+  gotchas: ""
+  fields:
+    - {name: Weighed mass, value: TBD g}
+    - {name: Thermal model, value: none}
+
+# ---------- F. Ground software (02 F) ----------
+- id: F
+  name: Ground software (C4)
+  subsystem: ground
+  track: core
+  cite: 02 F
+  role: "Modules: decoder service; image assembler; mount controller + state machine; guide processor; acceptance recorder; transmitter command; run logging (timestamped CSV/JSONL)."
+  status: candidate
+  chosen_part: TBD
+  candidates: "Python 3.x; pyserial; OpenCV; numpy; PyQt5/6 or web (FastAPI + browser) front end; INDI or SynScan-protocol library for AZ-GTi; SSDV decoder (open-source C via wrapper or Python port); RS library (reedsolo or via SSDV)."
+  downstream: ""
+  gotchas: ""
+  fields:
+    - {name: Repo, value: TBD}
+    - {name: Framework, value: TBD}
+
+# ---------- G. RF ground station (02 G) ----------
+- id: G
+  name: RF ground station
+  subsystem: flight
+  track: flight
+  cite: 02 G
+  role: "Certified LoRa module + Yagi; USB serial. Only needed for E-track and for GPS-seeded acquisition in C2 if the carrier carries a GNSS; C2 baseline can use a surveyed/known path instead."
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: ""
+  gotchas: ""
+  fields: []
+
+# ---------- H. Test equipment (02 H) ----------
+- id: H1
+  name: Optical power meter or calibrated photodiode (850 nm)
+  subsystem: optics
+  track: core
+  cite: 02 H
+  role: The single most important instrument; every attenuation and sensitivity number depends on it.
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: ""
+  gotchas: ""
+  fields: []
+  superseded_by: [TX-01]
+
+- id: H2
+  name: Oscilloscope ≥100 MHz
+  subsystem: optics
+  track: core
+  cite: 02 H
+  role: Test equipment (borrow/buy).
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: ""
+  gotchas: ""
+  fields: []
+
+- id: H3
+  name: Bench supplies with current limit
+  subsystem: optics
+  track: core
+  cite: 02 H
+  role: Test equipment (borrow/buy).
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: ""
+  gotchas: ""
+  fields: []
+
+- id: H4
+  name: SDR/spectrum analyzer (RF link)
+  subsystem: optics
+  track: core
+  cite: 02 H
+  role: Test equipment (borrow/buy).
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: ""
+  gotchas: ""
+  fields: []
+
+- id: H5
+  name: Absorptive ND filter set (OD 1–3) + calibrated fiber attenuator for 90 dB flight tests
+  subsystem: optics
+  track: core
+  cite: 02 H
+  role: Test equipment (borrow/buy).
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: ""
+  gotchas: ""
+  fields: []
+
+- id: H6
+  name: Beam profiler or camera-on-screen method for far-field measurement
+  subsystem: optics
+  track: core
+  cite: 02 H
+  role: Test equipment (borrow/buy).
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: ""
+  gotchas: ""
+  fields: []
+
+- id: H7
+  name: Laser eyewear OD 4+ at 800–900 nm ×3; beam stops, signage, key switch
+  subsystem: safety
+  track: core
+  cite: 02 H
+  role: Test equipment (borrow/buy) — eyewear and stops.
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: ""
+  gotchas: ""
+  fields: []
+  superseded_by: [SAF-02]
+
+- id: H8
+  name: Dry ice cooler / vacuum chamber access (E-track)
+  subsystem: optics
+  track: flight
+  cite: 02 H
+  role: Test equipment (borrow/buy).
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: ""
+  gotchas: ""
+  fields: []
+
+# ---------- I. Balloon operations (02 I) ----------
+- id: I
+  name: Balloon operations (E5)
+  subsystem: flight
+  track: flight
+  cite: 02 I
+  role: 800–1000 g latex envelope (800 g + 1.1 kg → ~2.97 m³ He for 5 m/s, ~29.7 km burst per CUSF model); parachute; line; swivel; radar reflector; helium (~3 m³); recovery beacon (independent, post-landing endurance requirement).
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: ""
+  gotchas: ""
+  fields:
+    - {name: Envelope, value: TBD}
+    - {name: Fill, value: TBD m³}
+    - {name: TC 602.42 interpretation, value: pending}

@@ -1,0 +1,50 @@
+# Physics model settings used by src/model.ts. Inputs come from register.yaml;
+# only the constants that are not register rows live here, each with its source.
+inputs:
+  # key used in src/model.ts  ->  register id
+  pmW: TX-02
+  nm: TX-01
+  mrad: TX-06
+  c2mrad: TX-07
+  range_m: SYS-04
+  c2range_m: SYS-05
+  apMM: OPT-01
+  kbps: SYS-02
+  sens50_dbm: RX-02
+  rf_kohm: RX-04
+  atmRxLoss_db: LNK-04
+  diffuserLoss_db: TX-08
+  fl_mm: OPT-02        # a range such as "650-750" uses the upper value
+
+constants:
+  txOpticsLoss_db: {value: 1.0, tag: MODELED, cite: "01 §5.1"}
+  detectorSide_mm: {value: 2.7, tag: MODELED, cite: "02 B1 (BPW34 7.5 mm² → ~2.7 mm side)"}
+  resp850_aw: {value: 0.50, tag: ASSUMED, cite: "01 §4; 07 §6"}
+  respOther_aw: {value: 0.40, tag: ASSUMED, cite: "07 §6"}
+  tiaSaturation_v: {value: 4, tag: ASSUMED, cite: "07 Appendix (saturation warning above 4 V)"}
+  indoorRef_m: {value: 50, tag: DECIDED, cite: "01 §5.3"}
+  marginOk_db: {value: 6, tag: TARGET, cite: "07 Appendix (gauge colour thresholds 0 / 6 dB)"}
+
+gauge: {min_db: -20, max_db: 20}
+
+# Sandbox controls, left column. param = register id.
+controls:
+  - {param: TX-02, label: Power (on-state), kind: pills, options: [1, 5, 20, 50, 100, 200]}
+  - {param: TX-01, label: Wavelength, kind: pills, options: [660, 850]}
+  - {param: TX-06, label: "Divergence (narrow, C1/C3)", kind: slider, min: 10, max: 100, step: 1}
+  - {param: SYS-04, label: C1 range, kind: slider, min: 200, max: 1500, step: 10}
+  - {param: SYS-05, label: C2 range, kind: slider, min: 100, max: 500, step: 10}
+  - {param: SYS-02, label: Bit rate, kind: pills, options: [5, 10, 25, 50]}
+  - {param: OPT-01, label: Aperture, kind: pills, options: [114, 130, 150, 200]}
+  - {param: RX-02, label: Sensitivity @50 kbps, kind: slider, min: -60, max: -40, step: 1}
+  - {param: RX-04, label: TIA resistor, kind: slider, min: 10, max: 500, step: 1}
+
+# Register rows that hold model outputs or feed checks. The health checks
+# attach their warnings to these rows (so the right subsystem shows broken).
+outputs:
+  c1_prx: LNK-01
+  c1_margin: LNK-02
+  c2_margin: LNK-03
+checks:
+  filter: OPT-03       # "850/40" = centre/width in nm
+  wavelength: TX-01

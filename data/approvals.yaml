@@ -1,0 +1,51 @@
+# Regulatory and institutional approvals. status: not_sent | sent | received
+# The site never shows an approval as obtained unless status is received.
+- id: AP-01
+  name: EHS registration for Class 3B upgrade
+  authority: Concordia EHS
+  status: not_sent
+  date: ""
+  subsystem: safety
+  track: core
+  note: Class 3B upgrade decision is November, gated on EHS registration with Zhang as PI (register SAF-03).
+  cite: 01 §8; 05 §3 #2; register SAF-03
+
+- id: AP-02
+  name: TC CAR 601.21 inquiry
+  authority: Transport Canada
+  status: not_sent
+  date: ""
+  subsystem: safety
+  track: core
+  note: One inquiry covering rooftop, drone and balloon; authorization required regardless of irradiance.
+  cite: 01 §8; 05 §2 (2026-09-07 regulatory); 05 §3 #3
+
+- id: AP-03
+  name: LSO room plan for C3
+  authority: Concordia EHS / LSO
+  status: not_sent
+  date: ""
+  subsystem: safety
+  track: core
+  note: C3 requires a room-specific LSO plan and coordinator agreement on graded evidence.
+  cite: 01 §3.1 C3; 05 §3 #2
+
+- id: AP-04
+  name: NAV CANADA NOTAM
+  authority: NAV CANADA
+  status: not_sent
+  date: ""
+  subsystem: flight
+  track: flight
+  note: A NOTAM is notification, not permission.
+  cite: 01 §8; 01 §3.3 G5
+
+- id: AP-05
+  name: University insurance / field ops
+  authority: Concordia University
+  status: not_sent
+  date: ""
+  subsystem: flight
+  track: flight
+  note: Required for any flight.
+  cite: 01 §3.3 G5; 05 §3 #19

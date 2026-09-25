@@ -1,0 +1,272 @@
+# The nine subsystems. Every page on the site is rendered from this file plus
+# the register, parts, interfaces, open items and decisions.
+#
+# intro: 3–5 plain-language sentences, each with a doc citation. Where the
+#   Rev D.2 docs say something the register has since changed, list the
+#   register ids in superseded_by; the site then marks the sentence
+#   "superseded by <id>" instead of presenting it as current.
+# gotchas: verbatim from 01 §13 (n is the number there).
+# register_prefixes: id prefixes whose rows mostly live on this page.
+
+- id: transmitter
+  name: Transmitter
+  owner: berky
+  icon: laser
+  track: core
+  intro:
+    - text: The transmitter is the light source for the data beam (Path B) — a laser diode behind an aspheric collimator that sets a 60 mrad beam for C1 and C3, with an engineered diffuser option that widens it to 200 mrad for the moving C2 link.
+      cite: 01 §6.3, §7.1
+    - text: The Rev D.2 design uses an 850 nm diode at ≤200 mW on-state, which is Class 3B and invisible.
+      cite: 01 §7.1, §8
+      superseded_by: [TX-01, TX-02, SAF-01]
+    - text: A constant-current driver switches the diode on and off from a TTL gate at 100 kchip/s Manchester.
+      cite: 01 §6.1, §7.1
+    - text: Around it sit a key switch, a mechanical sight aligned to an approved reference, a visible LED beside the aperture that shows where the transmitter is (not where the beam points), a tripod for C1 or a fixtured cart for C2, and a calibrated ND attenuator stage for the indoor C3 demo.
+      cite: 01 §7.1
+    - text: Rise/fall time and driver overshoot are still to be measured.
+      cite: 01 §7.1
+  gotchas:
+    - n: 1
+      text: Pointing tolerance is an angle; a handheld transmitter rotates >1.7°. → wide beam + fixtured carrier.
+    - n: 9
+      text: "Manchester on-state vs average power: 3 dB accounting error if mixed."
+    - n: 13
+      text: "\"Hand through the beam\" blocks nothing at 300 m. → two-shutter demo."
+    - n: 14
+      text: Class 3B/4 need LSO plans; enclosed housing ≠ enclosed beam; OD 3 is 0.4 OD short for 2 W → OD 4+.
+      superseded_by: [SAF-01]
+    - n: 24
+      text: 808 nm diodes don't pass an 850/40 filter; drift 838–856 nm. → freeze wavelength, match filter.
+      superseded_by: [TX-01, OPT-03]
+  doc_refs: ["01 §7.1", "01 §4", "01 §5.3", "02 A", "04 §2.3"]
+  register_prefixes: [TX]
+
+- id: optics
+  name: Optics & link
+  owner: berky
+  icon: telescope
+  track: core
+  intro:
+    - text: The optical front end is the photon bucket — a 130 mm Newtonian telescope (≤3.5 kg, focal length ~650–750 mm, TBD by the chosen OTA) collects the beam and focuses it onto the detector.
+      cite: 01 §7.3
+    - text: In front of the detector sit an 850/40 nm bandpass filter, chosen to hold the diode's drift of 838–856 nm, and a field stop that limits sky background.
+      cite: 01 §6.1, §7.3
+      superseded_by: [OPT-03, TX-01]
+    - text: Focus and boresight shift with range (about 11.4 mm of focus at 50 m for a 750 mm focal length, and 3.8 mrad of guide/receiver parallax between 1 km and 50 m), so both are recalibrated at every range with jigs.
+      cite: 01 §7.3
+    - text: The receiver field of view is roughly detector size over focal length, about 3.6–7 mrad, and has to be measured.
+      cite: 01 §7.3
+    - text: This page also carries the link budget and range rows — at Rev D.2 the 1 km C1 link captured −53.3 dB and received −35.8 dBm for about 14 dB of margin.
+      cite: 01 §4, §5.1
+      superseded_by: [LNK-01, LNK-02]
+  gotchas:
+    - n: 6
+      text: Boresight parallax 3.8 mrad and focus shift 11 mm between 1 km and 50 m. → recalibrate per range.
+    - n: 24
+      text: 808 nm diodes don't pass an 850/40 filter; drift 838–856 nm. → freeze wavelength, match filter.
+      superseded_by: [TX-01, OPT-03]
+    - n: 25
+      text: 8" Dob exceeds AZ-GTi capacity; 4.5 kg OTA leaves 0.5 kg. → ≤3.5 kg OTA; weigh everything.
+  doc_refs: ["01 §7.3", "01 §5.1", "01 §5.2", "02 C1–C3", "02 H", "04 §2.4"]
+  register_prefixes: [OPT, LNK]
+
+- id: receiver
+  name: Receiver
+  owner: bilal
+  icon: board
+  track: core
+  intro:
+    - text: The receiver turns light into bits — a BPW34-class PIN photodiode (7.5 mm² active area, 25 pF at 3 V reverse bias) feeds a transimpedance amplifier (OPA657 candidate) that converts its current into a voltage.
+      cite: 01 §7.2
+    - text: The TIA must be designed for stability, not just bandwidth, because the OPA657 is only gain-of-7 stable and sees 25–70 pF of diode capacitance.
+      cite: 01 §7.2
+    - text: After the TIA come AC coupling, a comparator with hysteresis (or simple AGC) and STM32 timer capture.
+      cite: 01 §6.1, §7.2
+    - text: At Rev D.2 the C1 link delivered 0.265 µW on-state, giving 132 nA and 15.9 mV through a 120 kΩ feedback resistor, against a −50 dBm placeholder sensitivity [TARGET].
+      cite: 01 §4
+      superseded_by: [TX-02, LNK-01, RX-04]
+    - text: Still to be measured — sensitivity (BER vs power), angular acceptance in two axes, stability at each gain setting, and overload recovery time.
+      cite: 01 §7.2
+  gotchas:
+    - n: 7
+      text: Receiver saturates at short range (6.4 V at 50 m). → calibrated attenuation, characterized gain, overload recovery.
+    - n: 8
+      text: "TIA stability: 25–70 pF diode C into OPA657 (gain-of-7 stable). → design the feedback network, measure transfer function."
+    - n: 9
+      text: "Manchester on-state vs average power: 3 dB accounting error if mixed."
+    - n: 26
+      text: "Sequencing: characterize receiver before design approval; order one APD in September; PIN first."
+  doc_refs: ["01 §7.2", "01 §4", "02 B", "04 §2.2"]
+  register_prefixes: [RX]
+
+- id: firmware
+  name: Firmware
+  owner: batu
+  icon: chip
+  track: core
+  intro:
+    - text: Firmware runs the STM32 code at both ends of the beam — on the transmit side it packetizes the image and gates the laser driver, and on the receive side it captures chips with a timer and turns them back into packets.
+      cite: 01 §6.1, §9
+    - text: Images are cut into 256-byte SSDV packets (15 B header, 4 B CRC, 32 B Reed–Solomon parity, 205 B payload), which is the only FEC layer.
+      cite: 01 §6.1
+    - text: Packets are Manchester-coded at 100 kchip/s, which is 50 kbps coded and about 40 kbps of image payload.
+      cite: 01 §3.1
+    - text: The receive side does clock recovery, frame sync and RS decode, then sends packets over USB to Ground Control.
+      cite: 01 §6.1
+  gotchas:
+    - n: 9
+      text: "Manchester on-state vs average power: 3 dB accounting error if mixed."
+    - n: 10
+      text: "\"50 kbps\" must be defined: 100 kchip/s → 50 kbps coded → ~40 kbps payload."
+    - n: 11
+      text: SSDV includes RS; don't stack a second RS layer. Interleaving can't bridge multi-second fades; retransmit/schedule images.
+  doc_refs: ["01 §6.1", "01 §3.1", "01 §14", "02 B5", "04 §6"]
+  register_prefixes: [SYS]
+
+- id: ground
+  name: Ground software
+  owner: open
+  icon: laptop
+  track: core
+  intro:
+    - text: Ground Control (C4) is the Python application on the laptop that brings the system together.
+      cite: 01 §3.1
+    - text: It reads serial data from the RX board and LoRa modem, takes guide-camera frames in, sends rate commands to the mount over SynScan/INDI, decodes packets, rebuilds the SSDV image and commands the transmitter.
+      cite: 01 §3.1
+    - text: Its modules are a decoder service, image assembler, mount controller (state machine), guide processor at 10 Hz and acceptance recorder.
+      cite: 01 §7.5
+    - text: The live acceptance panel reports lock state, goodput, pre- and post-FEC BER, packet loss, re-acquisition time and tracking error together, and every run is logged.
+      cite: 01 §3.1, §7.5
+    - text: The seat (R6) is open; if it stays open, Batu and Matei build a minimal ground app with a simplified acceptance panel.
+      cite: 01 §9
+  gotchas:
+    - n: 4
+      text: Re-acquisition needs COAST/SEARCH states; a hidden reversing carrier defeats constant-rate coast.
+    - n: 10
+      text: "\"50 kbps\" must be defined: 100 kchip/s → 50 kbps coded → ~40 kbps payload."
+    - n: 11
+      text: SSDV includes RS; don't stack a second RS layer. Interleaving can't bridge multi-second fades; retransmit/schedule images.
+  doc_refs: ["01 §7.5", "01 §3.1", "01 §14", "02 F", "04 §6"]
+  register_prefixes: [GS]
+
+- id: tracking
+  name: Tracking
+  owner: matei
+  icon: crosshair
+  track: core
+  intro:
+    - text: Tracking keeps the telescope pointed at the transmitter; it is a separate loop that carries no data (Path C).
+      cite: 01 §6.1, §6.3
+    - text: A 50 mm-class guide scope with a monochrome IR-transmitting camera sees the source over a ~3° field, and its centroid drives rate-mode commands to a Sky-Watcher AZ-GTi mount (5 kg capacity) over SynScan/INDI, with feed-forward and backlash compensation.
+      cite: 01 §6.1, §7.4
+      superseded_by: [OPT-06]
+    - text: A state machine runs IDLE → SLEW → SEARCH → TRACK → COAST — from a ±2° seeded position it spirals over the guide field, tracks at 10 Hz, coasts on loss and re-acquires by itself.
+      cite: 01 §3.1, §6.1
+    - text: Rate-mode command over SynScan/INDI still needs a protocol proof in October.
+      cite: 01 §7.4
+    - text: In C2 the baseline motion is walking speed, 0.27°/s at 300 m.
+      cite: 01 §3.1
+  gotchas:
+    - n: 3
+      text: Tracking is not autoguiding (0.004°/s vs 0.3–1°/s). → rate-mode commands, prove in October.
+    - n: 4
+      text: Re-acquisition needs COAST/SEARCH states; a hidden reversing carrier defeats constant-rate coast.
+    - n: 5
+      text: Phone GPS (10 m) = 1.9° at 300 m > half a 3° guide field. → GPS seeds a spiral search.
+    - n: 12
+      text: Indoor walking (1.6°/s at 50 m) is faster than a car at 300 m. → 0.2 m/s, ±0.5 m.
+    - n: 25
+      text: 8" Dob exceeds AZ-GTi capacity; 4.5 kg OTA leaves 0.5 kg. → ≤3.5 kg OTA; weigh everything.
+  doc_refs: ["01 §7.4", "01 §3.1", "02 C4–C6", "04 §2.5", "04 §2.6"]
+  register_prefixes: [TRK]
+
+- id: power
+  name: Power & field
+  owner: shabazz
+  icon: battery
+  track: core
+  intro:
+    - text: Power and field (R4) covers the laser driver board, field power, the carrier fixture, enclosures and site logistics.
+      cite: 01 §9
+    - text: For C2 the transmitter rides on a fixtured carrier — a cart, rigid and aimed once, with a car optional only after the mount's rate capability is proven.
+      cite: 01 §3.1; 02 A5
+    - text: Outdoors, the mount, laptop, guide camera and transmitter all need field power.
+      cite: 02 C7
+    - text: C1 needs a surveyed ≥1 km site pair (primary and backup) and C3 needs an indoor venue, both part of the September site survey.
+      cite: 01 §10
+    - text: Flight energy, thermal and battery qualification also sit with this role on the extended track.
+      cite: 01 §9
+  gotchas:
+    - n: 1
+      text: Pointing tolerance is an angle; a handheld transmitter rotates >1.7°. → wide beam + fixtured carrier.
+    - n: 20
+      text: Linear current sink from 12 V burns ~25 W at 2.5 A. → buck pre-regulator.
+    - n: 21
+      text: "L91 cells: near-zero capacity at 1 A at −40 °C. → keep warm, low per-cell drain, qualify by test."
+  doc_refs: ["01 §9", "01 §10", "02 A4", "02 A5", "02 C7"]
+  register_prefixes: [PWR]
+
+- id: safety
+  name: Safety & approvals
+  owner: berky
+  icon: shield
+  track: core
+  intro:
+    - text: Safety covers the laser class, eyewear, controlled areas and every regulatory filing, and is part of the C5 documentation and safety file.
+      cite: 01 §3.1, §8
+    - text: At Rev D.2 the campus transmitter was Class 3B (≤200 mW at 850 nm, invisible), requiring Concordia EHS registration, an LSO, training, OD 4+ eyewear at 800–900 nm, a key switch, beam stop and controlled area, plus a room-specific plan for C3.
+      cite: 01 §8
+      superseded_by: [SAF-01, SAF-02, TX-01, TX-02]
+    - text: Projecting a directed bright light into navigable airspace is assessed under CAR 601.21, including the rooftop; one inquiry to Transport Canada covers rooftop, drone and balloon.
+      cite: 01 §8
+    - text: The NOHD figure (≈2 m for 60 mrad) is a calculation, not an approved boundary.
+      cite: 01 §8
+      superseded_by: [SAF-01]
+    - text: A NAV CANADA NOTAM is notification, not permission.
+      cite: 01 §8
+  gotchas:
+    - n: 14
+      text: Class 3B/4 need LSO plans; enclosed housing ≠ enclosed beam; OD 3 is 0.4 OD short for 2 W → OD 4+.
+      superseded_by: [SAF-01]
+    - n: 15
+      text: CAR 601.21 applies regardless of irradiance; rooftop assessed too.
+    - n: 16
+      text: Drone laser payload → CAR 901.43 / SFOC, 60 business days.
+    - n: 17
+      text: CAR 602.42 "gas-carrying capacity" ≠ fill volume; get TC interpretation.
+  doc_refs: ["01 §8", "02 H7", "04 §2.8", "05 §3"]
+  register_prefixes: [SAF, BUD]
+
+- id: flight
+  name: Flight (extended)
+  owner: berky
+  icon: balloon
+  track: flight
+  intro:
+    - text: The flight track (E1–E5) is not graded and is gated — a ≤1.1 kg balloon payload that points a 2 W 850 nm laser at the ground station from a pan/tilt gimbal.
+      cite: 01 §3.2
+    - text: The payload design is an STM32H743 with FreeRTOS, an OV5640 camera, u-blox MAX-M10 GNSS in airborne mode, ISED-certified 915 MHz LoRa, an MS5611 barometer, a PT1000 exterior sensor and L91 cells kept warm.
+      cite: 01 §7.6
+    - text: The flight receiver is an APD with measured sensitivity; it adds gain, excess noise and a bias supply, so it is not a drop-in upgrade.
+      cite: 01 §3.2, §4
+    - text: Flight happens only after gates G1–G5 pass (pointing, APD receiver, thermal/vacuum qualification, interlock fault tests, written approvals); the realistic window if all pass is summer 2027.
+      cite: 01 §3.3
+    - text: The proposal states the balloon flight is the goal, and that the gates exist so the grade does not depend on weather or Transport Canada's response times.
+      cite: 05 Appendix A
+  gotchas:
+    - n: 2
+      text: Nadir beam + downrange station is geometrically impossible at 35 km (Rev C error). → station-directed pointing.
+    - n: 18
+      text: "GNSS: default mode dies at 12–18 km; VALSET airborne <2g; readback every boot; freefall can exceed <1g velocity limit."
+    - n: 19
+      text: BME280 can't read 15 hPa; DS18B20 stops at −55 °C. → MS5611, PT1000.
+    - n: 21
+      text: "L91 cells: near-zero capacity at 1 A at −40 °C. → keep warm, low per-cell drain, qualify by test."
+    - n: 22
+      text: "Thermal at 1 kPa: no convection; first model says cold (−44 °C), diode may still run hot locally. → transient model + full-profile test."
+    - n: 23
+      text: "Dusk geometry: payload in shadow when station sun < −5.4°. → time the climb to −1…−5°."
+    - n: 27
+      text: "Six people are six people: name core owners before any flight work."
+  doc_refs: ["01 §3.2", "01 §3.3", "01 §5.4", "01 §7.6", "02 D", "02 E", "02 G", "02 I"]
+  register_prefixes: [FLT]

@@ -1,0 +1,81 @@
+# Phase 2 (07 §4): on every register/interface change pushed to main,
+# work out what changed and which rows became stale, tell the team, and open
+# one "re-check" issue per newly stale row (unless one is already open).
+name: Notify on register change
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - data/register.yaml
+      - data/interfaces.yaml
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: Diff register against the previous commit
+        id: diff
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          BASE="$BEFORE"
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then BASE="HEAD^"; fi
+          SITE_URL="https://${GITHUB_REPOSITORY_OWNER,,}.github.io/${GITHUB_REPOSITORY#*/}/"
+          echo "site_url=$SITE_URL" >> "$GITHUB_OUTPUT"
+          npx tsx scripts/diff-register.ts --base "$BASE" --out diff.json --site "$SITE_URL"
+
+      # TODO(Phase 2): enable once the DISCORD_WEBHOOK secret exists
+      # (Settings → Secrets and variables → Actions → New secret DISCORD_WEBHOOK).
+      # - name: Post to Discord
+      #   env:
+      #     DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      #   run: |
+      #     jq -n --arg content "$(jq -r .message diff.json | head -c 1900)" '{content: $content}' \
+      #       | curl -sS -H 'Content-Type: application/json' -d @- "$DISCORD_WEBHOOK"
+
+      - name: Open a re-check issue per newly stale row
+        uses: actions/github-script@v7
+        env:
+          SITE_URL: ${{ steps.diff.outputs.site_url }}
+        with:
+          script: |
+            const fs = require('fs');
+            const diff = JSON.parse(fs.readFileSync('diff.json', 'utf8'));
+            const { owner, repo } = context.repo;
+            const open = await github.paginate(github.rest.issues.listForRepo, { owner, repo, state: 'open', labels: 're-check', per_page: 100 });
+            for (const row of diff.newly_stale) {
+              const prefix = `Re-check ${row.id}:`;
+              if (open.some((i) => i.title.startsWith(prefix))) { core.info(`${row.id}: open issue exists`); continue; }
+              const because = row.reasons.map((r) => `- ${r.from} changed ${r.changed}, after ${row.id} was checked ${r.checked}`).join('\n');
+              const body = [
+                `**${row.id} ${row.name}** is stale.`, '', because, '',
+                `Commit: ${diff.subject} (${diff.author})`, '',
+                `Row: ${process.env.SITE_URL}#/s/${row.subsystem}?row=${row.id}`,
+                `Edit: https://github.com/${owner}/${repo}/edit/main/data/register.yaml${row.line ? ` (line ${row.line})` : ''}`, '',
+                'Clear it by re-checking the row (the value may not change) and committing with `checked:` set to today.',
+                'Closing this issue is the acknowledgement.',
+              ].join('\n');
+              const params = { owner, repo, title: `${prefix} ${row.name}`, body, labels: ['re-check'] };
+              if (row.github) params.assignees = [row.github];
+              try {
+                await github.rest.issues.create(params);
+              } catch (e) {
+                core.warning(`${row.id}: ${e.message}; retrying without assignee`);
+                delete params.assignees;
+                await github.rest.issues.create(params);
+              }
+            }

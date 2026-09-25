@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+</head>
+<body class="hide-flight">
+  <header class="top">
+    <div class="top-row">
+      <a href="#/" class="brand" id="site-title"></a>
+      <div id="countdown" class="small"></div>
+    </div>
+    <nav>
+      <a href="#/" data-nav="">Map</a>
+      <a href="#/register" data-nav="register">Register</a>
+      <a href="#/interfaces" data-nav="interfaces">Interfaces</a>
+      <a href="#/sandbox" data-nav="sandbox">Sandbox</a>
+      <a href="#/inbox" data-nav="inbox">Inbox</a>
+      <label class="toggle"><input type="checkbox" id="flight-toggle"> show flight track</label>
+    </nav>
+  </header>
+  <main id="app"></main>
+  <footer class="small muted"><span id="built"></span> · <a id="repo-link" target="_blank" rel="noopener">repository</a></footer>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

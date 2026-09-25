@@ -1,0 +1,36 @@
+# Team (01 §9). github: handle used for issue assignment; "" = not known yet.
+- id: berky
+  name: Berkan
+  role: Optics, link, systems, safety, project lead (R1)
+  github: BerkanBozoglu
+  subsystems: [optics, transmitter, safety, flight]
+
+- id: bilal
+  name: Bilal
+  role: Receiver, RF, PCB (R2)
+  github: ""
+  subsystems: [receiver]
+
+- id: batu
+  name: Batu
+  role: Embedded, firmware (R3)
+  github: ""
+  subsystems: [firmware]
+
+- id: shabazz
+  name: Shabazz
+  role: Power, structures, field (R4)
+  github: ""
+  subsystems: [power]
+
+- id: matei
+  name: Matei
+  role: Controls, tracking (R5)
+  github: ""
+  subsystems: [tracking]
+
+- id: open
+  name: Open seat (R6)
+  role: Ground software (unassigned)
+  github: ""
+  subsystems: [ground]

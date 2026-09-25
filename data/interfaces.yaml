@@ -1,0 +1,126 @@
+# Interfaces between subsystems (07 §3 "Interfaces"). The upstream owner drafts
+# the one-line spec; the downstream owner edits it until they can build against
+# it, adds their name, and sets status: agreed AND spec_hash (the site shows the
+# hash to paste). If `what` changes later, the hash no longer matches and the
+# build drops the interface back to draft automatically.
+# status: agreed | draft | missing.  to: a subsystem id or a list of ids.
+
+- id: I-01
+  from: firmware
+  to: transmitter
+  what: TTL gate line, 100 kchip/s Manchester, 3.3 V logic, rise/fall <1 µs, idle = laser off.
+  owners: [batu, shabazz]
+  status: draft
+  spec_hash: ""
+  gap: ""
+  blocks: ""
+
+- id: I-02
+  from: power
+  to: transmitter
+  what: Driver set current, compliance voltage, overshoot limit, key switch in supply path.
+  owners: [shabazz, berky]
+  status: draft
+  spec_hash: ""
+  gap: ""
+  blocks: ""
+
+- id: I-03
+  from: transmitter
+  to: optics
+  what: "Through air: wavelength, divergence, on-state power — the link budget."
+  owners: [berky]
+  status: draft
+  spec_hash: ""
+  gap: Was agreed at Rev D.2; reopened by the Class 2 change (TX-01, TX-02).
+  blocks: ""
+
+- id: I-04
+  from: optics
+  to: receiver
+  what: Detector at focal plane, filter and field stop in front, focus travel for 50 m to 1 km.
+  owners: [berky, bilal]
+  status: missing
+  spec_hash: ""
+  gap: ""
+  blocks: ""
+
+- id: I-05
+  from: receiver
+  to: receiver
+  what: "Receiver internal: photodiode capacitance at chosen bias, bias voltage, lead length."
+  owners: [bilal]
+  status: draft
+  spec_hash: ""
+  gap: ""
+  blocks: ""
+
+- id: I-06
+  from: receiver
+  to: firmware
+  what: Comparator output logic level, connector, STM32 timer pin, expected chip timing.
+  owners: [bilal, batu]
+  status: missing
+  spec_hash: ""
+  gap: ""
+  blocks: October parallel work
+
+- id: I-07
+  from: firmware
+  to: ground
+  what: USB serial baud, packet framing, one line per SSDV packet plus status words.
+  owners: [batu, open]
+  status: missing
+  spec_hash: ""
+  gap: ""
+  blocks: ground software start
+
+- id: I-08
+  from: tracking
+  to: ground
+  what: Guide camera USB frames ≥10 fps, mono, exposure control from software.
+  owners: [matei, open]
+  status: draft
+  spec_hash: ""
+  gap: ""
+  blocks: ""
+
+- id: I-09
+  from: ground
+  to: tracking
+  what: Rate-mode mount commands over SynScan/INDI, command latency, backlash.
+  owners: [matei, open]
+  status: draft
+  spec_hash: ""
+  gap: Protocol proof due October.
+  blocks: ""
+
+- id: I-10
+  from: optics
+  to: tracking
+  what: Total mass ≤3.5 kg, dovetail, boresight rigid between tubes.
+  owners: [berky, matei]
+  status: draft
+  spec_hash: ""
+  gap: ""
+  blocks: ""
+
+- id: I-11
+  from: power
+  to: [tracking, ground, transmitter]
+  what: "All outdoor equipment: voltages, connectors, run time for mount, laptop, camera, transmitter."
+  owners: [shabazz]
+  status: missing
+  spec_hash: ""
+  gap: ""
+  blocks: ""
+
+- id: I-12
+  from: ground
+  to: transmitter
+  what: Command channel for shutter demo and TX on/off.
+  owners: [open, berky]
+  status: missing
+  spec_hash: ""
+  gap: ""
+  blocks: ""

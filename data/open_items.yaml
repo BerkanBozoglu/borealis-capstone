@@ -1,0 +1,223 @@
+# Open items, 05 §3 (ranked), verbatim. owners are people ids; due is free text as written.
+# subsystem is the dashboard's mapping. issue: GitHub issue number once created (null until then).
+- n: 1
+  item: Sixth member (ground software)
+  why: C4 quality; acceptance panel
+  closing_action: Aryan yes/no; else Batu+Matei minimal app
+  owners: [ berky ]
+  due: 09-18
+  subsystem: ground
+  track: core
+  cite: "05 §3 #1"
+  issue: null
+
+- n: 2
+  item: EHS registration + LSO; C3 room plan
+  why: blocks Rung 2 and the graded demo
+  closing_action: file; meet LSO
+  owners: [ berky ]
+  due: Sept
+  subsystem: safety
+  track: core
+  cite: "05 §3 #2"
+  issue: null
+  superseded_by: [ SAF-01, SAF-03 ]
+
+- n: 3
+  item: TC 601.21 / 901.43 / 602.42 letter
+  why: flight gate G5; rooftop assessment
+  closing_action: send
+  owners: [ berky ]
+  due: Sept
+  subsystem: safety
+  track: core
+  cite: "05 §3 #3"
+  issue: null
+
+- n: 4
+  item: ≥1 km site pair (primary + backup) with access
+  why: C1
+  closing_action: survey, permissions, site package
+  owners: [ berky, shabazz ]
+  due: Sept
+  subsystem: power
+  track: core
+  cite: "05 §3 #4"
+  issue: null
+
+- n: 5
+  item: Coordinator agreement on acceptance criteria and evidence
+  why: grading contract
+  closing_action: Phase 1 sign-off
+  owners: [ berky ]
+  due: Oct 4
+  subsystem: ground
+  track: core
+  cite: "05 §3 #5"
+  issue: null
+
+- n: 6
+  item: AZ-GTi rate-mode command proof (latency, residual, backlash)
+  why: C2 feasibility; car test decision
+  closing_action: Rung 5
+  owners: [ matei ]
+  due: Oct
+  subsystem: tracking
+  track: core
+  cite: "05 §3 #6"
+  issue: null
+
+- n: 7
+  item: PIN receiver sensitivity, stability, angular acceptance
+  why: link budget placeholders
+  closing_action: 04 §2.2
+  owners: [ bilal ]
+  due: Oct
+  subsystem: receiver
+  track: core
+  cite: "05 §3 #7"
+  issue: null
+
+- n: 8
+  item: Diffuser transmission and profile
+  why: C2 budget
+  closing_action: 04 §2.3
+  owners: [ berky ]
+  due: Oct
+  subsystem: transmitter
+  track: core
+  cite: "05 §3 #8"
+  issue: null
+
+- n: 9
+  item: Diode wavelength vs filter
+  why: link works at all
+  closing_action: measure
+  owners: [ berky ]
+  due: Oct
+  subsystem: optics
+  track: core
+  cite: "05 §3 #9"
+  issue: null
+
+- n: 10
+  item: Sky background (day/twilight) through real filter
+  why: daylight tests; flight window
+  closing_action: measure
+  owners: [ berky, bilal ]
+  due: Oct
+  subsystem: optics
+  track: core
+  cite: "05 §3 #10"
+  issue: null
+
+- n: 11
+  item: OTA choice (≤3.5 kg, FL, focuser travel)
+  why: mount load, FOV, focus shift
+  closing_action: buy used
+  owners: [ berky ]
+  due: Sept
+  subsystem: optics
+  track: core
+  cite: "05 §3 #11"
+  issue: null
+
+- n: 12
+  item: Guide camera IR window verification
+  why: acquisition
+  closing_action: check spec/measure
+  owners: [ matei ]
+  due: Sept
+  subsystem: tracking
+  track: core
+  cite: "05 §3 #12"
+  issue: null
+  superseded_by: [ OPT-06 ]
+
+- n: 13
+  item: Certified LoRa module and mode
+  why: RSS-247
+  closing_action: select
+  owners: [ bilal ]
+  due: Oct
+  subsystem: flight
+  track: flight
+  cite: "05 §3 #13"
+  issue: null
+
+- n: 14
+  item: t_acq / t_reacq targets
+  why: acceptance
+  closing_action: propose after Rung 5/6
+  owners: [ matei ]
+  due: Nov
+  subsystem: tracking
+  track: core
+  cite: "05 §3 #14"
+  issue: null
+
+- n: 15
+  item: CAN-SBX dates + laser policy
+  why: Flight 2
+  closing_action: email cansbx@seds.ca
+  owners: [ berky ]
+  due: Sept
+  subsystem: flight
+  track: flight
+  cite: "05 §3 #15"
+  issue: null
+
+- n: 16
+  item: Co-supervisor (controls)
+  why: tracking review
+  closing_action: ask Zhang for intro
+  owners: [ berky ]
+  due: Sept
+  subsystem: tracking
+  track: core
+  cite: "05 §3 #16"
+  issue: null
+
+- n: 17
+  item: Thermal model + L91 cold capacity (E-track)
+  why: G3
+  closing_action: model; test
+  owners: [ shabazz ]
+  due: Dec
+  subsystem: flight
+  track: flight
+  cite: "05 §3 #17"
+  issue: null
+
+- n: 18
+  item: APD part selection with 850 nm curves (E-track)
+  why: G2
+  closing_action: choose; order one
+  owners: [ bilal ]
+  due: Sept/Nov
+  subsystem: flight
+  track: flight
+  cite: "05 §3 #18"
+  issue: null
+
+- n: 19
+  item: University insurance/field-ops for any flight
+  why: G5
+  closing_action: inquire
+  owners: [ berky ]
+  due: Oct
+  subsystem: safety
+  track: flight
+  cite: "05 §3 #19"
+  issue: null
+
+- n: 20
+  item: MDA / MPBC / UBCO / IEEE / Space Concordia outreach
+  why: mentorship, gear, chamber
+  closing_action: send per 03
+  owners: [ berky, bilal ]
+  due: after 09-14
+  subsystem: flight
+  track: core
+  cite: "05 §3 #20"
+  issue: null

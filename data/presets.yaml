@@ -1,0 +1,30 @@
+# Sandbox presets. "Committed now" is always built from register.yaml and is not
+# listed here. values are keyed by register id. baseline: true marks the preset
+# shown struck through next to the committed C1 margin on the map.
+- id: revd2
+  name: Rev D.2 baseline
+  baseline: true
+  cite: 01 §3.1, §5.1
+  note: 850 nm, 200 mW on-state, 60 mrad, 1 km, 130 mm, 50 kbps, −50 dBm, 120 kΩ.
+  values:
+    TX-02: 200
+    TX-01: 850
+    TX-06: 60
+    TX-07: 200
+    SYS-04: 1000
+    SYS-05: 300
+    SYS-02: 50
+    OPT-01: 130
+    RX-02: -50
+    RX-04: 120
+
+- id: class2-narrow
+  name: Class 2 recovery option (20 mrad, 5 kbps)
+  baseline: false
+  cite: 07 §5 item 8
+  note: Narrowing to 20 mrad at 5 kbps gets C1 to about +5 dB (modeled); pointing tolerance drops to ±0.57°. A decision for Berky and Zhang, not the tool.
+  values:
+    TX-02: 1
+    TX-01: 660
+    TX-06: 20
+    SYS-02: 5

@@ -1,0 +1,64 @@
+# Fixed external dates (01 §2) and the test ladder.
+dates:
+  - date: 2026-10-04
+    name: Phase 1 report
+    cite: 01 §2
+  - date: 2026-11-27
+    name: Final design approval
+    cite: 01 §2
+  - date: 2026-11-29
+    name: Phase 2 report
+    cite: 01 §2
+  - date: 2027-02-15
+    week_of: true
+    name: In-lab pre-demo
+    cite: 01 §2
+  - date: 2027-03-22
+    week_of: true
+    name: In-lab final demo
+    cite: 01 §2
+  - date: 2027-04-02
+    name: Final report
+    cite: 01 §2
+
+# Test ladder (never skip a rung). Rungs as set for the dashboard (07 Appendix);
+# 04 §1 numbers them differently (8 rungs) — see cite on each rung.
+# status: not_started | in_progress | passed
+# blocked_by: register row ids or interface ids
+rungs:
+  - n: 1
+    name: Bench through filters
+    cite: 04 §1 rung 1, 04 §2.1
+    track: core
+    status: not_started
+    blocked_by: [BUD-01, OPT-03]
+  - n: 2
+    name: Corridor 50–80 m
+    cite: 04 §1 rung 2
+    track: core
+    status: not_started
+    blocked_by: []
+  - n: 3
+    name: Mount tracks a moving LED
+    cite: 04 §1 rung 5, 04 §2.5
+    track: core
+    status: not_started
+    blocked_by: []
+  - n: 4
+    name: Outdoor 200–300 m
+    cite: 04 §1 rung 3
+    track: core
+    status: not_started
+    blocked_by: []
+  - n: 5
+    name: ≥1 km
+    cite: 04 §1 rung 4
+    track: core
+    status: not_started
+    blocked_by: []
+  - n: 6
+    name: Flight gates G1–G5
+    cite: 01 §3.3
+    track: flight
+    status: not_started
+    blocked_by: []

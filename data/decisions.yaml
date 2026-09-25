@@ -1,0 +1,185 @@
+# Decision log, every bullet of 05 §2 (format: date · area · decision · reason · evidence · changes · owner).
+# Bullets with fewer than seven parts leave the missing fields empty (see README "Choices").
+# subsystems is the dashboard's mapping; each subsystem page shows the decisions mapped to it.
+# Append new decisions here AND in docs/05 (never delete history; supersede it).
+- date: 2026-09-03
+  area: flight ops
+  decision: Self-launch designed under 3.256 m³ (CARs 602.42)
+  reason: avoid TC balloon authorization on critical path
+  evidence: CAR text
+  changes: mass ceiling 1.1 kg
+  owner: Berkan
+  subsystems: [ flight ]
+  cite: 05 §2
+
+- date: 2026-09-03
+  area: flight
+  decision: Laser fires only on ground command with 40-min on-time budget
+  reason: power budget cannot carry 3 h of 6.5 W
+  evidence: energy calc
+  changes: uplink command path
+  owner: R3
+  subsystems: [ flight ]
+  cite: 05 §2
+
+- date: 2026-09-07
+  area: flight arch
+  decision: Station-directed pan/tilt pointing replaces nadir beam
+  reason: nadir cone (~1.7 km at 28 km) cannot reach a station 20 km downrange
+  evidence: review finding 1
+  changes: gimbal spec, 100 mrad, 5–10 kbps
+  owner: R5
+  subsystems: [ flight ]
+  cite: 05 §2
+
+- date: 2026-09-07
+  area: safety
+  decision: Campus transmitter capped at ≤200 mW (Class 3B); 2 W stays on the bench under LSO until G5
+  reason: shrink EHS burden for graded work; NOHD ~2 m
+  evidence: MPE calc
+  changes: budget line for a 3B diode
+  owner: R1
+  subsystems: [ safety, transmitter ]
+  cite: 05 §2
+  superseded_by: [ TX-02, SAF-01 ]
+
+- date: 2026-09-07
+  area: regulatory
+  decision: CAR 601.21 inquiry covering rooftop, drone, balloon in one letter
+  reason: authorization required regardless of irradiance
+  evidence: CAR text
+  changes: outreach 1.2
+  owner: Berkan
+  subsystems: [ safety ]
+  cite: 05 §2
+
+- date: 2026-09-07
+  area: receiver
+  decision: PIN receiver is the graded baseline; APD is a flight gate
+  reason: campus has 14 dB margin; APD is the hard analog problem
+  evidence: link budgets
+  changes: BOM
+  owner: R2
+  subsystems: [ receiver, flight ]
+  cite: 05 §2
+  superseded_by: [ LNK-02 ]
+
+- date: 2026-09-08
+  area: scope
+  decision: Pointing gimbal demo moved from graded to gate G1
+  reason: flight likely after grading; only ground-station tracking needs grading
+  evidence: calendar
+  changes: proposal deliverables
+  owner: Berkan
+  subsystems: [ flight, tracking ]
+  cite: 05 §2
+
+- date: 2026-09-08
+  area: C2
+  decision: 200 mrad diffuser + fixtured carrier; walking speed baseline; car optional after Rung 5
+  reason: pointing tolerance is an angle (±1.72° at 60 mrad)
+  evidence: review 2
+  changes: brief TB-04
+  owner: R1/R5
+  subsystems: [ transmitter, tracking, power ]
+  cite: 05 §2
+
+- date: 2026-09-08
+  area: C3
+  decision: Indoor demo at 60 mrad with locked attenuation, 0.2 m/s over ±0.5 m
+  reason: indoor walking = 1.6°/s at 50 m
+  evidence: rate table
+  changes: brief TB-05
+  owner: all
+  subsystems: [ transmitter, tracking ]
+  cite: 05 §2
+
+- date: 2026-09-08
+  area: demo
+  decision: Two-shutter interruption (receiver aperture; transmitter) replaces "hand through beam"
+  reason: a hand blocks nothing at 300 m
+  evidence: review 2
+  changes: C3 script
+  owner: R6
+  subsystems: [ transmitter, ground, tracking ]
+  cite: 05 §2
+
+- date: 2026-09-08
+  area: framing
+  decision: "One FEC layer: SSDV packets with built-in RS(255,223)"
+  reason: avoid double FEC; SSDV proven for lossy links
+  evidence: SSDV spec
+  changes: firmware
+  owner: R3
+  subsystems: [ firmware, ground ]
+  cite: 05 §2
+
+- date: 2026-09-08
+  area: metrics
+  decision: Rate defined as 100 kchip/s → 50 kbps coded → ~40 kbps payload; report pre/post-FEC BER, packet loss, goodput, outage together
+  reason: prevent "41 vs 50" and survivor-BER ambiguity
+  evidence: review 2
+  changes: acceptance §14
+  owner: Berkan
+  subsystems: [ firmware, ground ]
+  cite: 05 §2
+
+- date: 2026-09-08
+  area: calendar
+  decision: Attempt ≥1 km in November before winter
+  reason: second window before pre-demo
+  evidence: reviewed brief
+  changes: plan
+  owner: Berkan
+  subsystems: [ optics, power ]
+  cite: 05 §2
+
+- date: 2026-09-09
+  area: flight
+  decision: Flight 0 (drone/tether 50–120 m) is optional pending CAR 901.43/SFOC determination and aircraft/site
+  reason: 60-business-day standard
+  evidence: TC guidance
+  changes: outreach 1.3
+  owner: Berkan
+  subsystems: [ flight, safety ]
+  cite: 05 §2
+
+- date: 2026-09-10
+  area: outreach
+  decision: MDA via Bilal's manager; MPBC via supervisor intro; asks sequenced small→large
+  reason: warm intros outperform cold
+  evidence: outreach package
+  changes: ""
+  owner: Berkan/Bilal
+  subsystems: [ flight ]
+  cite: 05 §2
+
+- date: 2026-09-11
+  area: claims
+  decision: No "first"; differentiation = range + autonomous acquisition/tracking; IEEE Lumentum project is a resource
+  reason: UBCO, FHNW, DLR, Loon, IEEE precedents
+  evidence: positioning
+  changes: ""
+  owner: Berkan
+  subsystems: [ optics, tracking ]
+  cite: 05 §2
+
+- date: 2026-09-11
+  area: team
+  decision: Berkan owns optics/link + PM; Shabazz power/structures; Matei controls; software seat open (Aryan candidate)
+  reason: match to recruited skills
+  evidence: proposal task distribution
+  changes: ""
+  owner: Berkan
+  subsystems: [ optics, power, tracking, ground ]
+  cite: 05 §2
+
+- date: 2026-09-11
+  area: proposal
+  decision: Submitted 2026-09-14 with five names, one open seat; qualification moved to extended track; balloon intent stated
+  reason: ""
+  evidence: form text in Appendix A
+  changes: ""
+  owner: Berkan
+  subsystems: [ ground, flight ]
+  cite: 05 §2

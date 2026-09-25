@@ -1,0 +1,41 @@
+# Site-wide settings. Nothing here is a project number; project numbers live
+# in register.yaml and the other data files.
+title: BOREALIS systems dashboard
+repo:
+  owner: BerkanBozoglu
+  name: borealis-capstone
+  branch: main
+
+# Layout of the map page (subsystem ids).
+map:
+  data_path: [transmitter, optics, receiver, firmware, ground]
+  support_row: [tracking, power, safety]
+  flight_row: [flight]
+
+# Thresholds used by derived state and checks.
+recent_days: 14          # "changed in last 14 days" filter
+tbd_max_age_days: 30     # warn on TBD rows older than this
+recent_commits: 10       # map page "recent changes"
+
+# The four workflow rules, verbatim from 07 §3.
+workflow_cite: 07 §3
+workflow_rules:
+  - title: Own it → change it.
+    text: >-
+      The owner of a row edits `data/register.yaml` (on GitHub's web editor or via Claude Code),
+      sets `changed` and `checked` to today, and writes one commit line in decision-log format:
+      `TX-02: 200 → 1 mW · coordinator review, Class 2 baseline · Berky`
+  - title: Don't own it → propose it.
+    text: >-
+      Open the sandbox, set the change, press *Propose*. A GitHub issue opens, assigned to the
+      owner(s), with the share link and the modeled effect already in it. The owner commits or
+      closes with a reason.
+  - title: Downstream → re-check, not approve.
+    text: >-
+      When a row changes, every row in its `feeds_into` list becomes stale. Their owners see it in
+      *Inbox* and in Discord. They clear it by re-checking their row (value may not change) and
+      committing with `checked: today`.
+  - title: Measured beats modeled.
+    text: >-
+      To record a measurement, change `tag: MEASURED`, fill `conditions:`, and link the evidence
+      file under `evidence/`. Missing conditions = build fails = the change does not go live.
