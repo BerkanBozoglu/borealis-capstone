@@ -627,12 +627,12 @@
   unit: "-"
   tag: DECIDED
   owner: berky
-  feeds_into: [ FLT-02, OPT-03 ]
+  feeds_into: [ FLT-02 ]
   source: 01 §5.4
   track: flight
   changed: 2026-09-07
   checked: 2026-09-12
-  note: "Campus now 660 nm and flight 850 nm: filter and detector work will not transfer directly"
+  note: "Campus now 660 nm and flight 850 nm: filter and detector work will not transfer directly. (Seed listed OPT-03 in feeds_into; removed because a core row may not depend on a flight row, 07 §2 D6.)"
 
 - id: FLT-02
   name: APD sensitivity @50 / 5 kbps (E-track)
