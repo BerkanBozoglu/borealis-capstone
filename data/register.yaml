@@ -598,7 +598,7 @@
   value: pre/post-FEC BER; loss; goodput; outage; reacq time; tracking error
   unit: "-"
   tag: DECIDED
-  owner: open
+  owner: arnav
   feeds_into: []
   source: 01 §7.5
   track: core
@@ -612,7 +612,7 @@
   value: <=1e-5 post-FEC over >=1e7 bits
   unit: "-"
   tag: DECIDED
-  owner: open
+  owner: arnav
   feeds_into: []
   source: 01 §14
   track: core

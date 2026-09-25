@@ -7,9 +7,9 @@
 
 - id: bilal
   name: Bilal
-  role: Receiver, RF, PCB (R2); ground software owner
+  role: Receiver, RF, PCB (R2)
   github: ""
-  subsystems: [receiver, ground]
+  subsystems: [receiver]
 
 - id: batu
   name: Batu
@@ -29,8 +29,8 @@
   github: ""
   subsystems: [tracking]
 
-- id: open
-  name: Open seat (R6)
-  role: Ground software (unassigned)
+- id: arnav
+  name: Arnav
+  role: Ground software (R6)
   github: ""
   subsystems: [ground]

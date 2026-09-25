@@ -69,7 +69,7 @@
   from: firmware
   to: ground
   what: USB serial baud, packet framing, one line per SSDV packet plus status words.
-  owners: [batu, open]
+  owners: [batu, arnav]
   status: missing
   spec_hash: ""
   gap: ""
@@ -79,7 +79,7 @@
   from: tracking
   to: ground
   what: Guide camera USB frames ≥10 fps, mono, exposure control from software.
-  owners: [matei, open]
+  owners: [matei, arnav]
   status: draft
   spec_hash: ""
   gap: ""
@@ -89,7 +89,7 @@
   from: ground
   to: tracking
   what: Rate-mode mount commands over SynScan/INDI, command latency, backlash.
-  owners: [matei, open]
+  owners: [matei, arnav]
   status: draft
   spec_hash: ""
   gap: Protocol proof due October.
@@ -119,7 +119,7 @@
   from: ground
   to: transmitter
   what: Command channel for shutter demo and TX on/off.
-  owners: [open, berky]
+  owners: [arnav, berky]
   status: missing
   spec_hash: ""
   gap: ""

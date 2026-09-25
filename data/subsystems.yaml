@@ -125,7 +125,7 @@
 
 - id: ground
   name: Ground software
-  owner: bilal
+  owner: arnav
   icon: laptop
   track: core
   intro:
