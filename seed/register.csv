@@ -1,0 +1,48 @@
+id,parameter,subsystem,value,unit,tag,owner,feeds_into,source,class2_flag,last_changed,note
+SYS-01,Manchester chip rate,System,100,kchip/s,DECIDED,Batu,"SYS-02, RX-03, GS-01",01 §3.1,OK,2026-09-08,
+SYS-02,Coded bit rate,System,50,kbps,DECIDED,Batu,"SYS-03, GS-02",01 §3.1,OK,2026-09-08,Manchester halves chip rate
+SYS-03,Image payload rate,System,~40,kbps,MODELED,Batu,GS-01,01 §3.1,OK,2026-09-08,SSDV 205 of 256 bytes are payload
+SYS-04,C1 stationary link range,System,>=1000,m,DECIDED,Berky,"LNK-01, LNK-02",01 §3.1,RE-CHECK,2026-09-08,Does not close on paper at Class 2 power (see LNK-02)
+SYS-05,C2 tracking link range,System,300 (200-500),m,DECIDED,Berky,"LNK-03, TRK-03",01 §3.1,RE-CHECK,2026-09-08,Same on-axis power as C1 at 200 mrad (see LNK-03)
+SYS-06,C3 indoor demo range,System,50-80,m,DECIDED,Berky,TX-09,01 §3.1,OK,2026-09-08,
+TX-01,Campus laser wavelength,Transmitter,660 (was 850),nm,DECIDED,Berky,"OPT-03, OPT-06, RX-01, SAF-02, TX-03, TX-09, FLT-01",coordinator review 2026-09-24,CHANGED,2026-09-24,Class 2 baseline; not yet in 01/02/05
+TX-02,Campus laser on-state power,Transmitter,<=1 (was <=200),mW,DECIDED,Berky,"LNK-01, TX-04, SAF-01, RX-04",coordinator review 2026-09-24,CHANGED,2026-09-24,Confirm with EHS whether the Class 2 limit applies to on-state or average power under Manchester (3 dB difference)
+TX-03,Diode wavelength drift,Transmitter,0.3,nm/K,ASSUMED,Berky,OPT-03,02 A1,RE-CHECK,2026-09-12,Value was for 850 nm diodes; take from the chosen 660 nm datasheet
+TX-04,Laser driver set current,Transmitter,TBD,mA,TBD,Shabazz,PWR-02,02 A4,RE-CHECK,2026-09-12,A 1 mW diode needs far less current than a 200 mW one; driver topology may simplify
+TX-05,Driver rise/fall time,Transmitter,<1,µs,TARGET,Shabazz,RX-03,02 A4,OK,2026-09-12,Measure with fast photodiode
+TX-06,Narrow beam divergence (full angle),Transmitter,60 (±1.72°),mrad,TARGET,Berky,"LNK-01, TRK-05",01 §4,RE-CHECK,2026-09-08,Narrowing the beam is one way to recover margin but shrinks pointing tolerance
+TX-07,Wide beam divergence (full angle),Transmitter,200 (±5.73°),mrad,TARGET,Berky,"LNK-03, PWR-01",01 §4,OK,2026-09-08,
+TX-08,Diffuser insertion loss,Transmitter,0,dB,ASSUMED,Berky,LNK-03,05 §4,OK,2026-09-12,Measure before/after; directly cuts C2 margin
+TX-09,Indoor attenuation to mimic 1 km,Transmitter,26.0 @50 m / 21.9 @80 m,dB,MODELED,Berky,SYS-06,01 §5.3,CHANGED,2026-09-08,At 1 mW almost no attenuation is needed; re-derive after C1 target is settled
+OPT-01,Telescope aperture,Optics,130,mm,DECIDED,Berky,"LNK-01, OPT-04",01 §7.3,OK,2026-09-12,Capture -53.3 dB at 1 km in a 60 m spot
+OPT-02,Telescope focal length,Optics,650-750,mm,TBD,Berky,"OPT-05, OPT-07",02 C1,OK,2026-09-12,Set by chosen OTA
+OPT-03,Receiver bandpass filter,Optics,850/40 (must change),nm,DECIDED,Berky,"LNK-04, RX-01",02 C3,CHANGED,2026-09-24,An 850 nm filter blocks 660 nm light; pick a filter matched to the 660 nm diode
+OPT-04,Telescope + gear mass,Optics,<=3.5,kg,TARGET,Berky,TRK-01,02 C1,OK,2026-09-12,Weigh everything on the mount
+OPT-05,Receiver field of view,Optics,3.6-7,mrad,MODELED,Berky,TRK-03,05 §4,OK,2026-09-12,Measure by angular scan
+OPT-06,Guide camera,Optics,mono IR-pass (candidate),-,DECIDED,Matei,TRK-05,02 C6,RE-CHECK,2026-09-24,660 nm is visible; IR-pass window no longer required; re-check false bright sources
+OPT-07,Boresight parallax 1 km vs 50 m,Optics,3.8,mrad,MODELED,Berky,TRK-05,01 §7.3,OK,2026-09-08,Recalibrate per range
+RX-01,Detector responsivity,Receiver,0.5 @850 nm,A/W,ASSUMED,Bilal,"LNK-02, RX-04",05 §4,RE-CHECK,2026-09-12,Silicon responds less at 660 nm; take from datasheet then measure
+RX-02,PIN receiver sensitivity @50 kbps,Receiver,-50,dBm,TARGET,Bilal,"LNK-02, LNK-03",05 §4,OK,2026-09-12,Replace with measured BER curve
+RX-03,Receiver bandwidth,Receiver,~100,kHz,TARGET,Bilal,RX-04,02 B2,OK,2026-09-12,Follows chip rate SYS-01
+RX-04,TIA feedback resistor,Receiver,120,kΩ,DECIDED,Bilal,RX-05,02 B2,RE-CHECK,2026-09-12,Signal ~23 dB lower at 1 mW; gain/stability trade must be redone
+RX-05,Photodiode capacitance (BPW34 @3 V),Receiver,25,pF,VERIFIED,Bilal,RX-04,02 B1,OK,2026-09-12,Datasheet value; drives TIA stability
+TRK-01,Mount payload capacity (AZ-GTi),Tracking,5,kg,VERIFIED,Matei,OPT-04,02 C4,OK,2026-09-12,
+TRK-02,Mount command latency,Tracking,<150,ms,TARGET,Matei,TRK-03,05 §4,OK,2026-09-12,Prove in October (Rung 5)
+TRK-03,Residual tracking error @0.3°/s,Tracking,<2,mrad,TARGET,Matei,"OPT-05, GS-01",05 §4,OK,2026-09-12,Must stay inside receiver FOV
+TRK-04,Guide loop rate,Tracking,10,Hz,DECIDED,Matei,GS-01,01 §3.1,OK,2026-09-08,
+TRK-05,Acquisition seed error,Tracking,±2,deg,DECIDED,Matei,TRK-04,01 §3.1,OK,2026-09-08,Guide field ~3°
+PWR-01,C2 carrier speed,Power & field,walking (0.27°/s at 300 m),-,DECIDED,Shabazz,"TRK-02, TRK-03",01 §3.1,OK,2026-09-08,C3 indoor: 0.2 m/s over ±0.5 m
+PWR-02,Campus field power,Power & field,TBD,W,TBD,Shabazz,-,02 C7,OK,2026-09-12,Mount + laptop + camera + TX
+LNK-01,C1 received power at 1 km (on-state),Link,-58.8 (was -35.8),dBm,MODELED,Berky,LNK-02,01 §5.1 minus 23 dB,CHANGED,2026-09-25,Same beam and losses; 1 mW is 23 dB below 200 mW
+LNK-02,C1 margin at 1 km,Link,≈ -9 (was ~+14),dB,MODELED,Berky,SYS-04,01 §5.1,CHANGED,2026-09-25,Link does not close on paper; worse once lower 660 nm responsivity is included
+LNK-03,C2 margin at 300 m / 200 mrad,Link,≈ -9 (was ~+14) minus diffuser loss,dB,MODELED,Berky,SYS-05,01 §5.2,CHANGED,2026-09-25,Same spot size as C1 so same on-axis power
+LNK-04,Atmosphere + RX optics + obstruction,Link,4.5,dB,ASSUMED,Berky,LNK-01,01 §5.1,OK,2026-09-08,Replace with outdoor runs vs range
+SAF-01,Campus laser class,Safety,Class 2 (was 3B),-,DECIDED,Berky,"SAF-02, SAF-03",coordinator review 2026-09-24,CHANGED,2026-09-24,No EHS permission needed per coordinator; outdoor projection still assessed under CAR 601.21
+SAF-02,Protective eyewear,Safety,OD 4+ @800-900 nm (spec for 850),-,DECIDED,Berky,BUD-01,02 H7,RE-CHECK,2026-09-24,Existing spec does not match 660 nm; confirm Class 2 requirement with EHS
+SAF-03,Class 3B upgrade decision,Safety,November (gated on EHS registration with Zhang as PI),-,DECIDED,Berky,"TX-01, TX-02",coordinator review 2026-09-24,CHANGED,2026-09-24,
+BUD-01,Campus budget,Project,~700 (was ~4600 incl. flight),CAD,DECIDED,Berky,-,coordinator review 2026-09-24,CHANGED,2026-09-24,No used parts from eBay/Kijiji/FB Marketplace
+GS-01,Acceptance panel metrics,Ground software,pre/post-FEC BER; loss; goodput; outage; reacq time; tracking error,-,DECIDED,R6 (open),-,01 §7.5,OK,2026-09-08,
+GS-02,C1 acceptance BER,Ground software,<=1e-5 post-FEC over >=1e7 bits,-,DECIDED,R6 (open),-,01 §14,OK,2026-09-08,
+FLT-01,Flight laser (E-track),Flight,2 W / 850 nm / Class 4,-,DECIDED,Berky,"FLT-02, OPT-03",01 §5.4,RE-CHECK,2026-09-07,Campus now 660 nm and flight 850 nm: filter and detector work will not transfer directly
+FLT-02,APD sensitivity @50 / 5 kbps (E-track),Flight,-60 / -65,dBm,TARGET,Bilal,-,05 §4,OK,2026-09-07,
+FLT-03,Payload mass (E-track),Flight,860 of 1100,g,MODELED,Shabazz,-,05 §4,OK,2026-09-07,
