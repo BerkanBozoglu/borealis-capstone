@@ -7,9 +7,9 @@
 
 - id: bilal
   name: Bilal
-  role: Receiver, RF, PCB (R2)
+  role: Receiver, RF, PCB (R2); ground software owner
   github: ""
-  subsystems: [receiver]
+  subsystems: [receiver, ground]
 
 - id: batu
   name: Batu
