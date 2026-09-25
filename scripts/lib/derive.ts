@@ -76,23 +76,33 @@ export function computeSubsystems(
     const myRows = raw.register.filter((r) => r.subsystem === s.id);
     const rowIds = new Set(myRows.map((r) => r.id));
     const myIfaces = raw.interfaces.filter((i) => touches(i.id, s.id, ifaces, i.from));
-    const reasons: string[] = [];
+    // broken (red): a lint error, or one of the health checks listed in
+    // site.yaml broken_checks, on one of this subsystem's rows.
+    // re-check (amber): any other warning on its rows, a stale row, or an
+    // interface touching it that is not agreed.
+    const brokenCodes = new Set(raw.site.broken_checks ?? []);
+    const broken: string[] = [];
+    const recheck: string[] = [];
     for (const f of findings) {
       const hit = f.ids.filter((id) => rowIds.has(id));
-      if (hit.length) reasons.push(`${hit.join(', ')}: ${f.message}`);
+      if (!hit.length) continue;
+      (f.level === 'error' || brokenCodes.has(f.code) ? broken : recheck).push(`${hit.join(', ')}: ${f.message}`);
     }
     for (const i of myIfaces) {
-      if (ifaces[i.id].status === 'missing') reasons.push(`${i.id} interface is missing`);
+      const st = ifaces[i.id].status;
+      if (st !== 'agreed') recheck.push(`${i.id} interface is ${st}`);
     }
     const stale = myRows.filter((r) => rows[r.id]?.stale).map((r) => r.id);
+    if (stale.length) recheck.push(`${stale.length} stale row${stale.length === 1 ? '' : 's'}: ${stale.join(', ')}`);
     const confidence: Partial<Record<Tag, number>> = {};
     for (const t of TAGS) {
       const n = myRows.filter((r) => r.tag === t).length;
       if (n) confidence[t] = n;
     }
     out[s.id] = {
-      status: reasons.length ? 'broken' : stale.length ? 'recheck' : 'ok',
-      reasons,
+      status: broken.length ? 'broken' : recheck.length ? 'recheck' : 'ok',
+      broken_reasons: broken,
+      recheck_reasons: recheck,
       confidence,
       rows: myRows.map((r) => r.id),
       parts: raw.parts.filter((p) => p.subsystem === s.id).map((p) => p.id),

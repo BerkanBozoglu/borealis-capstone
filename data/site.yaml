@@ -17,6 +17,13 @@ recent_days: 14          # "changed in last 14 days" filter
 tbd_max_age_days: 30     # warn on TBD rows older than this
 recent_commits: 10       # map page "recent changes"
 
+# Subsystem status. broken (red) = a lint error, or one of these health
+# checks failing on one of its rows. Everything else that needs attention
+# (other warnings, stale rows, interfaces not agreed) is re-check (amber).
+broken_checks:
+  - c1-margin-negative   # link margin below 0 with committed values
+  - filter-passband      # filter passband does not contain the laser wavelength
+
 # The four workflow rules, verbatim from 07 §3.
 workflow_cite: 07 §3
 workflow_rules:

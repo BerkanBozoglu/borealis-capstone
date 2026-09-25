@@ -94,7 +94,7 @@ function ladder(ctx: Ctx): string {
   const rungs = visible(ctx, data.milestones.rungs);
   const current = rungs.find((r) => r.status !== 'passed');
   const steps = rungs.map((r) => {
-    const st = r.status === 'passed' ? 'ok' : r === current ? (r.blocked_by.length ? 'broken' : 'recheck') : null;
+    const st = r.status === 'passed' ? 'ok' : r === current ? 'recheck' : null;
     return `<li class="rung ${r === current ? 'current' : ''} rung-${r.status}"${trackAttr(r.track)} title="${esc(r.cite)}">
       <span class="rung-n num">${r.n}</span><span>${esc(r.name)}</span>${st ? mark(st, r.status === 'passed' ? 'passed' : r.status.replace('_', ' ')) : `<span class="muted small">${esc(r.status.replace('_', ' '))}</span>`}
     </li>`;
@@ -110,7 +110,10 @@ function ladder(ctx: Ctx): string {
       const i = data.interfaces.find((x) => x.id === id);
       return i ? `<li>${ifaceChip(ctx, id)} ${esc(i.what)}</li>` : `<li>${esc(id)}</li>`;
     }).join('');
-    blockers = `<div class="small"><b>Rung ${current.n} (${esc(current.name)})</b> ${current.blocked_by.length ? `is blocked by:<ul class="plain">${items}</ul>` : 'has no recorded blockers.'} ${cite(current.cite)}</div>`;
+    const notes = (current.blocked_by_notes ?? []).map((n) => `<li>${mark('recheck', 'before')} ${esc(n)}</li>`).join('');
+    blockers = `<div class="small"><b>Rung ${current.n} (${esc(current.name)})</b> ${cite(current.cite)}
+      ${current.proves ? `<div class="muted">Proves: ${esc(current.proves)}${current.log ? ` · log ${esc(current.log)}` : ''}</div>` : ''}
+      ${items || notes ? `<div>Blocked by:</div><ul class="plain">${items}${notes}</ul>` : '<div>No recorded blockers.</div>'}</div>`;
   }
   return `<section class="card"><h2>Test ladder <span class="muted small">never skip a rung</span></h2><ol class="ladder">${steps}</ol>${blockers}</section>`;
 }

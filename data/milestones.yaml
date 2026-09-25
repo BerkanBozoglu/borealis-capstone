@@ -21,44 +21,81 @@ dates:
     name: Final report
     cite: 01 §2
 
-# Test ladder (never skip a rung). Rungs as set for the dashboard (07 Appendix);
-# 04 §1 numbers them differently (8 rungs) — see cite on each rung.
+# Test ladder, 04 §1 (never skip a rung), in that order.
 # status: not_started | in_progress | passed
-# blocked_by: register row ids or interface ids
+# blocked_by: register row ids or interface ids (checked by the build)
+# blocked_by_notes: 04 §1 "What must be true before", verbatim, one per item
+# proves / log: 04 §1 "What we prove" and "Log artifact"
 rungs:
   - n: 1
-    name: Bench through filters
-    cite: 04 §1 rung 1, 04 §2.1
+    name: Bench, controlled path
+    cite: 04 §1 rung 1; 04 §2.1
     track: core
     status: not_started
     blocked_by: [BUD-01, OPT-03]
+    blocked_by_notes: [driver current-limited, eyewear, key switch]
+    proves: LED → PIN → TIA waveform; then attenuated laser; one byte, then one image
+    log: R1-bench-YYYYMMDD
   - n: 2
-    name: Corridor 50–80 m
+    name: Corridor 30–80 m
     cite: 04 §1 rung 2
     track: core
     status: not_started
     blocked_by: []
+    blocked_by_notes: [Rung 1 passed, EHS bench approval, ND attenuation calibrated]
+    proves: first real alignment; focus/boresight procedure; image transfer
+    log: R2-corridor-…
   - n: 3
-    name: Mount tracks a moving LED
-    cite: 04 §1 rung 5, 04 §2.5
-    track: core
-    status: not_started
-    blocked_by: []
-  - n: 4
-    name: Outdoor 200–300 m
+    name: Outdoor 200–300 m, night
     cite: 04 §1 rung 3
     track: core
     status: not_started
     blocked_by: []
-  - n: 5
-    name: ≥1 km
+    blocked_by_notes: [Rung 2, outdoor procedure approved, site permission]
+    proves: outdoor routine; guide loop on the real dot; cold/wind
+    log: R3-outdoor-…
+  - n: 4
+    name: ≥1 km surveyed pair
     cite: 04 §1 rung 4
     track: core
     status: not_started
     blocked_by: []
+    blocked_by_notes: [Rung 3, site package, permitted beam direction]
+    proves: C1 acceptance run (≥10⁷ reference bits)
+    log: R4-range-…
+  - n: 5
+    name: Mount rate test (indoor, moving LED)
+    cite: 04 §1 rung 5; 04 §2.5
+    track: core
+    status: not_started
+    blocked_by: []
+    blocked_by_notes: [AZ-GTi protocol library working]
+    proves: rate-mode command, latency, residual error, backlash
+    log: R5-mount-…
   - n: 6
-    name: Flight gates G1–G5
-    cite: 01 §3.3
+    name: Moving carrier 300 m
+    cite: 04 §1 rung 6; 04 §2.6
+    track: core
+    status: not_started
+    blocked_by: []
+    blocked_by_notes: [Rungs 3+5, 200 mrad diffuser measured]
+    proves: "C2 acceptance: acquire, track, blackout 1/5/15 s, re-acquire"
+    log: R6-track-…
+  - n: 7
+    name: Indoor attenuated 50–80 m
+    cite: 04 §1 rung 7; 04 §2.7
+    track: core
+    status: not_started
+    blocked_by: []
+    blocked_by_notes: [Rungs 4+6, LSO room plan]
+    proves: C3 demo script rehearsal ×3
+    log: R7-lab-…
+  - n: 8
+    name: Field day / hoisted payload (E-track)
+    cite: 04 §1 rung 8
     track: flight
     status: not_started
     blocked_by: []
+    blocked_by_notes: [core complete]
+    proves: G1 pointing demo; deployment drill
+    log: R8-field-…

@@ -164,7 +164,7 @@ export function renderSubsystem(ctx: Ctx, id: string): string {
       <div>Owner ${personLink(data, s.owner)} · ${mark(d.status, STATUS_LABEL[d.status])} · <span class="muted small">track ${esc(s.track)}</span></div>
       <div class="refs small">${s.doc_refs.map((r) => cite(r)).join(' ')} <span class="muted">register ids ${s.register_prefixes.map((p) => `${esc(p)}-*`).join(', ')}</span></div>
     </div></div>
-    ${d.reasons.length ? `<ul class="plain small reasons">${d.reasons.map((r) => `<li>${mark('broken', 'broken')} ${esc(r)}</li>`).join('')}</ul>` : ''}
+    ${d.broken_reasons.length || d.recheck_reasons.length ? `<ul class="plain small reasons">${d.broken_reasons.map((r) => `<li>${mark('broken', 'broken')} ${esc(r)}</li>`).join('')}${d.recheck_reasons.map((r) => `<li>${mark('recheck', 're-check')} ${esc(r)}</li>`).join('')}</ul>` : ''}
     <div class="small ${sinceCount ? 'warn' : 'muted'}">${ctx.lastSeen
       ? `${sinceCount} row${sinceCount === 1 ? '' : 's'} changed since you last looked (${esc(ctx.lastSeen.slice(0, 16).replace('T', ' '))})`
       : 'First visit on this browser: rows changed after today will be highlighted next time.'}</div>

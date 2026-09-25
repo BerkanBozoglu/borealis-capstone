@@ -60,6 +60,7 @@ export interface Interface {
 export interface Milestone { date: string; name: string; cite: string; week_of?: boolean }
 export interface Rung {
   n: number; name: string; cite: string; track: Track; status: RungStatus; blocked_by: string[];
+  blocked_by_notes?: string[]; proves?: string; log?: string;
 }
 
 export interface Approval {
@@ -88,6 +89,8 @@ export interface SiteConfig {
   repo: { owner: string; name: string; branch: string };
   map: { data_path: string[]; support_row: string[]; flight_row: string[] };
   recent_days: number; tbd_max_age_days: number; recent_commits: number;
+  /** warning codes that make a subsystem broken (red); lint errors always do */
+  broken_checks: string[];
   workflow_cite: string;
   workflow_rules: { title: string; text: string }[];
 }
@@ -122,7 +125,7 @@ export interface RowDerived {
 }
 export type SubsystemStatus = 'ok' | 'recheck' | 'broken';
 export interface SubsystemDerived {
-  status: SubsystemStatus; reasons: string[]; confidence: Partial<Record<Tag, number>>;
+  status: SubsystemStatus; broken_reasons: string[]; recheck_reasons: string[]; confidence: Partial<Record<Tag, number>>;
   rows: string[]; parts: string[]; interfaces: string[]; stale: string[];
 }
 export interface InterfaceDerived {
