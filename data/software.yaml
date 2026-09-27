@@ -1,0 +1,43 @@
+# Software shown on the Hardware page, below the hardware (it is not hardware:
+# nothing here counts toward the hardware lane totals).
+# talks_to: part, register or interface ids the module talks to (lint checks them).
+part: F                      # the 02 F entry this section stands for
+owner: arnav                 # R6 ground-software seat
+fallback: [batu, matei]      # 01 §9: if R6 stays open, Batu + Matei build a minimal app
+
+laptop:
+  title: Runs on the laptop
+  cite: 02 F; 01 §7.5
+  owner: arnav
+  libraries:
+    - Python 3.x
+    - pyserial
+    - OpenCV
+    - numpy
+    - PyQt5/6 or web (FastAPI + browser) front end
+    - INDI or SynScan-protocol library for AZ-GTi
+    - SSDV decoder (open-source C via wrapper or Python port)
+    - RS library (reedsolo or via SSDV)
+  modules:
+    - {name: Decoder service, talks_to: [B5, I-07]}
+    - {name: Image assembler, talks_to: []}
+    - {name: Mount controller + state machine, talks_to: [C4, I-09]}
+    - {name: Guide processor, talks_to: [C6]}
+    - {name: Acceptance recorder, talks_to: []}
+    - {name: Transmitter command, talks_to: [I-12]}
+    - {name: Run logging (timestamped CSV/JSONL), talks_to: []}
+
+boards:
+  title: Runs on the boards
+  cite: 01 §6.1; 04 §6
+  owner: batu
+  modules:
+    - {name: SSDV packetizer, note: "256 B packets: 15 B header, 4 B CRC, 32 B RS parity, 205 B payload; the only FEC layer", talks_to: []}
+    - {name: Manchester modulation, note: "100 kchip/s to the laser driver's TTL gate; hardware-timed (timer + DMA), no bit-banged chips", talks_to: [A4, I-01]}
+    - {name: Clock recovery, note: "from STM32 timer capture of the comparator output", talks_to: [B5, I-06]}
+    - {name: Frame sync, note: "SSDV sync/header, then RS decode", talks_to: [B5]}
+    - {name: USB to laptop, note: "packets to Ground Control", talks_to: [I-07]}
+
+# Open choices, with a stage: exploring | narrowing | decided
+choices:
+  - {name: "Ground software front end: PyQt or web", stage: exploring, owner: arnav, options: ["PyQt5/6", "web (FastAPI + browser)"], cite: 02 F}

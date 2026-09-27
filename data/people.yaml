@@ -1,4 +1,4 @@
-# Team (01 §9). github: handle used for issue assignment; "" = not known yet.
+# Team (01 §9; Arnav joined as the sixth member, Sep 2026). github: handle used for issue assignment; "" = not known yet.
 - id: berky
   name: Berkan
   role: Optics, link, systems, safety, project lead (R1)
@@ -8,29 +8,29 @@
 - id: bilal
   name: Bilal
   role: Receiver, RF, PCB (R2)
-  github: ""
+  github: b-samee
   subsystems: [receiver]
 
 - id: batu
   name: Batu
   role: Embedded, firmware (R3)
-  github: ""
+  github: BatuErata
   subsystems: [firmware]
 
 - id: shabazz
   name: Shabazz
   role: Power, structures, field (R4)
-  github: ""
+  github: Sbaz-Khan
   subsystems: [power]
 
 - id: matei
   name: Matei
   role: Controls, tracking (R5)
-  github: ""
+  github: mateimoldovan
   subsystems: [tracking]
 
 - id: arnav
   name: Arnav
-  role: Ground software (R6)
-  github: ""
+  role: Ground software (R6); software, possibly controls (confirm later)
+  github: arnav-singh-ahlawat
   subsystems: [ground]

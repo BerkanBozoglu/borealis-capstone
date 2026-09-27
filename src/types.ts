@@ -55,6 +55,12 @@ export interface Constraints {
   department_has: string[]; department_lacks: string[];
   class2: { wavelength_nm: number; max_power_mw: number; note: string };
 }
+export interface SoftwareModule { name: string; note?: string; talks_to: string[] }
+export interface SoftwareColumn { title: string; cite: string; owner: string; libraries?: string[]; modules: SoftwareModule[] }
+export interface Software {
+  part: string; owner: string; fallback: string[]; laptop: SoftwareColumn; boards: SoftwareColumn;
+  choices: { name: string; stage: string; owner: string; options: string[]; cite: string }[];
+}
 export interface GlossaryTerm { term: string; aliases?: string[]; definition: string; source: string }
 export interface DocSection { file: string; heading: string; anchor: string; level: number; text: string }
 export interface DocPage { file: string; title: string; html: string; sections: DocSection[] }
@@ -137,6 +143,7 @@ export interface RawData {
   constraints: Constraints;
   synonyms: Record<string, string[]>;
   glossary: GlossaryTerm[];
+  software: Software;
   /** line number of each "- id:" in register.yaml, parts.yaml, interfaces.yaml */
   lines: Record<string, Record<string, number>>;
   /** evidence files present under evidence/ (relative paths) */

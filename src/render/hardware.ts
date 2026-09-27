@@ -104,13 +104,36 @@ export function renderPartDetail(ctx: Ctx, p: Part | undefined): string {
   </div>`;
 }
 
+function softwareLink(ctx: Ctx, id: string): string {
+  if (ctx.data.parts.some((p) => p.id === id)) return `<a class="chip" href="#/hardware/${encodeURIComponent(id)}" data-hw-part="${esc(id)}">${esc(id)}</a>`;
+  return touchLink(ctx, id);
+}
+
+export function renderSoftware(ctx: Ctx): string {
+  const sw = ctx.data.software;
+  if (!sw) return '';
+  const name = (id: string) => ctx.data.people.find((p) => p.id === id)?.name ?? id;
+  const col = (c: typeof sw.laptop) => `<div class="sw-col">
+    <h3>${esc(c.title)} <span class="muted small">· ${esc(name(c.owner))}</span> ${cite(c.cite)}</h3>
+    <ul class="plain sw-modules">${c.modules.map((m) => `<li data-sw-module="${esc(m.name)}"><b>${esc(m.name)}</b>${m.note ? `<div class="small muted">${esc(m.note)}</div>` : ''}${m.talks_to.length ? `<div class="chips"><span class="small muted">talks to</span>${m.talks_to.map((t) => softwareLink(ctx, t)).join('')}</div>` : ''}</li>`).join('')}</ul>
+    ${c.libraries?.length ? `<div class="small"><span class="muted">Libraries:</span> ${c.libraries.map(esc).join(' · ')}</div>` : ''}
+  </div>`;
+  const choices = sw.choices.map((c) => `<li><span class="stage stage-${esc(c.stage)}">${esc(c.stage)}</span> <b>${esc(c.name)}</b> <span class="small muted">· ${esc(name(c.owner))} · options: ${c.options.map(esc).join(' / ')}</span> ${cite(c.cite)}</li>`).join('');
+  return `<section class="card software" id="software">
+    <div class="section-head"><h2>Software <span class="muted small">not hardware; not counted in the lanes</span></h2>
+      <div class="small">Owner ${esc(name(sw.owner))} <span class="muted">(fallback ${sw.fallback.map(name).map(esc).join(' + ')}, 01 §9)</span> · <a href="#/s/ground">Ground software page</a></div></div>
+    <div class="sw-grid">${col(sw.laptop)}${col(sw.boards)}</div>
+    ${choices ? `<h3 class="caps">Open choices</h3><ul class="plain">${choices}</ul>` : ''}
+  </section>`;
+}
+
 export function renderHardware(ctx: Ctx, selectedId: string | null): string {
   const { data } = ctx;
   const f = hardwareFilters(ctx.query);
   const hw = data.derived.hardware;
   const core = data.parts.filter((p) => p.track === 'core' && p.availability && p.availability !== 'flight');
   const flight = data.parts.filter((p) => p.availability === 'flight');
-  const unclassified = data.parts.filter((p) => !p.availability);
+  const unclassified = data.parts.filter((p) => !p.availability && p.id !== data.software?.part);
   const firstBlocked = core.find((p) => p.availability === 'blocked');
   const selected = data.parts.find((p) => p.id === selectedId) ?? firstBlocked;
   const sel = selected?.id ?? '';
@@ -164,6 +187,7 @@ export function renderHardware(ctx: Ctx, selectedId: string | null): string {
       </section>
       <section class="lanes">${lanes}</section>
       ${unclassified.length ? `<p class="small muted">Not on this view yet (no availability in parts.yaml): ${unclassified.map((p) => `<a href="#/s/${esc(p.subsystem)}">${esc(p.id)}</a> ${esc(p.name)}`).join(' · ')}</p>` : ''}
+      ${renderSoftware(ctx)}
       <section class="card flight-card" data-track="flight">
         <div class="section-head"><div><b>Flight track</b> · ${flight.length} parts · ${esc(data.site.hardware.flight_note)}</div>
           <a class="btn btn-small" href="${esc(hardwareHash(selectedId, { ...f, flightOpen: !f.flightOpen }))}">${f.flightOpen ? 'Hide' : 'Show'}</a></div>

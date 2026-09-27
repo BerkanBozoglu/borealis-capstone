@@ -137,8 +137,8 @@
       cite: 01 §7.5
     - text: The live acceptance panel reports lock state, goodput, pre- and post-FEC BER, packet loss, re-acquisition time and tracking error together, and every run is logged.
       cite: 01 §3.1, §7.5
-    - text: The seat (R6) is open; if it stays open, Batu and Matei build a minimal ground app with a simplified acceptance panel.
-      cite: 01 §9
+    - text: The seat (R6) was open at Rev D.2 and Arnav has now taken it; the documented fallback is Batu and Matei building a minimal ground app with a simplified acceptance panel.
+      cite: 01 §9; team update, Sep 2026
   gotchas:
     - n: 4
       text: Re-acquisition needs COAST/SEARCH states; a hidden reversing carrier defeats constant-rate coast.

@@ -275,3 +275,12 @@ a.add { color: var(--warn); font-family: var(--mono); }
 .doc table { border-collapse: collapse; font-size: .88rem; margin: .6rem 0; }
 .doc th, .doc td { border: 1px solid var(--border); padding: .3em .5em; vertical-align: top; }
 .doc p, .doc li { max-width: 95ch; }
+
+/* software section (hardware page) */
+.sw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 760px) { .sw-grid { grid-template-columns: 1fr; } }
+.sw-col { border: 1px solid var(--border); border-radius: 6px; padding: .6rem .8rem; background: #0d1628; }
+.sw-modules li { padding: .35em 0; }
+.sw-modules .chips { margin: .15rem 0 0; align-items: center; }
+.stage { font: 600 .7rem var(--mono); border: 1px dashed var(--warn); color: var(--warn); border-radius: 3px; padding: 0 .35em; }
+.stage-decided { border-style: solid; border-color: var(--ok); color: var(--ok); }

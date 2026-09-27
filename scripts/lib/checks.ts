@@ -223,6 +223,20 @@ export function runChecks(raw: RawData, ctx: Ctx): Finding[] {
     warn('over-budget', `Priced core parts total $${total} CAD, over the ~$${budget} CAD budget (constraints.yaml)`, priced.map((p) => p.id));
   }
 
+  // ---- software.yaml ----
+  const sw = raw.software;
+  if (sw) {
+    const partIds = new Set(raw.parts.map((p) => p.id));
+    if (!partIds.has(sw.part)) err('unknown-id', `software.yaml: part "${sw.part}" is not in parts.yaml`);
+    for (const o of [sw.owner, ...sw.fallback, sw.laptop.owner, sw.boards.owner, ...sw.choices.map((c) => c.owner)]) checkOwner('software.yaml', o, []);
+    for (const m of [...sw.laptop.modules, ...sw.boards.modules]) {
+      for (const t of m.talks_to ?? []) {
+        if (!rowIds.has(t) && !ifaceIds.has(t) && !partIds.has(t)) err('unknown-id', `software.yaml ${m.name}: talks_to "${t}" is not a part, register or interface id`);
+      }
+    }
+    for (const c of sw.choices) checkEnum(`software.yaml choice ${c.name}`, 'stage', c.stage, ['exploring', 'narrowing', 'decided'], []);
+  }
+
   // ---- open items ----
   for (const o of raw.open_items) {
     const w = `open item #${o.n}`;

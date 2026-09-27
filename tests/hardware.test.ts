@@ -108,3 +108,41 @@ describe('hardware page', () => {
     expect(html).toMatch(/class="hs hs-candidate sel\s*"[^>]*data-hw-part="B1"/);
   });
 });
+
+describe('software section', () => {
+  const data = loadSite();
+  const html = renderHardware(ctxFor(data), null);
+  it('renders both columns with every module', () => {
+    expect(html).toContain('Runs on the laptop');
+    expect(html).toContain('Runs on the boards');
+    for (const m of [...data.software.laptop.modules, ...data.software.boards.modules]) expect(html).toContain(`data-sw-module="${m.name}"`);
+  });
+  it('modules link to what they talk to', () => {
+    const block = (name: string) => html.split(`data-sw-module="${name}"`)[1].split('</li>')[0];
+    expect(block('Guide processor')).toContain('href="#/hardware/C6"');
+    expect(block('Mount controller + state machine')).toMatch(/#\/hardware\/C4[\s\S]*#\/interfaces\?id=I-09/);
+    expect(block('Decoder service')).toMatch(/#\/hardware\/B5[\s\S]*#\/interfaces\?id=I-07/);
+    expect(block('Transmitter command')).toContain('#/interfaces?id=I-12');
+  });
+  it('owners: Arnav on the laptop, Batu on the boards; front-end choice is exploring', () => {
+    expect(data.software.laptop.owner).toBe('arnav');
+    expect(data.software.boards.owner).toBe('batu');
+    expect(html).toMatch(/stage-exploring">exploring<\/span> <b>Ground software front end: PyQt or web/);
+  });
+  it('F is not in the lanes or the "not on this view" list, and lane totals are unchanged', () => {
+    expect(html).not.toContain('data-hw-part="F"');
+    expect(html).not.toMatch(/Not on this view yet[^<]*<a href="#\/s\/ground">F</);
+    expect(data.parts.filter((p) => p.track === 'core' && p.availability).length).toBe(23);
+  });
+});
+
+describe('people', () => {
+  it('everyone has a GitHub handle and Arnav owns the ground-software rows and interfaces', () => {
+    const data = loadSite();
+    for (const p of data.people) expect(p.github, p.id).toBeTruthy();
+    expect(data.people.find((p) => p.id === 'arnav')!.github).toBe('arnav-singh-ahlawat');
+    for (const id of ['GS-01', 'GS-02']) expect(data.register.find((r) => r.id === id)!.owner).toBe('arnav');
+    for (const id of ['I-07', 'I-08', 'I-09', 'I-12']) expect(data.interfaces.find((i) => i.id === id)!.owners).toContain('arnav');
+    expect(data.people.some((p) => p.id === 'open')).toBe(false);
+  });
+});
