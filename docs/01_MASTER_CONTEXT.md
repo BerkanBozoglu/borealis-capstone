@@ -210,7 +210,7 @@ If R6 stays open: Batu + Matei build a minimal ground app; acceptance panel simp
 - DLR CAPANINA/STROPEX: 1.25 Gbps stratospheric optical downlink, 1550 nm.
 - Google Loon: 130 Mbps balloon-to-balloon, >100 km, 20 km.
 - FHNW (Switzerland): HAB FSO payload, 2-axis servo gimbal, 38.5 km test flight.
-- UBC Okanagan "StratoLaser" capstone (Holzman, Integrated Optics Lab): targeting and tracking system for stratospheric laser links; flights via Stratoneers club/CSA; no public report of an optical link closed from altitude.
+- UBC Okanagan "StratoLaser" capstone (Integrated Optics Lab): targeting and tracking system for stratospheric laser links; flights via Stratoneers club/CSA; no public report of an optical link closed from altitude.
 - MIT CLICK-A: 10 Mbps to a 28 cm portable ground station; PULSE-A (UChicago): undergraduate optical CubeSat, launch ~2027.
 - IEEE Concordia / Lumentum project: benchtop TX/RX optical interconnect between microcontrollers — fixed alignment, short range; a resource and possible parts contact, not a competitor.
 - **Positioning:** not "first"; the differentiator is range (~1 km, −53 dB capture) and autonomous acquisition/tracking of a moving transmitter. Campus link is categorically beyond a benchtop interconnect; the balloon adds altitude and regulatory risk, not engineering novelty.

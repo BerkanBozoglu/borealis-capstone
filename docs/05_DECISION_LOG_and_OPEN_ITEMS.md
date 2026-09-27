@@ -57,8 +57,8 @@
 | 12 | Guide camera IR window verification | acquisition | check spec/measure | Matei | Sept |
 | 13 | Certified LoRa module and mode | RSS-247 | select | Bilal | Oct |
 | 14 | t_acq / t_reacq targets | acceptance | propose after Rung 5/6 | Matei | Nov |
-| 15 | CAN-SBX dates + laser policy | Flight 2 | email cansbx@seds.ca | Berkan | Sept |
-| 16 | Co-supervisor (controls) | tracking review | ask Zhang for intro | Berkan | Sept |
+| 15 | CAN-SBX dates + laser policy | Flight 2 | email the CAN-SBX program | Berkan | Sept |
+| 16 | Co-supervisor (controls) | tracking review | ask the Supervisor for intro | Berkan | Sept |
 | 17 | Thermal model + L91 cold capacity (E-track) | G3 | model; test | Shabazz | Dec |
 | 18 | APD part selection with 850 nm curves (E-track) | G2 | choose; order one | Bilal | Sept/Nov |
 | 19 | University insurance/field-ops for any flight | G5 | inquire | Berkan | Oct |
@@ -109,8 +109,8 @@
 ## APPENDIX A — Proposal form as submitted (2026-09-14), for reference
 
 **Title:** Borealis: Free-space Optical Data Link with Autonomous Tracking
-**Students:** Berkan Bozoglu, Bilal Samee, Batu Erata, Shabazz Khan, Matei Moldovan (+1 open)
-**Supervisor:** Prof. John Xiupu Zhang, ECE Photonics Research Group (agreed)
+**Students:** Berkan, Bilal, Batu, Shabazz, Matei (+1 open)
+**Supervisor:** the Supervisor, ECE Photonics Research Group (agreed)
 
 **Description (summary):** industry moving to laser comms; problem is closing an optical link between a moving airborne platform and a ground receiver with affordable hardware: aiming from a swinging platform, collecting light through a telescope at distance, recovering clean bits from photocurrent, staying pointed at a moving target; stratospheric environment and laser/aviation regulation. Two review rounds; UBCO precedent; independent design emphasizing transmitter payload and receiver electronics. Core (graded) C1 stationary 1 km link; C2 autonomous tracking on a fixtured carrier with wide beam and shutter blackouts; C3 in-lab attenuated demo; C4 ground software with acceptance panel; C5 documentation and safety file. Extended (gated): E1 payload; E2 APD receiver; E3 qualification; E4 low-altitude airborne test; E5 balloon after G1–G5; CAN-SBX uncommitted. "The balloon flight is the goal we are building toward, and we intend to attempt it. The gates exist so that our grade does not depend on weather or on Transport Canada's response times, not to hedge the ambition."
 

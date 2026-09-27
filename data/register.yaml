@@ -567,7 +567,7 @@
 - id: SAF-03
   name: Class 3B upgrade decision
   subsystem: safety
-  value: November (gated on EHS registration with Zhang as PI)
+  value: November (gated on EHS registration with the Supervisor as PI)
   unit: "-"
   tag: DECIDED
   owner: berky

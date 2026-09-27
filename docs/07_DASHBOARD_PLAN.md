@@ -83,7 +83,7 @@ The numbers live in one file in the team's GitHub repo. The site rebuilds itself
 5. **Onboarding.** A sixth member is joining. Every subsystem page opens with plain-language "Start here" and the gotchas that bit previous revisions.
 6. **Public vs private** is a real decision with real consequences for hosting (D7). Decide before Phase 0.
 7. **Two truths.** The register and 01_MASTER_CONTEXT must have a precedence rule (D10) or they will drift.
-8. **The Class 2 problem is not a dashboard problem.** The sandbox shows that C1 at 1 mW/660 nm is about −10 dB on paper and that narrowing to 20 mrad at 5 kbps gets it to about +5 dB (modeled; pointing tolerance drops to ±0.57°). C2 only closes at around 100 m instead of 300 m. That decision is Berky's and Zhang's, before Oct 4, and the tool cannot make it.
+8. **The Class 2 problem is not a dashboard problem.** The sandbox shows that C1 at 1 mW/660 nm is about −10 dB on paper and that narrowing to 20 mrad at 5 kbps gets it to about +5 dB (modeled; pointing tolerance drops to ±0.57°). C2 only closes at around 100 m instead of 300 m. That decision is Berky's and the Supervisor's, before Oct 4, and the tool cannot make it.
 
 ---
 

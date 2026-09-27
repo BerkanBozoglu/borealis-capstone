@@ -78,8 +78,8 @@ export function proposalUrl(ctx: Ctx, st: SandboxState): string {
   const b = runModel(data, st.committed);
   const who = whoHasToLook(data, st.changed);
   const share = ctx.baseUrl + sandboxHash(data, st.values, null);
-  const handle = (p: string) => data.people.find((x) => x.id === p)?.github;
-  const nameAt = (p: string) => (handle(p) ? `@${handle(p)}` : personName(data, p));
+  // names only: GitHub usernames never reach the browser (the owner assigns the issue)
+  const nameAt = (p: string) => personName(data, p);
   const lines = [
     'Proposal from the dashboard sandbox. All outputs are MODELED.', '',
     `Share link: ${share}`, '',
@@ -94,13 +94,11 @@ export function proposalUrl(ctx: Ctx, st: SandboxState): string {
     `Decide (owners of changed inputs): ${who.decide.map((w) => `${nameAt(w.person)} (${w.ids.join(', ')})`).join('; ') || '—'}`,
     `Re-check if accepted (owners of rows these feed): ${who.recheck.map((w) => `${nameAt(w.person)} (${w.ids.join(', ')})`).join('; ') || '—'}`,
   ];
-  const assignees = who.decide.map((w) => handle(w.person)).filter(Boolean).join(',');
   const q: Record<string, string> = {
     title: `Proposal: ${st.changed.map((id) => `${id} ${st.committed[id]} → ${st.values[id]}`).join(', ') || 'no change'}`,
     body: lines.join('\n'),
     labels: 'proposal',
   };
-  if (assignees) q.assignees = assignees;
   return gh(data).newIssue(q);
 }
 

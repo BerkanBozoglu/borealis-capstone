@@ -67,8 +67,8 @@ export const modeled = () => tagChip('MODELED');
 
 // ---------- links ----------
 export function gh(data: SiteData) {
-  const { owner, name, branch } = data.site.repo;
-  const repo = `https://github.com/${owner}/${name}`;
+  const { slug, branch } = data.site.repo;
+  const repo = `https://github.com/${slug}`;
   return {
     repo,
     edit: (file: string) => `${repo}/edit/${branch}/${file}`,
@@ -77,7 +77,7 @@ export function gh(data: SiteData) {
     issue: (n: number) => `${repo}/issues/${n}`,
     issues: `${repo}/issues`,
     newIssue: (q: Record<string, string>) => `${repo}/issues/new?${new URLSearchParams(q).toString()}`,
-    api: `https://api.github.com/repos/${owner}/${name}`,
+    api: `https://api.github.com/repos/${slug}`,
   };
 }
 

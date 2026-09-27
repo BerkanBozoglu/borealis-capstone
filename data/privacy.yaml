@@ -1,0 +1,29 @@
+# Privacy check (scripts/lib/privacy.ts): the build fails if any of these words
+# appears in the generated site (data.json, docs, search index, history, dist/).
+# Team surnames, staff names and GitHub usernames are stored as SHA-256 of the
+# lowercased word only, so this file doesn't publish them. To add a word:
+#   node -e "console.log(require('crypto').createHash('sha256').update('word').digest('hex'))"
+# Email addresses are always blocked.
+blocked_sha256:
+  - fa1cdb2f48ee362ff877f2ad741604b3f74e10aff945ea0e056a5b810094dd42
+  - 02f1d9c6d53c0d8fc82f7515fb99c0b1f2de435e0e85bee4aa51639b5a46fe57
+  - 1d902fd9042eb994f12d824f9f7c8381abc10bd0a9511d3895a6774253479caa
+  - 1ef393f2c0772064cae9403f23e7f8fc6d49bb2939f463f23c4e637231e84da4
+  - 5b372d01b4cc6c4a0d5c7307a11816e1700a82371ce791e2b39c123dff26f2ad
+  - f4d25158ccdd82c2579055b0454efd1ed981a9e670d2d8ff9707f1fa8130ad86
+  - 58b7d46d041447ec29cd075ac94c2ef4c08d939479b8f3669319d0b5f744f1d8
+  - 14bbfb46cb710ab5cf477269d856fc79d4d5b31cfbe466a37a43b1537e0693a4
+  - ff120a56a2bd4c3774651876e063c5ed5a03db5c9bee29bff2dafbecc60203ee
+  - 9949a9388d68aabe361e655601486cac037dde5e1fe5171226124d24bee29877
+  - cd529fdaa434eb37f086124b7e74225e394a4aec3cddbf41c60ce0cf39508765
+  - 96d9632f363564cc3032521409cf22a852f2032eec099ed5967c0d000cec607a
+  - e814db162565e716fd8b0d90213fd17a2be196132b84e1cb9b78bde5ca773a26
+  - 84e278fed7a3a6ada4e6d7b6ab84f12f2e4409d8f08b95f8695b13ad4ec3df4c
+  - bee50308fae739c9192c279887bfdf600b20ff8a5982b57f185427119d33795b
+  - 47a6245d9effb01c6b67db10b5d9aaa83baf01ea8b852b62f4b1429811febb88
+# Strings removed before scanning. The repository's own address contains the
+# owner's account name; it can't be avoided in Edit-on-GitHub links until the
+# repo moves to an organisation.
+allow:
+  - BerkanBozoglu/borealis-capstone
+  - berkanbozoglu.github.io

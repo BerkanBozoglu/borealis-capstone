@@ -283,7 +283,7 @@
   what_it_does: "Measures the actual light power. Every attenuation and sensitivity number in the project depends on it."
   need_to_know:
     - "02 calls it the single most important instrument"
-    - "The coordinator said the department has no optical test equipment: borrow one (ask Zhang’s photonics lab) or buy one"
+    - "The coordinator said the department has no optical test equipment: borrow one (ask the Supervisor’s photonics lab) or buy one"
     - "Must be calibrated at the laser’s wavelength"
   touches: [RX-02, TX-09]
   source: "borrow or buy"

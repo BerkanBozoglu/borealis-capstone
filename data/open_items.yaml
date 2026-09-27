@@ -159,7 +159,7 @@
 - n: 15
   item: CAN-SBX dates + laser policy
   why: Flight 2
-  closing_action: email cansbx@seds.ca
+  closing_action: email the CAN-SBX program
   owners: [ berky ]
   due: Sept
   subsystem: flight
@@ -170,7 +170,7 @@
 - n: 16
   item: Co-supervisor (controls)
   why: tracking review
-  closing_action: ask Zhang for intro
+  closing_action: ask the Supervisor for intro
   owners: [ berky ]
   due: Sept
   subsystem: tracking

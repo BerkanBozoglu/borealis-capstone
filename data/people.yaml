@@ -1,6 +1,6 @@
 # Team (01 §9; Arnav joined as the sixth member, Sep 2026). github: handle used for issue assignment; "" = not known yet.
 - id: berky
-  name: Berkan
+  name: Berky
   role: Optics, link, systems, safety, project lead (R1)
   github: BerkanBozoglu
   subsystems: [optics, transmitter, safety, flight]

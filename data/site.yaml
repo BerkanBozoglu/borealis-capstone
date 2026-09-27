@@ -89,7 +89,7 @@ doc_superseded:
 
 # BOM export header (#/bom). Blank fields are exported blank and flagged, never guessed.
 bom:
-  team_name: ""          # TODO: the team name as registered with the capstone office
+  team_name: Team BOREALIS
   project: BOREALIS
-  designed_by: ""        # TODO
-  revision: ""           # TODO, e.g. A
+  designed_by: Team BOREALIS
+  revision: A

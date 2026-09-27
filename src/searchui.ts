@@ -2,7 +2,7 @@
 import type MiniSearch from 'minisearch';
 import { GROUPS, groupHits, loadEngine, search, whyMatched, type Hit, type SearchDoc, type SearchOutcome } from './search.ts';
 import type { SiteData } from './types.ts';
-import { esc } from './render/util.ts';
+import { esc, gh } from './render/util.ts';
 
 let engine: MiniSearch<SearchDoc> | null = null;
 let loading: Promise<void> | null = null;
@@ -129,7 +129,7 @@ function paint(state?: 'loading') {
   if (state === 'loading') { results.innerHTML = '<p class="muted small">Loading index…</p>'; preview.innerHTML = ''; return; }
   if (!hits.length) {
     results.innerHTML = `<div class="pal-empty"><p>Nothing in the dashboard matches '${esc(q)}'.</p>
-      <p class="small muted">If the team calls something by another name, add it to that part's <code>aliases</code> in data/parts.yaml or to data/synonyms.yaml (<a href="https://github.com/${esc(data.site.repo.owner)}/${esc(data.site.repo.name)}/edit/${esc(data.site.repo.branch)}/data/synonyms.yaml" target="_blank" rel="noopener">Edit on GitHub</a>).</p>
+      <p class="small muted">If the team calls something by another name, add it to that part's <code>aliases</code> in data/parts.yaml or to data/synonyms.yaml (<a href="${esc(gh(data).edit('data/synonyms.yaml'))}" target="_blank" rel="noopener">Edit on GitHub</a>).</p>
       <p class="small"><a href="${esc(data.site.project_assistant_url)}" target="_blank" rel="noopener">Ask the project assistant</a></p></div>`;
     preview.innerHTML = '';
     return;

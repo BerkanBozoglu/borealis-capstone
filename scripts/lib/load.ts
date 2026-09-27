@@ -69,6 +69,7 @@ export function loadRaw(read: Reader, evidenceFiles: string[] = []): RawData {
   }
   for (const i of data.interfaces ?? []) { i.gap = i.gap ?? ''; i.blocks = i.blocks ?? ''; i.spec_hash = String(i.spec_hash ?? ''); }
   for (const p of data.parts ?? []) { p.fields = p.fields ?? []; p.id = String(p.id); }
+  if (data.site?.repo) data.site.repo.slug = `${data.site.repo.owner}/${data.site.repo.name}`;
   data.lines = lines;
   data.evidence_files = evidenceFiles;
   return data;

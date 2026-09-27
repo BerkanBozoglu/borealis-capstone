@@ -1,6 +1,7 @@
 // Interfaces, register and inbox pages.
 import { INTERFACE_STATUSES, TAGS, type RegisterRow } from '../types.ts';
 import { recheckBox } from './subsystem.ts';
+import { handleKey } from '../privacy.ts';
 import { choiceList } from './choices.ts';
 import { dueWithin } from '../choices.ts';
 import {
@@ -114,14 +115,15 @@ export function renderInbox(ctx: Ctx, person: string | null): string {
   let issuesHtml: string;
   if (ctx.issues === null) {
     issuesHtml = `<p class="muted small">GitHub issues could not be loaded (offline, private repo or rate limit). <a href="${esc(gh(data).issues)}" target="_blank" rel="noopener">Open issues on GitHub</a></p>`;
-  } else if (!p.github) {
+  } else if (!p.github_key && !p.github) {
     issuesHtml = `<p class="muted small">${esc(p.name)} has no GitHub handle in data/people.yaml, so assigned issues can't be matched.</p>`;
   } else {
-    const mine = ctx.issues.filter((i) => i.state === 'open' && i.assignees.some((a) => a.login.toLowerCase() === p.github.toLowerCase())
+    const key = p.github_key ?? handleKey(p.github!);
+    const mine = ctx.issues.filter((i) => i.state === 'open' && i.assignees.some((a) => handleKey(a.login) === key)
       && i.labels.some((l) => l.name === 'proposal' || l.name === 're-check'));
     issuesHtml = mine.length
       ? `<ul class="plain">${mine.map((i) => `<li><a href="${esc(i.html_url)}" target="_blank" rel="noopener">#${i.number}</a> ${esc(i.title)} <span class="small muted">${i.labels.map((l) => esc(l.name)).join(', ')}</span></li>`).join('')}</ul>`
-      : `<p>${mark('ok', 'none')} No open proposal or re-check issues assigned to @${esc(p.github)}.</p>`;
+      : `<p>${mark('ok', 'none')} No open proposal or re-check issues assigned to ${esc(p.name)}.</p>`;
   }
   return `<section class="card"><h1>Inbox: ${esc(p.name)}</h1><div>${picker}</div><p class="small muted">${esc(p.role)}</p></section>
     <section class="card"><h2>Stale rows you own <span class="muted small">${stale.length}</span></h2>${staleHtml}</section>

@@ -14,7 +14,13 @@ export const RUNG_STATUSES = ['not_started', 'in_progress', 'passed'] as const;
 export type RungStatus = (typeof RUNG_STATUSES)[number];
 export const CONDITION_FIELDS = ['range_m', 'power_dbm', 'attenuation_db', 'bandwidth_khz', 'temperature_c', 'evidence'] as const;
 
-export interface Person { id: string; name: string; role: string; github: string; subsystems: string[] }
+export interface Person {
+  id: string; name: string; role: string; subsystems: string[];
+  /** GitHub username: in people.yaml for issue assignment only, never shipped to the browser */
+  github?: string;
+  /** shipped instead of github: handleKey(login), for matching issue assignees */
+  github_key?: string;
+}
 
 export interface CitedText { text: string; cite: string; superseded_by?: string[] }
 export interface Gotcha { n: number; text: string; superseded_by?: string[] }
@@ -144,7 +150,7 @@ export interface ModelConfig {
 
 export interface SiteConfig {
   title: string;
-  repo: { owner: string; name: string; branch: string };
+  repo: { owner?: string; name?: string; slug: string; branch: string };
   map: { data_path: string[]; support_row: string[]; flight_row: string[] };
   recent_days: number; tbd_max_age_days: number; recent_commits: number;
   /** warning codes that make a subsystem broken (red); lint errors always do */

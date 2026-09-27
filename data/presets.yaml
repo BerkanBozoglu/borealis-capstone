@@ -22,7 +22,7 @@
   name: Class 2 recovery option (20 mrad, 5 kbps)
   baseline: false
   cite: 07 §5 item 8
-  note: Narrowing to 20 mrad at 5 kbps gets C1 to about +5 dB (modeled); pointing tolerance drops to ±0.57°. A decision for Berky and Zhang, not the tool.
+  note: Narrowing to 20 mrad at 5 kbps gets C1 to about +5 dB (modeled); pointing tolerance drops to ±0.57°. A decision for Berky and the Supervisor, not the tool.
   values:
     TX-02: 1
     TX-01: 660

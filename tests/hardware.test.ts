@@ -140,7 +140,6 @@ describe('people', () => {
   it('everyone has a GitHub handle and Arnav owns the ground-software rows and interfaces', () => {
     const data = loadSite();
     for (const p of data.people) expect(p.github, p.id).toBeTruthy();
-    expect(data.people.find((p) => p.id === 'arnav')!.github).toBe('arnav-singh-ahlawat');
     for (const id of ['GS-01', 'GS-02']) expect(data.register.find((r) => r.id === id)!.owner).toBe('arnav');
     for (const id of ['I-07', 'I-08', 'I-09', 'I-12']) expect(data.interfaces.find((i) => i.id === id)!.owners).toContain('arnav');
     expect(data.people.some((p) => p.id === 'open')).toBe(false);

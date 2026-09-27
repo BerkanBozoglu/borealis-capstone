@@ -39,7 +39,7 @@ LNK-03,C2 margin at 300 m / 200 mrad,Link,≈ -9 (was ~+14) minus diffuser loss,
 LNK-04,Atmosphere + RX optics + obstruction,Link,4.5,dB,ASSUMED,Berky,LNK-01,01 §5.1,OK,2026-09-08,Replace with outdoor runs vs range
 SAF-01,Campus laser class,Safety,Class 2 (was 3B),-,DECIDED,Berky,"SAF-02, SAF-03",coordinator review 2026-09-24,CHANGED,2026-09-24,No EHS permission needed per coordinator; outdoor projection still assessed under CAR 601.21
 SAF-02,Protective eyewear,Safety,OD 4+ @800-900 nm (spec for 850),-,DECIDED,Berky,BUD-01,02 H7,RE-CHECK,2026-09-24,Existing spec does not match 660 nm; confirm Class 2 requirement with EHS
-SAF-03,Class 3B upgrade decision,Safety,November (gated on EHS registration with Zhang as PI),-,DECIDED,Berky,"TX-01, TX-02",coordinator review 2026-09-24,CHANGED,2026-09-24,
+SAF-03,Class 3B upgrade decision,Safety,November (gated on EHS registration with the Supervisor as PI),-,DECIDED,Berky,"TX-01, TX-02",coordinator review 2026-09-24,CHANGED,2026-09-24,
 BUD-01,Campus budget,Project,~700 (was ~4600 incl. flight),CAD,DECIDED,Berky,-,coordinator review 2026-09-24,CHANGED,2026-09-24,No used parts from eBay/Kijiji/FB Marketplace
 GS-01,Acceptance panel metrics,Ground software,pre/post-FEC BER; loss; goodput; outage; reacq time; tracking error,-,DECIDED,R6 (open),-,01 §7.5,OK,2026-09-08,
 GS-02,C1 acceptance BER,Ground software,<=1e-5 post-FEC over >=1e7 bits,-,DECIDED,R6 (open),-,01 §14,OK,2026-09-08,

@@ -86,6 +86,11 @@ This repository is public. **No emails, phone numbers, or regulatory
 correspondence in this repo** — not in data files, not in evidence, not in
 commit messages. Approvals are tracked here only as `not_sent · sent · received`.
 
+- Team members appear by first name only; staff (supervisor, coordinators, technician) by role only.
+- GitHub usernames stay in `data/people.yaml` for assigning issues and are never shipped to the site.
+- The build fails if a team surname, a staff name, a GitHub username or an email address appears in
+  what the site ships (`data/privacy.yaml` holds the blocked words as hashes only).
+
 ## Setup notes (one-time)
 
 - GitHub Pages: Settings → Pages → Source: **GitHub Actions**.

@@ -7,7 +7,7 @@
   date: ""
   subsystem: safety
   track: core
-  note: Class 3B upgrade decision is November, gated on EHS registration with Zhang as PI (register SAF-03).
+  note: Class 3B upgrade decision is November, gated on EHS registration with the Supervisor as PI (register SAF-03).
   cite: 01 §8; 05 §3 #2; register SAF-03
 
 - id: AP-02

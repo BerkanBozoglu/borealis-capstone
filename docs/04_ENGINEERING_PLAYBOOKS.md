@@ -37,7 +37,7 @@ Pass: image received; BER curve logged; TIA stable at all gain settings used.
 
 ### 2.3 Transmitter beam measurement
 - Far-field: project onto a screen at ≥10 m (indoors, attenuated), image with the IR camera, fit the spot; compute full-angle at 50% and at 10% intensity in X and Y. Repeat with the diffuser. Record insertion loss with H1 (power before/after).
-- Wavelength: if a spectrometer is available (Zhang/Kahrizi labs), measure λ at 20 °C and after 10 min warm-up; otherwise measure power through the 850/40 filter vs without (transmission ≥80% means the diode is inside the passband).
+- Wavelength: if a spectrometer is available (the Supervisor's lab or another ECE photonics lab), measure λ at 20 °C and after 10 min warm-up; otherwise measure power through the 850/40 filter vs without (transmission ≥80% means the diode is inside the passband).
 - Driver: rise/fall, overshoot, modulation depth (residual light in the "off" chip must be <5% of on-state).
 
 ### 2.4 Focus and boresight at each range (do before every session)

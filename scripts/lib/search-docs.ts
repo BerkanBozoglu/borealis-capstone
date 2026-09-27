@@ -141,7 +141,7 @@ export function searchDocs(data: SiteData, docs: DocPage[]): SearchDoc[] {
       id: `person:${p.id}`, kind: 'person', ref: p.name, title: p.role,
       body: `owns ${p.subsystems.join(', ')} · ${data.register.filter((r) => r.owner === p.id).map((r) => r.id).join(' ')}`,
       owner: p.name, status: '', source: 'people.yaml',
-      link: `#/inbox/${p.id}`, compact: compactField(p.id, p.name, p.github),
+      link: `#/inbox/${p.id}`, compact: compactField(p.id, p.name),
     });
   }
   const glossaryDoc = docs.find((d) => d.sections.some((s) => /glossary/i.test(s.heading)));

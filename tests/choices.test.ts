@@ -224,7 +224,7 @@ describe('BOM export', () => {
   });
   it('CSV follows the Capstone Manual column order, blanks stay blank, header block first', () => {
     const csv = bomCsv(bom).split('\r\n');
-    expect(csv[0]).toBe('Team,');
+    expect(csv[0]).toBe('Team,Team BOREALIS');
     expect(csv[1]).toBe('Project,BOREALIS');
     expect(csv[7]).toBe(BOM_COLUMNS.join(','));
     const nucleo = csv.find((l) => l.includes('NUCLEO-H753ZI'))!;
