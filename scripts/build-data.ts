@@ -23,7 +23,8 @@ if (errors.length) {
 }
 
 const subsystemOf = new Map(raw.register.map((r) => [r.id, r.subsystem]));
-const history = publicHistory(data, registerHistory('.', 300, (id) => subsystemOf.get(id)));
+const cfg = loadPrivacy('.');
+const history = publicHistory(data, registerHistory('.', 300, (id) => subsystemOf.get(id)), cfg);
 const pub = publicSiteData(data);
 
 mkdirSync('src/generated', { recursive: true });
@@ -36,7 +37,6 @@ const index = JSON.stringify(buildEngine(searchDocs(pub, docs)));
 writeFileSync('src/generated/search-index.json', index);
 
 // privacy: no surnames, staff names, GitHub usernames or emails in anything shipped
-const cfg = loadPrivacy('.');
 const hits = [
   ...scanText(JSON.stringify(pub), 'data.json', cfg), ...scanText(JSON.stringify(history), 'history.json', cfg),
   ...scanText(JSON.stringify(docs), 'docs.json', cfg), ...scanText(index, 'search-index.json', cfg),

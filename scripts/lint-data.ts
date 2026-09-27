@@ -22,7 +22,7 @@ if (!errors.length) {
   const docs = buildDocs(pub.site.search.docs, pub.site.doc_superseded, (id) => `#/register?id=${id}`);
   const shipped: [string, string][] = [
     ['data.json', JSON.stringify(pub)],
-    ['history.json', JSON.stringify(publicHistory(data, registerHistory('.', 300)))],
+    ['history.json', JSON.stringify(publicHistory(data, registerHistory('.', 300), cfg))],
     ['docs.json', JSON.stringify(docs)],
     ['search-index.json', JSON.stringify(buildEngine(searchDocs(pub, docs)))],
   ];

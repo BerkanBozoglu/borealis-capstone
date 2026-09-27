@@ -48,3 +48,14 @@ export function scanDir(dir: string, cfg: PrivacyConfig): PrivacyHit[] {
   }
   return hits;
 }
+
+/** Blank out blocked words and email addresses (used on git history, which can't be rewritten here). */
+export function redact(text: string, cfg: PrivacyConfig): string {
+  const blocked = new Set(cfg.blocked_sha256);
+  return text
+    .replace(EMAIL, '[email removed]')
+    .replace(/[\p{L}\p{N}]+/gu, (run) => {
+      const parts = run.split(/(?<=\p{Ll})(?=\p{Lu})/u);
+      return blocked.has(sha256(run.toLowerCase())) || parts.some((p) => blocked.has(sha256(p.toLowerCase()))) ? '[name removed]' : run;
+    });
+}

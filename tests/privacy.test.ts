@@ -23,6 +23,12 @@ describe('privacy check', () => {
     expect(scanText('JaneTestsurname', 'x', test).length).toBe(1);
     expect(scanText('by Jane', 'x', test)).toEqual([]);
   });
+  it('history text is redacted, since git history keeps old values', async () => {
+    const { redact } = await import('../scripts/lib/privacy.ts');
+    expect(redact('gated on registration with Testsurname as PI; mail a@b.org', test)).toBe('gated on registration with [name removed] as PI; mail [email removed]');
+    const { registerHistory } = await import('../scripts/lib/history.ts');
+    expect(scanText(JSON.stringify(publicHistory(data, registerHistory('.', 300), cfg)), 'history', cfg)).toEqual([]);
+  });
   it('catches email addresses', () => expect(scanText('write to someone@example.org', 'x', test)[0].kind).toBe('email'));
   it('ignores allowed strings (the repository address)', () => expect(scanText('github.com/Owner/repo', 'x', { blocked_sha256: [sha256('owner')], allow: ['Owner/repo'] })).toEqual([]));
   it('everything the site ships passes', () => {

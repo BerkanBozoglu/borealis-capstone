@@ -2,6 +2,7 @@
 // reduced to its address, and git author names become team first names.
 import type { Commit, SiteData } from '../../src/types.ts';
 import { handleKey } from '../../src/privacy.ts';
+import { redact, type PrivacyConfig } from './privacy.ts';
 
 export function publicSiteData(data: SiteData): SiteData {
   return {
@@ -19,6 +20,17 @@ export function authorName(data: Pick<SiteData, 'people'>, author: string): stri
   return p ? p.name : 'team member';
 }
 
-export function publicHistory(data: Pick<SiteData, 'people'>, history: Commit[]): Commit[] {
-  return history.map((c) => ({ ...c, author: authorName(data, c.author) }));
+/** History with first-name authors; blocked names and emails in old values/subjects are blanked. */
+export function publicHistory(data: Pick<SiteData, 'people'>, history: Commit[], cfg?: PrivacyConfig): Commit[] {
+  const clean = (v: unknown): unknown => {
+    if (!cfg) return v;
+    if (typeof v === 'string') return redact(v, cfg);
+    if (Array.isArray(v)) return v.map(clean);
+    if (v && typeof v === 'object') return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, clean(x)]));
+    return v;
+  };
+  return history.map((c) => ({
+    ...c, author: authorName(data, c.author), subject: clean(c.subject) as string,
+    changes: c.changes.map((ch) => ({ ...ch, fields: ch.fields.map((f) => ({ ...f, old: clean(f.old), new: clean(f.new) })) })),
+  }));
 }
