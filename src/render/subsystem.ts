@@ -80,7 +80,7 @@ function parts(ctx: Ctx, list: Part[]): string {
       <td>${p.chosen_part && p.chosen_part !== 'TBD' ? esc(p.chosen_part) : '<span class="tbd">TBD</span>'}</td>
       <td>${ladder(p)}</td>
       <td class="small">${tbd.length ? tbd.map((f) => `${esc(f.name)}: <span class="tbd">${esc(f.value)}</span>`).join('<br>') : '<span class="muted">none</span>'}</td>
-      <td class="actions">${editLink(data, 'data/parts.yaml', data.lines.parts?.[p.id])}</td>
+      <td class="actions">${editLink(data, 'data/parts.yaml', data.lines.parts?.[p.id])}${p.availability ? ` <a class="btn btn-small" href="#/hardware/${esc(p.id)}">Hardware view</a>` : ''}</td>
     </tr>`;
   }).join('');
   return `<table class="tbl"><thead><tr><th>ID</th><th>Part</th><th>Chosen</th><th>Status</th><th>TBD fields</th><th></th></tr></thead><tbody>${body}</tbody></table>`;
@@ -106,16 +106,16 @@ function openItems(ctx: Ctx, id: string): string {
     const issue = o.issue
       ? `<a href="${esc(gh(data).issue(o.issue))}" target="_blank" rel="noopener">#${o.issue}</a>${live ? ` <span class="small">${esc(live.state)}</span>` : ''}`
       : '<span class="muted small">none</span>';
-    return `<tr data-open-item="${o.n}"${trackAttr(o.track)}><td class="num">${o.n}</td><td>${esc(o.item)} ${cite(o.cite)}${superseded(data, o.superseded_by)}</td><td>${esc(o.why)}</td><td>${esc(o.closing_action)}</td>
+    return `<tr id="item-${o.n}" data-open-item="${o.n}"${trackAttr(o.track)}><td class="num">${o.n}</td><td>${esc(o.item)} ${cite(o.cite)}${superseded(data, o.superseded_by)}</td><td>${esc(o.why)}</td><td>${esc(o.closing_action)}</td>
       <td>${o.owners.map((x) => personLink(data, x)).join(', ')}</td><td>${esc(o.due)}</td><td>${issue}</td></tr>`;
   }).join('')}</tbody></table>`;
 }
 
 function decisions(ctx: Ctx, id: string): string {
   const { data } = ctx;
-  const list = data.decisions.filter((d) => d.subsystems.includes(id));
+  const list = data.decisions.map((d, k) => ({ d, k })).filter(({ d }) => d.subsystems.includes(id));
   if (!list.length) return '<p class="muted">No decisions in 05 §2 map here.</p>';
-  return `<ul class="plain decisions">${list.map((d) => `<li data-decision><span class="num muted">${esc(d.date)}</span> · ${esc(d.area)} · <b>${esc(d.decision)}</b>${superseded(data, d.superseded_by)}
+  return `<ul class="plain decisions">${list.map(({ d, k }) => `<li id="decision-${k}" data-decision><span class="num muted">${esc(d.date)}</span> · ${esc(d.area)} · <b>${esc(d.decision)}</b>${superseded(data, d.superseded_by)}
     <div class="small muted">${[['reason', d.reason], ['evidence', d.evidence], ['changes', d.changes], ['owner', d.owner]].filter(([, v]) => v).map(([k, v]) => `${k}: ${esc(v)}`).join(' · ')} ${cite(d.cite)}</div></li>`).join('')}</ul>`;
 }
 
@@ -189,7 +189,7 @@ export function renderSubsystem(ctx: Ctx, id: string): string {
     ${params(ctx, rows)}
   </section>
 
-  <section class="card"><h2>Parts <span class="muted small">${partList.length} from 02</span></h2>${parts(ctx, partList)}</section>
+  <section class="card"><div class="section-head"><h2>Parts <span class="muted small">${partList.length} from 02</span></h2><a class="btn" href="#/hardware${partList.find((p) => p.availability && p.availability !== 'flight') ? `/${esc(partList.find((p) => p.availability && p.availability !== 'flight')!.id)}` : ''}">See on hardware view</a></div>${parts(ctx, partList)}</section>
   <section class="card"><h2>Interfaces</h2>${interfaces(ctx, d.interfaces)}</section>
   ${approvals(ctx, id)}
   <section class="card"><h2>Open items ${cite('05 §3')}</h2>${openItems(ctx, id)}</section>

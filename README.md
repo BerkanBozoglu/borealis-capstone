@@ -42,6 +42,17 @@ npm test           # physics model, derived state, page tests
 npm run build      # lint + typecheck + production build into dist/
 ```
 
+## Hardware view and search
+
+- **#/hardware** shows every physical part on a schematic of both stations plus the test bench, sorted into
+  *Can use now · Want to use · Still choosing · Can't use as-is* (`availability` in `data/parts.yaml`).
+  Cost, lead time and datasheet are never guessed: they show **[add]** until someone fills them in.
+- **Search** is on every page: press `/` or Ctrl/⌘+K. It covers parts (and their `aliases`), shared numbers,
+  interfaces, open items, decisions, people, a glossary and every heading of docs 01, 02, 04 and 05.
+  If search misses a name the team uses, add it to that part's `aliases` or to `data/synonyms.yaml`.
+- Coordinator rules the site enforces live in `data/constraints.yaml` (no used-market parts, ~$700 budget,
+  Class 2 at 660 nm).
+
 ## What is where
 
 | Path | What |
@@ -54,6 +65,7 @@ npm run build      # lint + typecheck + production build into dist/
 | `data/milestones.yaml`, `data/approvals.yaml` | fixed dates, test ladder, approvals |
 | `data/presets.yaml`, `data/model.yaml` | sandbox presets, model constants and sandbox controls |
 | `data/people.yaml`, `data/site.yaml` | team, repo settings, the workflow rules above |
+| `data/constraints.yaml`, `data/synonyms.yaml`, `data/glossary.yaml` | coordinator rules, search shorthand, glossary |
 | `src/model.ts` | the physics (pure functions, tested against 01 §4/§5) |
 | `scripts/build-data.ts` | YAML → `src/generated/data.json` + `history.json` (from `git log`) |
 | `scripts/lint-data.ts` | the checks; errors fail the build, warnings show in the health panel |

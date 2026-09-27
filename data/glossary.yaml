@@ -1,0 +1,26 @@
+# Glossary for search. Terms are those listed in 01 §15 plus a few extras.
+# Definitions are the site's own plain-language wording, not quoted from the docs.
+- {term: OOK, definition: "On-off keying: sending bits by switching the laser fully on or off.", source: "site glossary (not in docs)"}
+- {term: Manchester, definition: "A line code where every bit is a pair of chips (on-off or off-on), so the signal is balanced and self-clocking.", source: "site glossary (not in docs)"}
+- {term: chip, definition: "One on/off time slot of the Manchester code; two chips make one coded bit (100 kchip/s gives 50 kbps).", source: "site glossary (not in docs)"}
+- {term: TIA, aliases: [transimpedance amplifier], definition: "Transimpedance amplifier: turns the photodiode's tiny current into a voltage the rest of the receiver can use.", source: "site glossary (not in docs)"}
+- {term: PIN, aliases: [PIN photodiode], definition: "A common silicon photodiode with an undoped middle layer; cheap, fast, no internal gain. The campus detector.", source: "site glossary (not in docs)"}
+- {term: APD, aliases: [avalanche photodiode], definition: "Avalanche photodiode: a detector with internal gain from a high bias voltage; more sensitive, noisier and fussier than a PIN.", source: "site glossary (not in docs)"}
+- {term: responsivity, definition: "How much current a detector gives per watt of light, in A/W; depends on wavelength.", source: "site glossary (not in docs)"}
+- {term: BER, aliases: [bit error rate], definition: "Bit error rate: the fraction of received bits that are wrong.", source: "site glossary (not in docs)"}
+- {term: goodput, definition: "Useful data actually delivered per second, after overhead and lost packets are removed.", source: "site glossary (not in docs)"}
+- {term: "RS(255,223)", aliases: [Reed-Solomon, RS], definition: "A Reed-Solomon error-correcting code: 32 parity bytes let the receiver repair damaged bytes in each block.", source: "site glossary (not in docs)"}
+- {term: SSDV, definition: "A packet format for sending images over lossy links; each 256-byte packet carries its own error correction.", source: "site glossary (not in docs)"}
+- {term: divergence, definition: "How fast the beam spreads, as a full angle in mrad; beam width is roughly divergence times range.", source: "site glossary (not in docs)"}
+- {term: étendue, aliases: [etendue], definition: "Emitter size times beam angle; it sets the narrowest beam a given diode and lens can make.", source: "site glossary (not in docs)"}
+- {term: boresight, definition: "Aligning two optical axes, here the guide camera and the receiver, so both point at the same spot.", source: "site glossary (not in docs)"}
+- {term: backlash, definition: "Slack in the mount's gears: a dead zone when it reverses direction.", source: "site glossary (not in docs)"}
+- {term: NOHD, definition: "Nominal ocular hazard distance: beyond this range the beam is below the eye-safety limit.", source: "site glossary (not in docs)"}
+- {term: MPE, definition: "Maximum permissible exposure: the light level the eye can take without injury.", source: "site glossary (not in docs)"}
+- {term: Class 3B/4, aliases: [Class 3B, Class 4, laser class, Class 2], definition: "Laser hazard classes; Class 2 is low power visible, 3B needs controls and eyewear, 4 is the most hazardous.", source: "site glossary (not in docs)"}
+- {term: "CAR 601.21 / 602.42 / 901.43", aliases: [CAR 601.21, CAR 602.42, CAR 901.43, CARs], definition: "Canadian Aviation Regulations on projecting light into airspace, unmanned balloons and hazardous drone payloads.", source: "site glossary (not in docs)"}
+- {term: NOTAM, definition: "Notice to air missions: a published warning to pilots; notification, not permission.", source: "site glossary (not in docs)"}
+- {term: SFOC, definition: "Special flight operations certificate from Transport Canada, needed for unusual drone operations.", source: "site glossary (not in docs)"}
+- {term: VALSET, definition: "The u-blox command that writes a GNSS configuration setting, such as the airborne dynamic model.", source: "site glossary (not in docs)"}
+- {term: link margin, aliases: [margin], definition: "How many dB the received power sits above the receiver's sensitivity; below zero the link fails.", source: "site glossary (not in docs)"}
+- {term: on-state vs average power, aliases: [on-state power, average power], definition: "Power while the laser is on versus averaged over time; with Manchester the average is 3 dB below on-state.", source: "site glossary (not in docs)"}

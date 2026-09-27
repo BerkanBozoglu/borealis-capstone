@@ -12,7 +12,7 @@ export function renderInterfaces(ctx: Ctx): string {
   const order = (id: string) => INTERFACE_STATUSES.indexOf(data.derived.interfaces[id].status);
   const list = [...data.interfaces].sort((a, b) => order(a.id) - order(b.id) || a.id.localeCompare(b.id));
   const counts = INTERFACE_STATUSES.map((s) => `${ifaceMark(s)} <b class="num">${data.interfaces.filter((i) => data.derived.interfaces[i.id].status === s).length}</b>`).join(' &nbsp; ');
-  const focus = ctx.query.get('i');
+  const focus = ctx.query.get('i') ?? ctx.query.get('id');
   const rows = list.map((i) => {
     const d = data.derived.interfaces[i.id];
     return `<tr id="iface-${esc(i.id)}" data-iface="${esc(i.id)}" class="${focus === i.id ? 'flash' : ''}">
@@ -30,10 +30,10 @@ export function renderInterfaces(ctx: Ctx): string {
 }
 
 // ---------------- register ----------------
-export interface RegisterFilters { status: string; subsystem: string; tag: string; owner: string; q: string }
+export interface RegisterFilters { status: string; subsystem: string; tag: string; owner: string; q: string; id?: string }
 
 export function registerFilters(q: URLSearchParams): RegisterFilters {
-  return { status: q.get('status') ?? '', subsystem: q.get('subsystem') ?? '', tag: q.get('tag') ?? '', owner: q.get('owner') ?? '', q: q.get('q') ?? '' };
+  return { status: q.get('status') ?? '', subsystem: q.get('subsystem') ?? '', tag: q.get('tag') ?? '', owner: q.get('owner') ?? '', q: q.get('q') ?? '', id: q.get('id') ?? '' };
 }
 
 export function filterRegister(ctx: Ctx, f: RegisterFilters): RegisterRow[] {
@@ -42,6 +42,7 @@ export function filterRegister(ctx: Ctx, f: RegisterFilters): RegisterRow[] {
   const needle = f.q.trim().toLowerCase();
   return visible(ctx, data.register).filter((r) => {
     const d = data.derived.rows[r.id];
+    if (f.id && r.id !== f.id) return false;
     if (f.status === 'stale' && !d.stale) return false;
     if (f.status === 'recent' && -daysUntil(ctx.now, r.changed) > recent) return false;
     if (f.status === 'ok' && d.stale) return false;
@@ -61,7 +62,7 @@ export function renderRegisterTable(ctx: Ctx, f: RegisterFilters): string {
   const rows = filterRegister(ctx, f);
   const body = rows.map((r) => {
     const d = data.derived.rows[r.id];
-    return `<tr data-row="${esc(r.id)}"${trackAttr(r.track)} class="${d.stale ? 'is-stale' : ''}">
+    return `<tr id="row-${esc(r.id)}" data-row="${esc(r.id)}"${trackAttr(r.track)} class="${d.stale ? 'is-stale' : ''} ${f.id === r.id ? 'flash' : ''}">
       <td>${rowLink(data, r.id)}</td><td>${esc(r.name)}${r.note ? `<div class="small muted">${esc(r.note)}</div>` : ''}</td>
       <td><a href="#/s/${esc(r.subsystem)}">${esc(subsystemName(data, r.subsystem))}</a></td>
       <td>${valueText(r.value, r.unit)}</td><td>${tagChip(r.tag)}</td><td>${personLink(data, r.owner)}</td>
@@ -88,6 +89,7 @@ export function renderRegister(ctx: Ctx): string {
       ${sel('owner', 'Owner', data.people.map((p) => [p.id, p.name]))}
       <label>Search <input type="search" data-reg-filter="q" value="${esc(f.q)}" placeholder="id, name, value, note"></label>
     </div>
+    ${f.id ? `<p class="small">Showing ${esc(f.id)} only. <a href="#/register">Show all rows</a></p>` : ''}
     <div id="reg-table">${renderRegisterTable(ctx, f)}</div></section>`;
 }
 

@@ -1,0 +1,365 @@
+# Hardware view seed (08 prompt, 2026-09-27). Merged into data/parts.yaml by
+# scripts/seed/merge-hardware-seed.ts. Kept for provenance; parts.yaml is the truth.
+- id: A1
+  availability: blocked
+  owner_display: "Berky"
+  short: "Was 850 nm, 200 mW. Now needs 660 nm, ≤1 mW."
+  model_line: "Rev D.2: 850 nm, 100–200 mW TO-can · Now: 660 nm, ≤1 mW Class 2 · part TBD"
+  what_it_does: "The light source. Its wavelength and power set almost every other number in the link."
+  blocked_reason: "Every candidate in 02 is an 850 nm, 100–200 mW (Class 3B) diode. The campus baseline is now Class 2: ≤1 mW at 660 nm. No 660 nm part has been chosen yet."
+  need_to_know:
+    - "Wavelength decides the filter, the detector response and the eyewear"
+    - "Datasheet \"typical\" wavelength varies ±10 nm part to part: measure each diode"
+    - "Never power it without a current limit; it is ESD-sensitive"
+  touches: [TX-01, TX-02, TX-03, TX-04, I-02, I-03]
+  source: "buy new · TBD"
+  aliases: ["laser", "laser diode", "diode", "660 nm", "850 nm", "class 2", "l850", "ushio", "oclaro"]
+  hotspot: {view: station, x: 125, y: 216}
+  doc_ref: "02 A1"
+- id: A2
+  availability: candidate
+  owner_display: "Berky"
+  short: "Aspheric f 4–8 mm, NA ~0.5, adjustable barrel"
+  model_line: "Aspheric lens f = 4–8 mm, NA ≈ 0.5, adjustable barrel (e.g. Thorlabs C-series)"
+  what_it_does: "Squeezes the diode’s wide cone into a ~60 mrad beam (±1.72°) for the stationary and indoor tests."
+  class2_note: "Anti-reflection coating was specified for 850 nm. Re-check it at 660 nm."
+  need_to_know:
+    - "A diode’s fast axis can be ~30° wide: the lens needs NA ≥ 0.28 to catch it"
+    - "Focus sets the beam width; it does not fix an oval beam"
+    - "Measure the far-field pattern in both axes (04 §2.3)"
+  touches: [TX-06]
+  source: "buy new"
+  aliases: ["asphere", "aspheric", "collimator", "lens", "thorlabs c series"]
+  hotspot: {view: station, x: 167, y: 247}
+  doc_ref: "02 A2"
+- id: A3
+  availability: candidate
+  owner_display: "Berky"
+  short: "10–12° diffuser for the moving test"
+  model_line: "10–12° engineered diffuser (Thorlabs ED1-series, RPC Photonics, Edmund)"
+  what_it_does: "Spreads the beam to ~200 mrad (±5.73°) so the moving cart stays inside it during the tracking test (C2)."
+  class2_note: "Confirm the diffuser is rated for 660 nm."
+  need_to_know:
+    - "Its loss is assumed to be 0 dB today and comes straight off the C2 margin"
+    - "How even the edge is decides the real pointing allowance"
+  touches: [TX-07, TX-08]
+  source: "buy new"
+  aliases: ["diffuser", "ed1", "thorlabs ed1", "rpc photonics", "edmund"]
+  hotspot: {view: station, x: 181, y: 184}
+  doc_ref: "02 A3"
+- id: A4
+  availability: choosing
+  owner_display: "Shabazz"
+  short: "Current source, switched 100,000×/s"
+  model_line: "Topology TBD: op-amp + MOSFET current sink, or iC-Haus iC-HG class"
+  what_it_does: "Constant-current source that turns the laser on and off 100,000 times a second from the firmware’s signal."
+  class2_note: "A 1 mW diode needs far less current than a 200 mW one. The driver may get simpler."
+  need_to_know:
+    - "Rise and fall under 1 µs for clean 10 µs chips"
+    - "Turn-on overshoot can exceed the diode’s maximum: protect it"
+    - "The key switch sits in its supply path"
+  touches: [TX-04, TX-05, I-01, I-02]
+  source: "build"
+  aliases: ["laser driver", "driver", "ic hg", "ic haus", "current sink", "mosfet"]
+  hotspot: {view: station, x: 84, y: 274}
+  doc_ref: "02 A4"
+- id: A5
+  availability: choosing
+  owner_display: "Shabazz"
+  short: "Aiming, carrying, and the interruption demo"
+  model_line: "TBD"
+  what_it_does: "Aims the transmitter repeatably, carries it for the moving test, and the shutter drives the interruption demo."
+  need_to_know:
+    - "The visible LED shows where the transmitter is, not where the beam points"
+    - "A car mount only after the mount’s tracking speed is proven"
+  touches: [PWR-01]
+  source: "build / buy"
+  aliases: ["sight", "tripod", "cart", "carrier", "shutter", "beam stop"]
+  hotspot: {view: station, x: 135, y: 314}
+  doc_ref: "02 A5"
+- id: A6
+  availability: choosing
+  flag: "MUST BUY"
+  owner_display: "Berky"
+  short: "Makes 50–80 m indoors look like 1 km"
+  model_line: "Absorptive ND filter set, OD 1–3, in a locked holder"
+  what_it_does: "Dims the beam indoors so the receiver sees what it would at 1 km, and stops it saturating at short range."
+  class2_note: "At 1 mW much less attenuation is needed. Re-derive it once the C1 target is settled."
+  need_to_know:
+    - "The department has no ND filters (coordinator): they must be bought"
+    - "Filter strength depends on wavelength: calibrate at the laser’s actual wavelength"
+    - "Stack absorptive filters, not reflective ones"
+  touches: [TX-09]
+  source: "buy new"
+  aliases: ["nd filter", "nd", "neutral density", "attenuator", "od"]
+  hotspot: {view: station, x: 214, y: 240}
+  doc_ref: "02 A6"
+- id: C7
+  availability: choosing
+  owner_display: "Shabazz"
+  short: "Keeps everything running outdoors"
+  model_line: "Dew heater strip + shield, adapters, batteries · TBD"
+  what_it_does: "Dew heater, adapters, and batteries for the mount, laptop, camera and transmitter outdoors."
+  need_to_know:
+    - "Dew heater on before the optics fog, not after (04 §7)"
+    - "Laptops die in the cold: keep them in a bag"
+    - "No field power budget exists yet (interface I-11)"
+  touches: [I-11]
+  source: "buy new"
+  aliases: ["dew heater", "dew", "adapters", "field power", "battery", "12 V"]
+  hotspot: {view: station, x: 185, y: 277}
+  doc_ref: "02 C7"
+- id: C1
+  availability: blocked
+  owner_display: "Berky"
+  short: "130 mm Newtonian; 02 plans to buy it used"
+  model_line: "130 mm f/5 Newtonian, ~650 mm focal length, ≤3.5 kg"
+  what_it_does: "The light bucket. At 1 km it catches 0.13 m of a 60 m wide spot (−53.3 dB)."
+  blocked_reason: "02 and open item 11 plan to buy it used. The coordinator ruled out used parts from eBay, Kijiji and FB Marketplace. Buy new, or borrow one."
+  need_to_know:
+    - "Keep it ≤ 3.5 kg: the mount carries 5 kg in total"
+    - "Focus moves ~11 mm between 50 m and 1 km"
+    - "Pointed near the Sun it is a fire hazard: solar exclusion in software"
+  touches: [OPT-01, OPT-02, OPT-04, I-04, I-10]
+  source: "buy new or borrow"
+  aliases: ["telescope", "scope", "ota", "newtonian", "130 mm"]
+  hotspot: {view: station, x: 660, y: 194}
+  doc_ref: "02 C1 · open item 11"
+- id: C2
+  availability: choosing
+  owner_display: "Berky"
+  short: "Holds the photodiode at the focus"
+  model_line: "TBD"
+  what_it_does: "Holds the photodiode exactly at the focal point and blocks stray sky light around it."
+  need_to_know:
+    - "Must allow focus and boresight calibration at each range (04 §2.4)"
+    - "No mechanical drawing yet (interface I-04)"
+  touches: [I-04]
+  source: "build"
+  aliases: ["field stop", "detector mount", "focal plane", "focus"]
+  hotspot: {view: station, x: 537, y: 116}
+  doc_ref: "02 C2"
+- id: C3
+  availability: blocked
+  owner_display: "Berky"
+  short: "850/40 nm: blocks the 660 nm laser"
+  model_line: "850/40 nm interference filter (Thorlabs FB850-40 or equivalent)"
+  what_it_does: "Lets only the laser’s colour through, so sky light and streetlights don’t drown the signal."
+  blocked_reason: "It passes 830–870 nm. The Class 2 laser is 660 nm, so this filter blocks it completely. The link cannot work until a filter matched to the chosen 660 nm diode replaces it."
+  need_to_know:
+    - "Interference filters shift colour when tilted: mount it square to the beam"
+    - "Check transmission at the diode’s measured wavelength, not the datasheet’s"
+  touches: [OPT-03, LNK-04, RX-01]
+  source: "buy new"
+  aliases: ["fb850 40", "fb850", "850 40", "bandpass", "filter", "interference filter"]
+  hotspot: {view: station, x: 537, y: 152}
+  doc_ref: "02 C3 · open item 9"
+- id: B1
+  availability: candidate
+  owner_display: "Bilal"
+  short: "Vishay BPW34"
+  model_line: "Vishay BPW34 (datasheet verified) · alternatives BPW34S, SFH 2xx, Hamamatsu S1223"
+  what_it_does: "Turns the captured light into a tiny electric current."
+  class2_note: "Silicon responds less at 660 nm than at 850 nm. Take the value from the datasheet, then measure."
+  need_to_know:
+    - "7.5 mm² area sets the field of view: ~3.6 mrad at 750 mm focal length"
+    - "Capacitance 70 pF at 0 V, 25 pF at 3 V reverse: this drives amplifier stability"
+    - "Responsivity 0.5 A/W at 850 nm is assumed, not measured"
+  touches: [RX-01, RX-05, OPT-05, I-04, I-05]
+  source: "buy new"
+  aliases: ["bpw34", "vishay", "bpw34s", "sfh", "s1223", "hamamatsu", "photodiode", "pin", "detector"]
+  hotspot: {view: station, x: 598, y: 116}
+  doc_ref: "02 B1"
+- id: C5
+  availability: choosing
+  owner_display: "Matei"
+  short: "~50 mm, ~3° field"
+  model_line: "~50 mm aperture, ~200 mm focal length"
+  what_it_does: "A wide view that finds the beam and feeds the tracking loop. Kept separate so the data path loses no light."
+  need_to_know:
+    - "Must stay rigidly aligned with the main telescope"
+    - "Alignment between the two tubes shifts 3.8 mrad between 1 km and 50 m"
+  touches: [OPT-07, I-10]
+  source: "buy new"
+  aliases: ["guide scope", "finder", "scope"]
+  hotspot: {view: station, x: 655, y: 149}
+  doc_ref: "02 C5"
+- id: C6
+  availability: candidate
+  owner_display: "Matei"
+  short: "Mono astro camera, IMX290/462 class"
+  model_line: "IMX290/IMX462 mono astro camera (ZWO ASI120MM-S / ASI290MM, SVBONY SV305M Pro)"
+  what_it_does: "Sees the laser as a dot and reports its position ten or more times a second."
+  class2_note: "660 nm is visible light, so the \"must pass infrared\" requirement no longer applies. Wider choice of cameras."
+  need_to_know:
+    - "Watch for saturation at short range"
+    - "Streetlights can look like the target"
+  touches: [TRK-04, OPT-06, I-08]
+  source: "buy new"
+  aliases: ["asi120mm", "asi120mm s", "asi290mm", "zwo", "sv305m", "svbony", "imx290", "imx462", "guide camera", "camera"]
+  hotspot: {view: station, x: 738, y: 149}
+  doc_ref: "02 C6 · open item 12"
+- id: C4
+  availability: candidate
+  owner_display: "Matei"
+  short: "Sky-Watcher AZ-GTi"
+  model_line: "Sky-Watcher AZ-GTi (chosen candidate, not yet bought)"
+  what_it_does: "Motorised pointing that follows the moving transmitter using speed (rate) commands."
+  need_to_know:
+    - "Carries 5 kg (verified)"
+    - "Use rate commands, not repeated go-to commands"
+    - "Command delay and gear slack must be proven in October"
+    - "Alt-az mounts struggle pointing straight up"
+  touches: [TRK-01, TRK-02, I-09, I-10]
+  source: "buy new"
+  aliases: ["az gti", "azgti", "sky watcher", "skywatcher", "mount", "synscan", "indi"]
+  hotspot: {view: station, x: 622, y: 264}
+  doc_ref: "02 C4 · open item 6"
+- id: B2
+  availability: candidate
+  owner_display: "Bilal"
+  short: "TI OPA657"
+  model_line: "TI OPA657 (datasheet verified) · alternatives OPA818, LTC6268, ADA4817"
+  what_it_does: "Converts the photodiode’s current into a voltage. The stage where noise is won or lost."
+  class2_note: "At 1 mW the signal is ~23 dB weaker. The gain resistor and stability design must be redone."
+  need_to_know:
+    - "OPA657 is only stable at gain ≥ 7: the feedback network must be designed, not guessed"
+    - "With 120 kΩ the old baseline gave 15.9 mV at 1 km"
+    - "Saturates at 50 m without attenuation (6.4 V on the old baseline)"
+  touches: [RX-03, RX-04]
+  source: "buy new"
+  aliases: ["opa657", "opa818", "ltc6268", "ada4817", "tia", "transimpedance", "amplifier", "amp", "op amp"]
+  hotspot: {view: station, x: 753, y: 198}
+  doc_ref: "02 B2"
+- id: B3
+  availability: candidate
+  owner_display: "Bilal"
+  short: "TLV3501-class"
+  model_line: "Fast comparator with hysteresis (TLV3501-class) + gain stage"
+  what_it_does: "Turns the analog waveform into clean ones and zeros for the microcontroller."
+  need_to_know:
+    - "Manchester coding allows AC coupling: keep the cutoff at a few hundred Hz"
+    - "Its output level and pin are interface I-06, not yet agreed with Batu"
+  touches: [I-06]
+  source: "buy new"
+  aliases: ["tlv3501", "comparator", "slicer", "post amp", "hysteresis"]
+  hotspot: {view: station, x: 793, y: 198}
+  doc_ref: "02 B3"
+- id: B4
+  availability: choosing
+  owner_display: "Bilal"
+  short: "Carries photodiode, amplifier, comparator"
+  model_line: "Rev A · three revisions budgeted · fab TBD"
+  what_it_does: "The circuit board that carries the photodiode, amplifier and comparator."
+  need_to_know:
+    - "Guard rings and short input traces at the amplifier"
+    - "Separate analog and digital grounds; shield it"
+    - "Add test points for measuring received power"
+  touches: [I-05, I-06]
+  source: "fab"
+  aliases: ["receiver board", "rx board", "receiver pcb", "receiver circuit", "pcb"]
+  hotspot: {view: station, x: 772, y: 168}
+  doc_ref: "02 B4"
+- id: B5
+  availability: candidate
+  owner_display: "Bilal · Batu"
+  short: "STM32H743 (WeAct or Nucleo)"
+  model_line: "STM32H743 (WeAct or Nucleo) or STM32F4-class"
+  what_it_does: "Captures the chips, recovers the clock, decodes packets and sends them to the laptop over USB."
+  need_to_know:
+    - "Hardware-timed capture, no bit-banging (04 §6)"
+    - "Packet format to the laptop is interface I-07, still missing"
+  touches: [SYS-01, I-06, I-07]
+  source: "buy new"
+  aliases: ["stm32h743", "stm32", "weact", "nucleo", "stm32f4", "mcu", "microcontroller"]
+  hotspot: {view: station, x: 772, y: 259}
+  doc_ref: "02 B5"
+- id: H1
+  availability: choosing
+  flag: "CRITICAL GAP"
+  owner_display: "Berky"
+  short: "Every power number depends on it"
+  model_line: "Power meter or calibrated photodiode, at the laser wavelength"
+  what_it_does: "Measures the actual light power. Every attenuation and sensitivity number in the project depends on it."
+  need_to_know:
+    - "02 calls it the single most important instrument"
+    - "The coordinator said the department has no optical test equipment: borrow one (ask Zhang’s photonics lab) or buy one"
+    - "Must be calibrated at the laser’s wavelength"
+  touches: [RX-02, TX-09]
+  source: "borrow or buy"
+  aliases: ["power meter", "optical power meter", "h1"]
+  hotspot: {view: bench}
+  doc_ref: "02 H1"
+- id: H2
+  availability: available
+  owner_display: "shared"
+  short: "Department scopes"
+  model_line: "Department oscilloscopes · confirm ≥ 100 MHz"
+  what_it_does: "Shows the amplifier and comparator waveforms. The first tool for \"power is there but no bits\" (04 §3.2)."
+  need_to_know:
+    - "Available in the department (coordinator)"
+    - "Book lab time; confirm bandwidth ≥ 100 MHz"
+  touches: []
+  source: "department"
+  aliases: ["oscilloscope", "scope", "o scope"]
+  hotspot: {view: bench}
+  doc_ref: "02 H2"
+- id: H3
+  availability: choosing
+  owner_display: "Shabazz"
+  short: "With current limit"
+  model_line: "Bench power supplies with current limit · availability TBD"
+  what_it_does: "Powers boards safely during testing. The current limit is what protects the laser."
+  need_to_know:
+    - "Never power the laser without a current limit"
+    - "Ask the Engineer in Residence whether the lab can lend them"
+  touches: []
+  source: "ask lab"
+  aliases: ["bench supply", "power supply", "psu", "current limit"]
+  hotspot: {view: bench}
+  doc_ref: "02 H3"
+- id: H6
+  availability: choosing
+  owner_display: "Berky"
+  short: "Or camera + screen"
+  model_line: "Beam profiler, or the camera-on-screen method (04 §2.3)"
+  what_it_does: "Measures how wide the beam is and its shape, in both directions."
+  need_to_know:
+    - "The camera-on-screen method is the cheap option"
+    - "Needed to replace the 60 / 200 mrad targets with measured values"
+  touches: [TX-06, TX-07]
+  source: "borrow or build"
+  aliases: ["beam profiler", "profiler", "far field", "beam width"]
+  hotspot: {view: bench}
+  doc_ref: "02 H6"
+- id: H7
+  availability: blocked
+  owner_display: "Berky"
+  short: "Specified for 850 nm"
+  model_line: "Rev D.2: OD 4+ at 800–900 nm, ×3"
+  what_it_does: "Eye protection for everyone near the beam."
+  blocked_reason: "Specified for the 850 nm Class 3B laser. It does not cover 660 nm. Confirm with EHS what Class 2 requires before buying anything."
+  need_to_know:
+    - "Safety gear follows the approved plan: never improvise it"
+  touches: [SAF-02]
+  source: "confirm with EHS"
+  aliases: ["eyewear", "goggles", "glasses", "od 4", "safety glasses"]
+  hotspot: {view: bench}
+  doc_ref: "02 H7"
+# second block from the 08 prompt
+- {id: E3, aliases: ["max m10s", "max m10", "ublox", "u blox", "gnss", "gps"]}
+- {id: D1, aliases: ["apd", "c30902", "excelitas", "avalanche", "hamamatsu"]}
+# flight parts without seed aliases: 2–4 from their 02 text (dashboard choice)
+- {id: D2, aliases: ["bias supply", "apd bias", "high voltage"]}
+- {id: E1, aliases: ["stm32h743", "flight computer", "freertos", "iwdg"]}
+- {id: E2, aliases: ["ov5640", "flight camera", "jpeg camera"]}
+- {id: E4, aliases: ["rfm95w", "lora", "915 mhz", "ebyte"]}
+- {id: E5, aliases: ["ms5611", "icm-20948", "pt1000", "barometer"]}
+- {id: E6, aliases: ["flight laser", "2 w diode", "c-mount diode"]}
+- {id: E7, aliases: ["flight laser driver", "buck pre-regulator", "interlocks"]}
+- {id: E8, aliases: ["storm32", "simplebgc", "gimbal", "pan tilt"]}
+- {id: E9, aliases: ["l91", "energizer l91", "li-fes2", "battery pack"]}
+- {id: E10, aliases: ["epp shell", "payload structure", "radar reflector"]}
+- {id: G, aliases: ["yagi", "lora ground station", "rf ground station"]}
+- {id: H8, aliases: ["dry ice cooler", "vacuum chamber", "thermal vacuum"]}
+- {id: I, aliases: ["latex envelope", "balloon", "helium", "parachute"]}

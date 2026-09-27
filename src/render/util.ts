@@ -92,6 +92,7 @@ export function rowLink(data: SiteData, id: string): string {
   const s = rowSubsystem(data, id);
   if (s) return `<a class="id" href="#/s/${esc(s)}?row=${encodeURIComponent(id)}">${esc(id)}</a>`;
   if (data.interfaces.some((i) => i.id === id)) return `<a class="id" href="#/interfaces?i=${encodeURIComponent(id)}">${esc(id)}</a>`;
+  if (data.parts.some((p) => p.id === id)) return `<a class="id" href="#/hardware/${encodeURIComponent(id)}">${esc(id)}</a>`;
   return `<span class="id">${esc(id)}</span>`;
 }
 

@@ -1,0 +1,19 @@
+# Facts from the coordinator review (Sep 2026) that override the Rev D.2 docs.
+source: coordinator review, 2026-09
+
+budget_cad: 700            # revised campus budget, approximate (register BUD-01)
+
+procurement_rules:
+  - No used parts from eBay, Kijiji or Facebook Marketplace (coordinator, Sep 2026)
+
+department_has:
+  - oscilloscopes
+
+department_lacks:
+  - ND filters
+  - optical test equipment (power meter, etc.)
+
+class2:
+  wavelength_nm: 660
+  max_power_mw: 1
+  note: Campus baseline since 2026-09-24; 850 nm Class 3B is a gated upgrade decided in November

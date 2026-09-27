@@ -1,7 +1,7 @@
 // Data checks. Errors fail the build; warnings show in the site's health panel.
 import type { Finding, InterfaceDerived, RawData, RowDerived } from '../../src/types.ts';
 import {
-  APPROVAL_STATUSES, CONDITION_FIELDS, INTERFACE_STATUSES, PART_STATUSES, RUNG_STATUSES, TAGS, TRACKS,
+  APPROVAL_STATUSES, AVAILABILITIES, CONDITION_FIELDS, INTERFACE_STATUSES, PART_STATUSES, RUNG_STATUSES, TAGS, TRACKS,
 } from '../../src/types.ts';
 import { constantsFrom, evaluate, inputsFrom, passband, firstNumber } from '../../src/model.ts';
 
@@ -175,6 +175,52 @@ export function runChecks(raw: RawData, ctx: Ctx): Finding[] {
     checkEnum(w, 'track', p.track, TRACKS, [p.id]);
     if (!String(p.cite ?? '').trim()) err('missing-cite', `${w}: no cite`, [p.id]);
     checkSuperseded(w, p.superseded_by);
+  }
+
+  // ---- hardware view fields (parts.yaml) ----
+  const partText = (p: RawData['parts'][number]) => [p.name, p.role, p.candidates, p.downstream, p.gotchas, ...p.fields.map((f) => `${f.name} ${f.value}`)].join(' ');
+  for (const p of raw.parts) {
+    const w = `part ${p.id}`;
+    if (p.availability !== undefined) checkEnum(w, 'availability', p.availability, AVAILABILITIES, [p.id]);
+    if (p.availability === 'blocked' && !String(p.blocked_reason ?? '').trim()) {
+      err('blocked-without-reason', `${w}: availability is blocked but blocked_reason is empty`, [p.id]);
+    }
+    for (const t of p.touches ?? []) {
+      if (!rowIds.has(t) && !ifaceIds.has(t)) err('unknown-id', `${w}: touches "${t}" is not a register or interface id`, [p.id]);
+    }
+    if (p.hotspot) {
+      if (!['station', 'bench'].includes(p.hotspot.view)) err('bad-enum', `${w}: hotspot.view "${p.hotspot.view}" is not station | bench`, [p.id]);
+      if (p.hotspot.view === 'station' && (typeof p.hotspot.x !== 'number' || typeof p.hotspot.y !== 'number')) {
+        err('bad-hotspot', `${w}: a station hotspot needs numeric x and y`, [p.id]);
+      }
+    }
+    if (p.est_cost_cad !== undefined && p.est_cost_cad !== null && typeof p.est_cost_cad !== 'number') {
+      err('bad-cost', `${w}: est_cost_cad must be a number or null`, [p.id]);
+    }
+    if (p.datasheet_url && !/^https?:\/\//.test(p.datasheet_url)) err('bad-url', `${w}: datasheet_url must be an http(s) URL`, [p.id]);
+
+    // procurement: no used-market purchases (constraints.yaml)
+    const source = String(p.source ?? '').toLowerCase();
+    const says = (t: string) => /\bused\b/i.test(t);
+    if ((says([p.role, p.candidates].join(' ')) || says(source)) && !/\bnew\b|\bborrow/.test(source)) {
+      warn('used-market', `${w}: Used-market purchase not allowed (constraints.yaml)`, [p.id]);
+    }
+    // Class 2: core part still specified at 850 nm (or 800–900 nm)
+    if (p.track === 'core' && p.availability) {
+      const text = `${p.model_line ?? ''} ${partText(p)}`;
+      if (/\b850\s*(nm|\/)|800\s*[–-]\s*900\s*nm/i.test(text) && !p.class2_note && !p.blocked_reason) {
+        warn('class2-unchecked', `${w}: Not checked against the Class 2 ${raw.constraints?.class2?.wavelength_nm ?? ''} nm baseline`, [p.id]);
+      }
+    }
+    if (p.availability === 'candidate' && !String(p.model_line ?? '').trim()) {
+      warn('candidate-no-model', `${w}: availability candidate but no model_line`, [p.id]);
+    }
+  }
+  const budget = Number(raw.constraints?.budget_cad ?? 0);
+  const priced = raw.parts.filter((p) => p.track === 'core' && p.availability && p.availability !== 'available' && typeof p.est_cost_cad === 'number');
+  const total = priced.reduce((a, p) => a + (p.est_cost_cad as number), 0);
+  if (budget && total > budget) {
+    warn('over-budget', `Priced core parts total $${total} CAD, over the ~$${budget} CAD budget (constraints.yaml)`, priced.map((p) => p.id));
   }
 
   // ---- open items ----

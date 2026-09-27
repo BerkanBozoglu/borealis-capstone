@@ -8,7 +8,7 @@ import type { RawData } from '../../src/types.ts';
 
 export const DATA_FILES = [
   'site', 'people', 'subsystems', 'register', 'parts', 'open_items', 'decisions',
-  'interfaces', 'milestones', 'approvals', 'presets', 'model',
+  'interfaces', 'milestones', 'approvals', 'presets', 'model', 'constraints', 'synonyms', 'glossary',
 ] as const;
 
 type Reader = (file: string) => string | null;

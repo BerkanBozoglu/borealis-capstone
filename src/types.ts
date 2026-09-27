@@ -40,6 +40,27 @@ export interface Part {
   id: string; name: string; subsystem: string; track: Track; cite: string; role: string;
   status: PartStatus; chosen_part: string; candidates: string; downstream: string; gotchas: string;
   fields: PartField[]; superseded_by?: string[];
+  // hardware view (all optional)
+  availability?: Availability; flag?: string; owner_display?: string; short?: string; model_line?: string;
+  what_it_does?: string; blocked_reason?: string; class2_note?: string; need_to_know?: string[];
+  touches?: string[]; source?: string; est_cost_cad?: number | null; lead_time?: string | null;
+  datasheet_url?: string | null; aliases?: string[]; hotspot?: { view: 'station' | 'bench'; x?: number; y?: number };
+  doc_ref?: string;
+}
+export const AVAILABILITIES = ['available', 'candidate', 'choosing', 'blocked', 'flight'] as const;
+export type Availability = (typeof AVAILABILITIES)[number];
+
+export interface Constraints {
+  source: string; budget_cad: number; procurement_rules: string[];
+  department_has: string[]; department_lacks: string[];
+  class2: { wavelength_nm: number; max_power_mw: number; note: string };
+}
+export interface GlossaryTerm { term: string; aliases?: string[]; definition: string; source: string }
+export interface DocSection { file: string; heading: string; anchor: string; level: number; text: string }
+export interface DocPage { file: string; title: string; html: string; sections: DocSection[] }
+export interface HardwareDerived {
+  budget_cad: number; priced: number; to_price: number; priced_total_cad: number;
+  lanes: Record<string, number>;
 }
 
 export interface OpenItem {
@@ -91,6 +112,10 @@ export interface SiteConfig {
   recent_days: number; tbd_max_age_days: number; recent_commits: number;
   /** warning codes that make a subsystem broken (red); lint errors always do */
   broken_checks: string[];
+  project_assistant_url: string;
+  doc_superseded: { skip_headings: string[]; phrases: { match: string; ids: string[] }[] };
+  hardware: { lanes: { availability: string; label: string }[]; groups: { letter: string; label: string }[]; flight_note: string };
+  search: { suggestions: string[]; stop_words: string[]; docs: string[] };
   workflow_cite: string;
   workflow_rules: { title: string; text: string }[];
 }
@@ -109,6 +134,9 @@ export interface RawData {
   approvals: Approval[];
   presets: Preset[];
   model: ModelConfig;
+  constraints: Constraints;
+  synonyms: Record<string, string[]>;
+  glossary: GlossaryTerm[];
   /** line number of each "- id:" in register.yaml, parts.yaml, interfaces.yaml */
   lines: Record<string, Record<string, number>>;
   /** evidence files present under evidence/ (relative paths) */
@@ -138,6 +166,7 @@ export interface Derived {
   subsystems: Record<string, SubsystemDerived>;
   interfaces: Record<string, InterfaceDerived>;
   inbox: Record<string, Inbox>;
+  hardware: HardwareDerived;
   committed: Record<string, number>;
   findings: Finding[];
 }

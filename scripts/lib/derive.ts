@@ -1,7 +1,7 @@
 // Derived state: computed at build time, never typed by hand (07 §2 D4).
 import { createHash } from 'node:crypto';
 import type {
-  Derived, Finding, Inbox, InterfaceDerived, RawData, RegisterRow, RowDerived, SiteData,
+  Derived, Finding, HardwareDerived, Inbox, InterfaceDerived, RawData, RegisterRow, RowDerived, SiteData,
   SubsystemDerived, Tag,
 } from '../../src/types.ts';
 import { TAGS } from '../../src/types.ts';
@@ -128,6 +128,22 @@ export function computeInbox(
   return out;
 }
 
+/** Lane counts and budget for the hardware page. */
+export function computeHardware(raw: RawData): HardwareDerived {
+  const lanes: Record<string, number> = {};
+  for (const p of raw.parts) if (p.availability) lanes[p.availability] = (lanes[p.availability] ?? 0) + 1;
+  // parts still to acquire: core, classified, not already available
+  const toBuy = raw.parts.filter((p) => p.track === 'core' && p.availability && p.availability !== 'available');
+  const priced = toBuy.filter((p) => typeof p.est_cost_cad === 'number');
+  return {
+    budget_cad: Number(raw.constraints?.budget_cad ?? 0),
+    priced: priced.length,
+    to_price: toBuy.length,
+    priced_total_cad: priced.reduce((a, p) => a + (p.est_cost_cad as number), 0),
+    lanes,
+  };
+}
+
 /** The whole pipeline: raw data → site data with derived state and findings. */
 export function buildSiteData(raw: RawData, today: string, builtAt = new Date().toISOString()): SiteData {
   const rows = computeRows(raw);
@@ -141,6 +157,7 @@ export function buildSiteData(raw: RawData, today: string, builtAt = new Date().
     findings,
     subsystems: computeSubsystems(raw, rows, interfaces, findings),
     inbox: computeInbox(raw, rows, interfaces),
+    hardware: computeHardware(raw),
   };
   const { evidence_files: _unused, ...rest } = raw;
   void _unused;

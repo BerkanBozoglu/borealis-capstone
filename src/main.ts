@@ -8,6 +8,10 @@ import { renderSubsystem } from './render/subsystem.ts';
 import { renderSandbox, renderSandboxOutputs } from './render/sandbox.ts';
 import { renderInbox, renderInterfaces, renderRegister, renderRegisterTable, registerFilters } from './render/tables.ts';
 import { parseSandbox, presetValues, sandboxHash } from './sandbox.ts';
+import { renderHardware, hardwareFilters, hardwareHash } from './render/hardware.ts';
+import { renderDocs } from './render/docs.ts';
+import { initSearch, openSearch, isOpen } from './searchui.ts';
+import type { DocPage } from './types.ts';
 
 const data = dataJson as unknown as SiteData;
 const commits = historyJson as unknown as Commit[];
@@ -23,11 +27,17 @@ let issues: GhIssue[] | null = null;
 let currentSubsystem: string | null = null;
 
 // ---------- routing ----------
-interface Route { path: string[]; query: URLSearchParams }
+interface Route { path: string[]; query: URLSearchParams; anchor: string }
 function route(): Route {
   const h = location.hash.replace(/^#/, '') || '/';
-  const [p, q = ''] = h.split('?');
-  return { path: p.split('/').filter(Boolean).map(decodeURIComponent), query: new URLSearchParams(q) };
+  const [pa, q = ''] = h.split('?');
+  const [p, anchor = ''] = pa.split('#'); // #/docs/<file>#<anchor>
+  return { path: p.split('/').filter(Boolean).map(decodeURIComponent), query: new URLSearchParams(q), anchor };
+}
+
+let docs: DocPage[] | null = null;
+function loadDocs() {
+  void import('./generated/docs.json').then((m) => { docs = m.default as unknown as DocPage[]; if (route().path[0] === 'docs') render(); });
 }
 
 function baseUrl(): string {
@@ -85,16 +95,29 @@ function render() {
       html = renderInbox(ctxFor(r), person);
       break;
     }
+    case 'hardware': html = renderHardware(ctxFor(r), arg ?? null); break;
+    case 'docs':
+      if (!docs) { loadDocs(); html = '<section class="card"><p class="muted">Loading docs…</p></section>'; }
+      else html = renderDocs(docs, arg);
+      break;
+    case 'search': html = renderMap(ctxFor(r)); break;
     default: html = `<section class="card"><h1>Not found</h1><p><a href="#/">Back to the map</a></p></section>`;
   }
   main().innerHTML = html;
   currentSubsystem = nextSubsystem;
 
-  const focusRow = r.query.get('row') ?? r.query.get('i');
-  if (focusRow) {
-    const el = document.getElementById(`row-${focusRow}`) ?? document.getElementById(`iface-${focusRow}`);
-    if (el) { el.classList.add('flash'); el.scrollIntoView({ block: 'center' }); }
-  } else if (page !== 'sandbox' && page !== 'register') {
+  if (page === 'search' && !isOpen()) openSearch(r.query.get('q') ?? '');
+
+  const focusRow = r.query.get('row') ?? r.query.get('i') ?? r.query.get('id');
+  const focus = focusRow
+    ? document.getElementById(`row-${focusRow}`) ?? document.getElementById(`iface-${focusRow}`)
+    : r.query.get('item') ? document.getElementById(`item-${r.query.get('item')}`)
+      : r.query.get('decision') ? document.getElementById(`decision-${r.query.get('decision')}`)
+        : r.anchor ? document.getElementById(`doc-${r.anchor}`) : null;
+  if (focus) {
+    if (!r.anchor) focus.classList.add('flash');
+    focus.scrollIntoView({ block: r.anchor ? 'start' : 'center' });
+  } else if (page !== 'sandbox' && page !== 'register' && page !== 'hardware') {
     window.scrollTo(0, 0);
   }
 }
@@ -127,6 +150,12 @@ document.addEventListener('click', (e) => {
         document.querySelector(`.block[data-subsystem="${CSS.escape(s)}"]`)?.classList.add('hl');
       }
     }
+    return;
+  }
+  const part = t.closest<HTMLElement>('[data-hw-part]');
+  if (part) {
+    const r = route();
+    location.hash = hardwareHash(part.dataset.hwPart!, hardwareFilters(r.query));
     return;
   }
   const pill = t.closest<HTMLElement>('button[data-sb-param]');
@@ -208,5 +237,6 @@ async function loadIssues() {
 
 document.getElementById('repo-link')!.setAttribute('href', gh(data).repo);
 document.getElementById('built')!.innerHTML = `built ${esc(data.built_at.slice(0, 16).replace('T', ' '))} UTC from <code>data/*.yaml</code>`;
+initSearch(data);
 render();
 void loadIssues();

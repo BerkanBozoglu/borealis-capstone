@@ -46,3 +46,43 @@ workflow_rules:
     text: >-
       To record a measurement, change `tag: MEASURED`, fill `conditions:`, and link the evidence
       file under `evidence/`. Missing conditions = build fails = the change does not go live.
+
+# TODO(Berky): paste the Claude Project link here (the "Ask the project assistant" buttons use it).
+project_assistant_url: https://claude.ai/project/
+
+# Hardware page (#/hardware). Lanes in display order, keyed by parts.yaml availability.
+hardware:
+  lanes:
+    - {availability: available, label: Can use now}
+    - {availability: candidate, label: Want to use}
+    - {availability: choosing, label: Still choosing}
+    - {availability: blocked, label: "Can't use as-is"}
+  # filter pills: part id section letter → group
+  groups:
+    - {letter: A, label: Transmitter}
+    - {letter: B, label: Receiver}
+    - {letter: C, label: Optics & mount}
+    - {letter: H, label: Test bench}
+  flight_note: gated behind G1–G5
+
+# Search palette: suggestion chips shown when the box is empty, and words
+# dropped from queries.
+search:
+  suggestions: [receiver board, BPW34, azgti, who owns TIA, I-06, scope]
+  stop_words: [who, owns, what, is, the, a, of, our, for, which, does]
+  docs: [01_MASTER_CONTEXT, 02_COMPONENT_REGISTER, 04_ENGINEERING_PLAYBOOKS, 05_DECISION_LOG_and_OPEN_ITEMS]
+
+# Doc pages (#/docs/…): a paragraph, list item or table row in docs/*.md that
+# contains one of these Rev D.2 phrases gets "superseded by <ID>".
+doc_superseded:
+  # headings (regex) whose whole section is about the flight track, where 850 nm / 2 W stay current
+  skip_headings: ["[Ff]light", "FLIGHT", "E-track", "BALLOON", "Extended track", "APD", "Dusk", "Three channels"]
+  phrases:
+    - {match: "850 nm", ids: [TX-01]}
+    - {match: "≤200 mW", ids: [TX-02]}
+    - {match: "200 mW", ids: [TX-02]}
+    - {match: "Class 3B", ids: [SAF-01]}
+    - {match: "850/40", ids: [OPT-03]}
+    - {match: "~14 dB", ids: [LNK-02]}
+    - {match: "14 dB margin", ids: [LNK-02]}
+    - {match: "IR-transmitting", ids: [OPT-06]}

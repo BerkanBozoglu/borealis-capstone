@@ -1,0 +1,10 @@
+# Team shorthand for search. A query containing the key also searches for
+# every alternative (ids included). Add a line when search misses something.
+receiver board: [B4, rx board, receiver pcb]
+tia: [transimpedance, B2]
+photodiode: [pin, detector, B1]
+mount: [az-gti, azgti, C4]
+scope: [telescope, oscilloscope, guide scope]
+filter: [bandpass, C3]
+laser: [diode, A1]
+power meter: [H1]
