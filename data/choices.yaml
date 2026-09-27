@@ -1,0 +1,98 @@
+# Open choices: things narrowed down but not picked (prompt 09, 2026-09-27).
+# stage: waiting | exploring | shortlisted | proposed | decided
+# Nothing counts as decided until it is logged in 05 (decisions.yaml): set
+#   stage: decided, decided: {date, option: <option name>, log_ref: "<05 date> · <area>"}
+# and the build copies the chosen option's manufacturer, mpn, supplier,
+# supplier_pn, unit price and currency into every part in `parts`.
+# Seeded from a team research session on 2026-09-27; PROPOSED items are not yet in 05.
+- id: mcu
+  title: Microcontroller boards
+  parts: [A7, B5, E1]
+  stage: proposed
+  owner: batu
+  owner_status: proposed
+  decide_by: {text: "design approval", date: 2026-11-27}
+  summary: "One board model for every job that needs a microcontroller, bought as separate physical boards. The leading option is proposed, not decided; it becomes final when I-06, I-07 and I-12 are written and the owner logs it in 05."
+  roles:
+    - {name: Core transmitter, part_ref: A7, qty: 1, need: "Hardware-timed 100 kchip/s modulation of the laser driver. Sends stored JPEG test images, no camera."}
+    - {name: Core receiver, part_ref: B5, qty: 1, need: "Timer capture of the comparator output, clock recovery, packet decode, USB to the laptop."}
+    - {name: Spare, part_ref: null, qty: 1, need: "Same model; swaps in for either core board."}
+    - {name: Flight computer, part_ref: E1, qty: 1, need: "Transmitter role on the balloon plus OV5640 camera (DCMI) and microSD logging. Flight track; chosen after the flight gates."}
+  options:
+    - {name: NUCLEO-H753ZI, chip: "STM32H753 (= H743 + crypto, same code)", manufacturer: STMicroelectronics, mpn: NUCLEO-H753ZI, supplier: Digi-Key, supplier_pn: null, unit_price: 28.15, currency: USD, price_source: "Digi-Key", price_checked: 2026-09-27, lifecycle: active, status: leading, qty: 3, notes: "Built-in debugger. For core TX, RX and spare."}
+    - {name: WeAct MiniSTM32H743, chip: STM32H743, manufacturer: WeAct Studio, mpn: MiniSTM32H743, supplier: AliExpress, supplier_pn: null, unit_price: 14, currency: USD, price_source: "2024 AliExpress listing", price_checked: null, lifecycle: unknown, status: later, qty: 1, notes: "Flight only, deferred to flight gates. microSD and camera connector built in. Needs a separate ST-Link (~US$25.51). AliExpress only with 14-day delivery (Capstone Manual)."}
+    - {name: NUCLEO-H7A3ZI-Q, chip: "STM32H7A3 (different chip)", manufacturer: STMicroelectronics, mpn: NUCLEO-H7A3ZI-Q, supplier: Digi-Key, supplier_pn: null, unit_price: 30.17, currency: USD, price_source: "board comparison doc", price_checked: 2026-09-27, lifecycle: active, status: fallback, qty: 0, notes: "Firmware would have to be re-ported."}
+    - {name: NUCLEO-H723ZG, chip: "STM32H723 (different chip)", manufacturer: STMicroelectronics, mpn: NUCLEO-H723ZG, supplier: Digi-Key, supplier_pn: null, unit_price: 40.81, currency: USD, price_source: "board comparison doc", price_checked: 2026-09-27, lifecycle: active, status: fallback, qty: 0, notes: "Firmware would have to be re-ported."}
+    - {name: NUCLEO-H743ZI2, chip: STM32H743, manufacturer: STMicroelectronics, mpn: NUCLEO-H743ZI2, supplier: null, supplier_pn: null, unit_price: null, currency: USD, price_source: null, price_checked: null, lifecycle: obsolete, status: obsolete, qty: 0, notes: "Listed in 02 B5 and E1; replace in the register."}
+  facts:
+    - {status: PROPOSED, text: "A microcontroller, not Linux / Raspberry Pi: no vision runs on the transmitter or payload, and 100 kchip/s needs hardware-timed modulation, low power and instant boot.", source: "research session 2026-09-27"}
+    - {status: PROPOSED, text: "One board model in three roles, as separate physical boards: core TX, core RX, flight computer (TX role on the balloon).", source: "research session 2026-09-27"}
+    - {status: PROPOSED, text: "Core transmitter sends stored JPEG test images; no camera. Firmware keeps the image source swappable (file now, camera later).", source: "research session 2026-09-27"}
+    - {status: PROPOSED, text: "No computer vision on any microcontroller; all vision runs on the ground laptop (Python/OpenCV).", source: "research session 2026-09-27"}
+    - {status: DECIDED, text: "Vision is bright-dot tracking: threshold + centroid at ~10 Hz. No machine learning.", source: "01 §3.1 C2"}
+    - {status: DECIDED, text: "Flight camera is an OV5640 via DCMI, flight track only.", source: "02 E2"}
+    - {status: DECIDED, text: "Flight pointing uses GNSS + IMU + magnetometer + gimbal, no vision; a ground-beacon + payload-camera loop is the fallback only if G1 fails.", source: "Rev D"}
+    - {status: OPEN, text: "Board ownership: 02 puts the receiver board under Bilal (B5) and the flight computer under Batu (E1), and has no transmitter-board row. Proposed: Batu owns all board selection; Bilal co-owns I-06.", source: "02 B5, E1"}
+  blockers: [I-06, I-07, I-12]
+  docs:
+    - {id: DS12110, title: "STM32H743 datasheet"}
+    - {id: DS12117, title: "STM32H753 datasheet"}
+    - {id: RM0433, title: "STM32H7 reference manual (H743/H753), ~3,300 pages"}
+  comparison_link: {url: "https://claude.ai/code/artifact/c0c0adbc-6acd-450e-8038-9a9a6fc408b4", note: "Berky's comparison doc: private until shared from its Share menu"}
+  decision_entry_draft: "YYYY-MM-DD · embedded · Decision: NUCLEO-H753ZI for core TX and RX (3 boards incl. spare); WeAct MiniSTM32H743 for the flight computer, deferred to flight gates · Reason: hardware-timed 100 kchip/s modulation, no vision on the MCU, active part with on-board debugger; NUCLEO-H743ZI2 obsolete · Evidence: Digi-Key 2026-09-27; board comparison doc · Changes: 02 B5, E1, new TX-board row; I-06, I-07, I-12 · Owner: Batu"
+  decided: null
+
+- id: diode
+  title: "660 nm laser diode (Class 2)"
+  parts: [A1]
+  stage: exploring
+  owner: berky
+  owner_status: confirmed
+  decide_by: {text: "before bench tests (rung 1)"}
+  summary: "No 660 nm part chosen yet. Its wavelength sets the filter, the detector response and the eyewear."
+  options: []
+  facts:
+    - {status: DECIDED, text: "Campus baseline is Class 2: ≤1 mW at 660 nm.", source: "coordinator review, 2026-09"}
+  blockers: [I-02, I-03]
+  decided: null
+
+- id: filter
+  title: "660 nm bandpass filter"
+  parts: [C3]
+  stage: waiting
+  waiting_on: diode
+  owner: berky
+  owner_status: confirmed
+  decide_by: {text: "after A1's wavelength is measured"}
+  summary: "The 850/40 filter in 02 blocks 660 nm. Its replacement must be matched to the chosen diode's measured wavelength."
+  options: []
+  facts: []
+  blockers: [I-04]
+  decided: null
+
+- id: ota
+  title: "Telescope: new or borrowed"
+  parts: [C1]
+  stage: exploring
+  owner: berky
+  owner_status: confirmed
+  decide_by: {text: "design approval", date: 2026-11-27}
+  summary: "02 and open item 11 plan a used 130 mm Newtonian; used marketplace parts are ruled out. Buy new, or borrow."
+  options: []
+  facts:
+    - {status: DECIDED, text: "No used parts from eBay, Kijiji or Facebook Marketplace.", source: "coordinator review, 2026-09"}
+  blockers: [I-04, I-10]
+  decided: null
+
+- id: meter
+  title: "Optical power meter"
+  parts: [H1]
+  stage: exploring
+  owner: berky
+  owner_status: confirmed
+  decide_by: {text: "before bench tests (rung 1)"}
+  summary: "02 calls it the single most important instrument; the department has no optical test equipment. Borrow from a lab, or buy. Must be calibrated at the laser's wavelength."
+  options: []
+  facts: []
+  blockers: []
+  decided: null

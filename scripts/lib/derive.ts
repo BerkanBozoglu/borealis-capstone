@@ -7,6 +7,7 @@ import type {
 import { TAGS } from '../../src/types.ts';
 import { committedValues } from '../../src/model.ts';
 import { runChecks } from './checks.ts';
+import { applyDecisions, scheduleClashes } from '../../src/choices.ts';
 
 export const sha1 = (s: string) => createHash('sha1').update(s, 'utf8').digest('hex');
 /** Stored spec_hash is the first 10 hex chars of sha1(what). */
@@ -145,7 +146,9 @@ export function computeHardware(raw: RawData): HardwareDerived {
 }
 
 /** The whole pipeline: raw data → site data with derived state and findings. */
-export function buildSiteData(raw: RawData, today: string, builtAt = new Date().toISOString()): SiteData {
+export function buildSiteData(rawIn: RawData, today: string, builtAt = new Date().toISOString()): SiteData {
+  // decided choices copy their chosen option into the parts they decide
+  const raw: RawData = { ...rawIn, choices: rawIn.choices ?? [], parts: applyDecisions(rawIn.parts, rawIn.choices ?? []) };
   const rows = computeRows(raw);
   const interfaces = computeInterfaces(raw);
   const committed = committedValues(raw.register, raw.model?.inputs ?? {});
@@ -158,6 +161,7 @@ export function buildSiteData(raw: RawData, today: string, builtAt = new Date().
     subsystems: computeSubsystems(raw, rows, interfaces, findings),
     inbox: computeInbox(raw, rows, interfaces),
     hardware: computeHardware(raw),
+    schedule_clashes: scheduleClashes(raw),
   };
   const { evidence_files: _unused, ...rest } = raw;
   void _unused;

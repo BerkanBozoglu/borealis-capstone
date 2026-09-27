@@ -47,8 +47,8 @@ workflow_rules:
       To record a measurement, change `tag: MEASURED`, fill `conditions:`, and link the evidence
       file under `evidence/`. Missing conditions = build fails = the change does not go live.
 
-# TODO(Berky): paste the Claude Project link here (the "Ask the project assistant" buttons use it).
-project_assistant_url: https://claude.ai/project/
+# The team's Claude Project (the "Ask the project assistant" buttons use it).
+project_assistant_url: https://claude.ai/project/01a0c1f5-294f-71ea-8e04-1d1bc281ba53
 
 # Hardware page (#/hardware). Lanes in display order, keyed by parts.yaml availability.
 hardware:
@@ -68,8 +68,8 @@ hardware:
 # Search palette: suggestion chips shown when the box is empty, and words
 # dropped from queries.
 search:
-  suggestions: [receiver board, BPW34, azgti, who owns TIA, I-06, scope]
-  stop_words: [who, owns, what, is, the, a, of, our, for, which, does]
+  suggestions: [receiver board, BPW34, azgti, who owns TIA, I-06, scope, nucleo, how do we order parts]
+  stop_words: [who, owns, what, is, the, a, of, our, for, which, does, how, do, we, can, to]
   docs: [01_MASTER_CONTEXT, 02_COMPONENT_REGISTER, 04_ENGINEERING_PLAYBOOKS, 05_DECISION_LOG_and_OPEN_ITEMS]
 
 # Doc pages (#/docs/…): a paragraph, list item or table row in docs/*.md that
@@ -86,3 +86,10 @@ doc_superseded:
     - {match: "~14 dB", ids: [LNK-02]}
     - {match: "14 dB margin", ids: [LNK-02]}
     - {match: "IR-transmitting", ids: [OPT-06]}
+
+# BOM export header (#/bom). Blank fields are exported blank and flagged, never guessed.
+bom:
+  team_name: ""          # TODO: the team name as registered with the capstone office
+  project: BOREALIS
+  designed_by: ""        # TODO
+  revision: ""           # TODO, e.g. A

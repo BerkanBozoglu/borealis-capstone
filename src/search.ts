@@ -2,7 +2,7 @@
 // and loaded in the browser; the same options and query logic run in tests.
 import MiniSearch, { type Options, type Query, type SearchResult } from 'minisearch';
 
-export type SearchKind = 'part' | 'param' | 'iface' | 'item' | 'person' | 'doc' | 'decision' | 'term';
+export type SearchKind = 'choice' | 'option' | 'part' | 'param' | 'iface' | 'item' | 'person' | 'rule' | 'doc' | 'ref' | 'decision' | 'term';
 
 export interface SearchDoc {
   id: string;          // unique key, e.g. "part:B1"
@@ -20,14 +20,18 @@ export interface SearchDoc {
   track: string;
 }
 
-/** Display order of result groups. */
+/** Result groups; shown ordered by their best match, this order breaking ties. */
 export const GROUPS: { kind: SearchKind; label: string }[] = [
+  { kind: 'choice', label: 'Open choices' },
+  { kind: 'option', label: 'Choice options' },
   { kind: 'part', label: 'Parts' },
   { kind: 'param', label: 'Shared numbers' },
   { kind: 'iface', label: 'Interfaces' },
   { kind: 'item', label: 'Open items' },
   { kind: 'person', label: 'People' },
+  { kind: 'rule', label: 'Rules' },
   { kind: 'doc', label: 'Doc sections' },
+  { kind: 'ref', label: 'Datasheets & manuals' },
   { kind: 'decision', label: 'Decisions' },
   { kind: 'term', label: 'Glossary' },
 ];
@@ -44,7 +48,8 @@ export const OPTIONS: Options<SearchDoc> = {
   fields: FIELDS,
   storeFields: STORE as string[],
   processTerm: (t) => { const n = norm(t); return n || null; },
-  searchOptions: { boost: BOOST, prefix: true, fuzzy: 0.2 },
+  // open choices rank above parts on ties
+  searchOptions: { boost: BOOST, prefix: true, fuzzy: 0.2, boostDocument: (_id, _term, stored) => ((stored as { kind?: string } | undefined)?.kind === 'choice' ? 1.5 : 1) },
 };
 
 export function buildEngine(docs: SearchDoc[]): MiniSearch<SearchDoc> {
@@ -138,16 +143,13 @@ export function search(ms: MiniSearch<SearchDoc>, cfg: SearchConfig, q: string, 
     via: viaMap.get(String(r.id)) ?? null,
   }));
 
-  // typo feedback: a word that no top hit matches directly (exactly or as a prefix)
+  // typo feedback, only when the top result depended on a fuzzy match
   let corrected: string | null = null;
-  const top = results.slice(0, 5);
+  const topTerms = results[0]?.terms ?? [];
   const fixed = ws.map((w) => {
-    if (w.length < 4) return w;
-    const matched = top.flatMap((r) => r.terms);
-    if (matched.some((t) => t.startsWith(w))) return w;
-    const best = matched.map((t) => ({ t, d: lev(w, t.slice(0, Math.max(w.length, 1) + 1)) }))
-      .concat(matched.map((t) => ({ t, d: lev(w, t) })))
-      .sort((a, b) => a.d - b.d)[0];
+    if (w.length < 4 || !topTerms.length) return w;
+    if (topTerms.some((t) => t.startsWith(w) || w.startsWith(t))) return w;
+    const best = topTerms.map((t) => ({ t, d: Math.min(lev(w, t), lev(w, t.slice(0, w.length + 1))) })).sort((a, b) => a.d - b.d)[0];
     return best && best.d <= 2 ? best.t : w;
   });
   if (fixed.some((f, i) => f !== ws[i])) corrected = fixed.join(' ');
@@ -156,6 +158,14 @@ export function search(ms: MiniSearch<SearchDoc>, cfg: SearchConfig, q: string, 
 }
 
 /** One short line on why a hit matched. */
+/** Group hits for display: groups ordered by their best score, GROUPS order on ties. */
+export function groupHits(hits: Hit[]): { kind: SearchKind; label: string; hits: Hit[] }[] {
+  return GROUPS.map((g, i) => ({ ...g, i, hits: hits.filter((h) => h.doc.kind === g.kind) }))
+    .filter((g) => g.hits.length)
+    .sort((a, b) => Math.max(...b.hits.map((h) => h.score)) - Math.max(...a.hits.map((h) => h.score)) || a.i - b.i)
+    .map(({ kind, label, hits: list }) => ({ kind, label, hits: list }));
+}
+
 export function whyMatched(h: Hit): string {
   const fieldName: Record<string, string> = { ref: 'id', model_line: 'model', aliases: 'also known as', compact: 'id / name / alias', title: 'name', body: 'text', owner: 'owner' };
   const f = h.fields.map((x) => fieldName[x] ?? x);

@@ -1,5 +1,6 @@
 import { icon } from '../icons.ts';
 import { baselinePreset, presetValues, runModel } from '../sandbox.ts';
+import { dueWithin, isOpenChoice } from '../choices.ts';
 import type { Finding, Interface } from '../types.ts';
 import {
   type Ctx, cite, confidenceBar, esc, gh, ifaceMark, inline, mark, modeled, num, personName, rowLink,
@@ -81,6 +82,11 @@ function tiles(ctx: Ctx): string {
       <div class="tile-value num">${measured}</div>
       <div class="small muted">of ${rows.length}; the rest are models, targets and assumptions</div>
     </a>
+    <a class="tile" href="#/hardware">
+      <div class="tile-label">Open choices</div>
+      <div class="tile-value num">${data.choices.filter(isOpenChoice).length}</div>
+      <div class="small muted">${data.choices.filter((c) => dueWithin(c, ctx.now, 30)).length} due within 30 days</div>
+    </a>
     <a class="tile" href="${esc(gh(data).issues)}" target="_blank" rel="noopener">
       <div class="tile-label">Open issues</div>
       <div class="tile-value num">${openIssues ?? '—'}</div>
@@ -94,9 +100,10 @@ function ladder(ctx: Ctx): string {
   const rungs = visible(ctx, data.milestones.rungs);
   const current = rungs.find((r) => r.status !== 'passed');
   const steps = rungs.map((r) => {
-    const st = r.status === 'passed' ? 'ok' : r === current ? 'recheck' : null;
+    const clash = data.derived.schedule_clashes.find((c) => c.rung === r.n);
+    const st = r.status === 'passed' ? 'ok' : clash ? 'broken' : r === current ? 'recheck' : null;
     return `<li class="rung ${r === current ? 'current' : ''} rung-${r.status}"${trackAttr(r.track)} title="${esc(r.cite)}">
-      <span class="rung-n num">${r.n}</span><span>${esc(r.name)}</span>${st ? mark(st, r.status === 'passed' ? 'passed' : r.status.replace('_', ' ')) : `<span class="muted small">${esc(r.status.replace('_', ' '))}</span>`}
+      <span class="rung-n num">${r.n}</span><span>${esc(r.name)}</span>${st ? mark(st, r.status === 'passed' ? 'passed' : clash ? 'schedule clash' : r.status.replace('_', ' ')) : `<span class="muted small">${esc(r.status.replace('_', ' '))}</span>`}${r.planned ? `<span class="small muted num">${esc(r.planned)}</span>` : ''}
     </li>`;
   }).join('');
   let blockers = '';

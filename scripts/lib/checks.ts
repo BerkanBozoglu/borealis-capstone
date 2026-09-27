@@ -1,7 +1,8 @@
 // Data checks. Errors fail the build; warnings show in the site's health panel.
-import type { Finding, InterfaceDerived, RawData, RowDerived } from '../../src/types.ts';
+import type { Finding, InterfaceDerived, RawData, RowDerived, Statement } from '../../src/types.ts';
+import { partView, scheduleClashes } from '../../src/choices.ts';
 import {
-  APPROVAL_STATUSES, AVAILABILITIES, CONDITION_FIELDS, INTERFACE_STATUSES, PART_STATUSES, RUNG_STATUSES, TAGS, TRACKS,
+  APPROVAL_STATUSES, AVAILABILITIES, CHOICE_STAGES, CONDITION_FIELDS, OPTION_STATUSES, STATEMENT_STATUSES, INTERFACE_STATUSES, PART_STATUSES, RUNG_STATUSES, TAGS, TRACKS,
 } from '../../src/types.ts';
 import { constantsFrom, evaluate, inputsFrom, passband, firstNumber } from '../../src/model.ts';
 
@@ -62,6 +63,13 @@ export function runChecks(raw: RawData, ctx: Ctx): Finding[] {
   }
 
   const knownRef = (id: string) => rowIds.has(id);
+  function checkStatements(where: string, list: Statement[] | undefined, ids: string[]) {
+    for (const st of list ?? []) {
+      if (typeof st === 'string') continue;
+      if (!STATEMENT_STATUSES.includes(st.status)) err('bad-enum', `${where}: statement status "${st.status}" is not PROPOSED | DECIDED | OPEN`, ids);
+      if (st.status === 'DECIDED' && !String(st.source ?? '').trim()) err('decided-without-source', `${where}: DECIDED statement has no source ("${st.text.slice(0, 50)}…")`, ids);
+    }
+  }
   const checkOwner = (where: string, owner: string, ids: string[]) => {
     if (!people.has(owner)) err('unknown-owner', `${where}: unknown owner "${owner}" (not in people.yaml)`, ids);
   };
@@ -212,7 +220,10 @@ export function runChecks(raw: RawData, ctx: Ctx): Finding[] {
         warn('class2-unchecked', `${w}: Not checked against the Class 2 ${raw.constraints?.class2?.wavelength_nm ?? ''} nm baseline`, [p.id]);
       }
     }
-    if (p.availability === 'candidate' && !String(p.model_line ?? '').trim()) {
+    if (p.currency !== undefined && p.currency !== null) checkEnum(w, 'currency', p.currency, ['USD', 'CAD'], [p.id]);
+    if (p.ece_stock !== undefined) checkEnum(w, 'ece_stock', p.ece_stock, ['unknown', 'yes', 'no'], [p.id]);
+    checkStatements(w, p.need_to_know, [p.id]);
+    if (p.availability === 'candidate' && !partView(raw.choices ?? [], p).model_line.trim()) {
       warn('candidate-no-model', `${w}: availability candidate but no model_line`, [p.id]);
     }
   }
@@ -221,6 +232,68 @@ export function runChecks(raw: RawData, ctx: Ctx): Finding[] {
   const total = priced.reduce((a, p) => a + (p.est_cost_cad as number), 0);
   if (budget && total > budget) {
     warn('over-budget', `Priced core parts total $${total} CAD, over the ~$${budget} CAD budget (constraints.yaml)`, priced.map((p) => p.id));
+  }
+
+  // ---- choices.yaml ----
+  const choiceIds = new Set((raw.choices ?? []).map((c) => c.id));
+  const partIdSet = new Set(raw.parts.map((p) => p.id));
+  dupCheck('choices.yaml', (raw.choices ?? []).map((c) => c.id));
+  for (const c of raw.choices ?? []) {
+    const w = `choice ${c.id}`;
+    checkEnum(w, 'stage', c.stage, CHOICE_STAGES, [c.id]);
+    checkOwner(w, c.owner, [c.id]);
+    checkEnum(w, 'owner_status', c.owner_status, ['proposed', 'confirmed'], [c.id]);
+    for (const pid of c.parts) if (!partIdSet.has(pid)) err('unknown-id', `${w}: part "${pid}" is not in parts.yaml`, [c.id]);
+    for (const b of c.blockers ?? []) if (!ifaceIds.has(b) && !rowIds.has(b)) err('unknown-id', `${w}: blocker "${b}" is not an interface or register id`, [c.id]);
+    if (c.stage === 'waiting' && !(c.waiting_on && (choiceIds.has(c.waiting_on) || partIdSet.has(c.waiting_on)))) {
+      err('unknown-id', `${w}: stage waiting needs waiting_on (a part or choice id)`, [c.id]);
+    }
+    if (c.stage === 'decided') {
+      if (!c.decided?.option || !c.decided?.log_ref) {
+        err('decided-without-log', `${w}: stage decided needs decided.option and decided.log_ref (the 05 entry's date and area)`, [c.id]);
+      } else {
+        if (!c.options.some((o) => o.name === c.decided!.option)) err('decided-without-log', `${w}: decided.option "${c.decided.option}" is not one of its options`, [c.id]);
+        const ref = c.decided.log_ref.toLowerCase();
+        if (!raw.decisions.some((d) => ref.includes(d.date) && ref.includes(d.area.toLowerCase()))) {
+          err('decided-without-log', `${w}: decided.log_ref "${c.decided.log_ref}" matches no entry in decisions.yaml (log it in 05 first)`, [c.id]);
+        }
+      }
+    } else if (c.decide_by?.date && daysBetween(c.decide_by.date, ctx.today) > 0) {
+      warn('choice-overdue', `${w}: decide-by ${c.decide_by.date} has passed and the choice is still ${c.stage}`, [c.id]);
+    }
+    for (const r of c.roles ?? []) {
+      if (r.part_ref === null || r.part_ref === undefined) warn('role-not-in-02', `${w}: role "${r.name}" needs a row in 02 (part_ref is null)`, [c.id]);
+      else if (!partIdSet.has(r.part_ref)) err('unknown-id', `${w}: role "${r.name}" part_ref "${r.part_ref}" is not in parts.yaml`, [c.id]);
+    }
+    const leadCount = c.options.filter((o) => o.status === 'leading' || o.status === 'chosen').length;
+    if (leadCount > 1) err('two-leaders', `${w}: ${leadCount} options are leading or chosen; at most one`, [c.id]);
+    for (const o of c.options) {
+      const ow = `${w} option ${o.name}`;
+      checkEnum(ow, 'status', o.status, OPTION_STATUSES, [c.id]);
+      checkEnum(ow, 'lifecycle', o.lifecycle, ['active', 'obsolete', 'unknown'], [c.id]);
+      if (o.currency) checkEnum(ow, 'currency', o.currency, ['USD', 'CAD'], [c.id]);
+      if (o.lifecycle === 'obsolete' && o.status !== 'obsolete' && o.status !== 'rejected') {
+        err('obsolete-option', `${ow}: lifecycle obsolete but status is ${o.status}`, [c.id]);
+      }
+      if (typeof o.unit_price === 'number') {
+        if (!o.price_checked) warn('price-recheck', `${ow}: re-check price (price has no check date)`, [c.id]);
+        else if (daysBetween(o.price_checked, ctx.today) > 60) warn('price-recheck', `${ow}: re-check price (checked ${o.price_checked}, over 60 days ago)`, [c.id]);
+      }
+      if (o.lifecycle === 'obsolete' && o.mpn) {
+        const needle = o.mpn.toLowerCase();
+        for (const p of raw.parts) {
+          const text = [p.model_line, p.mpn, partText(p)].join(' ').toLowerCase();
+          if (text.includes(needle)) warn('obsolete-in-register', `part ${p.id}: register names an obsolete part (${o.mpn})`, [p.id]);
+        }
+      }
+    }
+    checkStatements(w, c.facts, [c.id]);
+  }
+  checkStatements('constraints.yaml procurement_rules', raw.constraints?.procurement_rules, []);
+
+  // ---- schedule clash: rungs before design approval that need parts to order ----
+  for (const c of scheduleClashes(raw)) {
+    warn('schedule-clash', `Schedule clash: rung ${c.rung} needs parts that can't be ordered until after design approval (${c.parts.join(', ')})`, c.parts);
   }
 
   // ---- software.yaml ----

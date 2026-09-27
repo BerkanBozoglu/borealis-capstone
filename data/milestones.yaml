@@ -4,6 +4,7 @@ dates:
     name: Phase 1 report
     cite: 01 §2
   - date: 2026-11-27
+    key: design_approval       # procurement opens after this (schedule clash check)
     name: Final design approval
     cite: 01 §2
   - date: 2026-11-29
@@ -26,6 +27,10 @@ dates:
 # blocked_by: register row ids or interface ids (checked by the build)
 # blocked_by_notes: 04 §1 "What must be true before", verbatim, one per item
 # proves / log: 04 §1 "What we prove" and "Log artifact"
+# planned: YYYY-MM the rung is planned for; needs_parts: part ids it needs.
+#   A rung planned before design approval that needs parts which must be
+#   ordered (ece_stock not yes, source not department/borrow) raises a
+#   schedule-clash warning. Fix it in data (ece_stock: yes, or source: borrow …).
 rungs:
   - n: 1
     name: Bench, controlled path
@@ -34,6 +39,8 @@ rungs:
     status: not_started
     blocked_by: [BUD-01, OPT-03]
     blocked_by_notes: [driver current-limited, eyewear, key switch]
+    planned: 2026-10
+    needs_parts: [A1, A4, A6, A7, B1, B2, B3, B5, H1, H3]
     proves: LED → PIN → TIA waveform; then attenuated laser; one byte, then one image
     log: R1-bench-YYYYMMDD
   - n: 2
@@ -43,6 +50,8 @@ rungs:
     status: not_started
     blocked_by: []
     blocked_by_notes: [Rung 1 passed, EHS bench approval, ND attenuation calibrated]
+    planned: 2026-11          # assumed from 01 §10; the owner adjusts
+    needs_parts: [A1, A4, A6, A7, B1, B2, B3, B5, H1, H3, C1, C2, C3]
     proves: first real alignment; focus/boresight procedure; image transfer
     log: R2-corridor-…
   - n: 3

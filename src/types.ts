@@ -42,16 +42,47 @@ export interface Part {
   fields: PartField[]; superseded_by?: string[];
   // hardware view (all optional)
   availability?: Availability; flag?: string; owner_display?: string; short?: string; model_line?: string;
-  what_it_does?: string; blocked_reason?: string; class2_note?: string; need_to_know?: string[];
+  what_it_does?: string; blocked_reason?: string; class2_note?: string; need_to_know?: Statement[];
   touches?: string[]; source?: string; est_cost_cad?: number | null; lead_time?: string | null;
   datasheet_url?: string | null; aliases?: string[]; hotspot?: { view: 'station' | 'bench'; x?: number; y?: number };
   doc_ref?: string;
+  in_02?: boolean;
+  // BOM (Capstone Manual columns); null = not known yet, exported blank
+  manufacturer?: string | null; mpn?: string | null; supplier?: string | null; supplier_pn?: string | null;
+  unit_cost?: number | null; currency?: Currency | null; qty?: number | null;
+  ece_stock?: 'unknown' | 'yes' | 'no'; bom_include?: boolean;
+}
+export type Currency = 'USD' | 'CAD';
+export const STATEMENT_STATUSES = ['PROPOSED', 'DECIDED', 'OPEN'] as const;
+export type StatementStatus = (typeof STATEMENT_STATUSES)[number];
+/** A fact or note: a plain string, or one carrying its provenance. */
+export type Statement = string | { text: string; status: StatementStatus; source?: string };
+
+export const CHOICE_STAGES = ['waiting', 'exploring', 'shortlisted', 'proposed', 'decided'] as const;
+export type ChoiceStage = (typeof CHOICE_STAGES)[number];
+export const OPTION_STATUSES = ['leading', 'fallback', 'later', 'rejected', 'obsolete', 'chosen'] as const;
+export interface ChoiceOption {
+  name: string; chip?: string; manufacturer?: string | null; mpn?: string | null; supplier?: string | null;
+  supplier_pn?: string | null; unit_price?: number | null; currency?: Currency; price_source?: string | null;
+  price_checked?: string | null; lifecycle: 'active' | 'obsolete' | 'unknown';
+  status: (typeof OPTION_STATUSES)[number]; qty?: number; notes?: string;
+}
+export interface Choice {
+  id: string; title: string; parts: string[]; stage: ChoiceStage; waiting_on?: string;
+  owner: string; owner_status: 'proposed' | 'confirmed'; decide_by: { text: string; date?: string };
+  summary: string;
+  roles?: { name: string; need: string; part_ref: string | null; qty: number }[];
+  options: ChoiceOption[]; facts: Statement[]; blockers: string[];
+  docs?: { id: string; title: string }[];
+  comparison_link?: { url: string; note: string };
+  decision_entry_draft?: string;
+  decided: null | { date: string; option: string; log_ref: string };
 }
 export const AVAILABILITIES = ['available', 'candidate', 'choosing', 'blocked', 'flight'] as const;
 export type Availability = (typeof AVAILABILITIES)[number];
 
 export interface Constraints {
-  source: string; budget_cad: number; procurement_rules: string[];
+  source: string; budget_cad: number; procurement_rules: Statement[]; procurement_source: string;
   department_has: string[]; department_lacks: string[];
   class2: { wavelength_nm: number; max_power_mw: number; note: string };
 }
@@ -84,10 +115,10 @@ export interface Interface {
   status: InterfaceStatus; spec_hash: string; gap: string; blocks: string;
 }
 
-export interface Milestone { date: string; name: string; cite: string; week_of?: boolean }
+export interface Milestone { date: string; name: string; cite: string; week_of?: boolean; key?: string }
 export interface Rung {
   n: number; name: string; cite: string; track: Track; status: RungStatus; blocked_by: string[];
-  blocked_by_notes?: string[]; proves?: string; log?: string;
+  blocked_by_notes?: string[]; proves?: string; log?: string; planned?: string; needs_parts?: string[];
 }
 
 export interface Approval {
@@ -122,6 +153,7 @@ export interface SiteConfig {
   doc_superseded: { skip_headings: string[]; phrases: { match: string; ids: string[] }[] };
   hardware: { lanes: { availability: string; label: string }[]; groups: { letter: string; label: string }[]; flight_note: string };
   search: { suggestions: string[]; stop_words: string[]; docs: string[] };
+  bom: { team_name: string; project: string; designed_by: string; revision: string };
   workflow_cite: string;
   workflow_rules: { title: string; text: string }[];
 }
@@ -144,6 +176,7 @@ export interface RawData {
   synonyms: Record<string, string[]>;
   glossary: GlossaryTerm[];
   software: Software;
+  choices: Choice[];
   /** line number of each "- id:" in register.yaml, parts.yaml, interfaces.yaml */
   lines: Record<string, Record<string, number>>;
   /** evidence files present under evidence/ (relative paths) */
@@ -174,6 +207,7 @@ export interface Derived {
   interfaces: Record<string, InterfaceDerived>;
   inbox: Record<string, Inbox>;
   hardware: HardwareDerived;
+  schedule_clashes: { rung: number; name: string; planned: string; parts: string[] }[];
   committed: Record<string, number>;
   findings: Finding[];
 }

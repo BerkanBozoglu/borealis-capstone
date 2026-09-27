@@ -1,6 +1,6 @@
 // Search palette: "/" or Cmd/Ctrl+K anywhere, #/search?q=…, and the header box.
 import type MiniSearch from 'minisearch';
-import { GROUPS, loadEngine, search, whyMatched, type Hit, type SearchDoc, type SearchOutcome } from './search.ts';
+import { GROUPS, groupHits, loadEngine, search, whyMatched, type Hit, type SearchDoc, type SearchOutcome } from './search.ts';
 import type { SiteData } from './types.ts';
 import { esc } from './render/util.ts';
 
@@ -111,8 +111,8 @@ function run(q: string) {
   lastQuery = q;
   if (!engine) { outcome = { hits: [], correctedQuery: null, words: [] }; hits = []; paint(q.trim() ? 'loading' : undefined); return; }
   outcome = search(engine, { synonyms: data.synonyms, stopWords: data.site.search.stop_words }, q, 16);
-  // display grouped in the fixed order; rank within a group by score
-  hits = GROUPS.flatMap((g) => outcome.hits.filter((h) => h.doc.kind === g.kind));
+  // display grouped, groups ordered by their best match
+  hits = groupHits(outcome.hits).flatMap((g) => g.hits);
   active = 0;
   paint();
 }
@@ -136,15 +136,14 @@ function paint(state?: 'loading') {
   }
   let html = outcome.correctedQuery ? `<div class="pal-typo small">Showing results for '${esc(outcome.correctedQuery)}'</div>` : '';
   let k = 0;
-  for (const g of GROUPS) {
-    const list = hits.filter((h) => h.doc.kind === g.kind);
-    if (!list.length) continue;
+  for (const g of groupHits(hits)) {
+    const list = g.hits;
     html += `<div class="pal-group caps small muted">${esc(g.label)}</div>`;
     for (const h of list) {
-      const cls = STATUS_CLASS[h.doc.status] ?? 'muted';
+      const cls = STATUS_CLASS[h.doc.status.split(' ')[0]] ?? 'muted';
       html += `<div class="pal-hit ${k === active ? 'active' : ''}" data-hit="${k}" role="option" aria-selected="${k === active}">
         <div><span class="id ${cls}">${esc(h.doc.ref)}</span> ${esc(h.doc.title)}${h.doc.track === 'flight' ? ' <span class="badge-flight">flight track</span>' : ''}</div>
-        <div class="small muted">${[h.doc.owner, h.doc.status].filter(Boolean).map(esc).join(' · ')}</div>
+        <div class="small muted">${[h.doc.owner, h.doc.status].filter(Boolean).map(esc).join(' · ')}${/proposed/i.test(h.doc.status) ? '' : ''}</div>
         <div class="small why">${esc(whyMatched(h))}</div></div>`;
       k++;
     }

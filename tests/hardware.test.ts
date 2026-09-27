@@ -13,10 +13,10 @@ describe('parts.yaml hardware fields', () => {
   const data = loadSite();
   const core = data.parts.filter((p) => p.track === 'core' && p.availability);
 
-  it('23 core parts carry availability: available 1 / candidate 8 / choosing 10 / blocked 4', () => {
-    expect(core.length).toBe(23);
+  it('25 core parts carry availability: available 1 / candidate 9 / choosing 11 / blocked 4', () => {
+    expect(core.length).toBe(25);
     const count = (a: string) => core.filter((p) => p.availability === a).length;
-    expect([count('available'), count('candidate'), count('choosing'), count('blocked')]).toEqual([1, 8, 10, 4]);
+    expect([count('available'), count('candidate'), count('choosing'), count('blocked')]).toEqual([1, 9, 11, 4]);
   });
   it('every flight-track part is availability: flight', () => {
     for (const p of data.parts.filter((x) => x.track === 'flight')) expect(p.availability, p.id).toBe('flight');
@@ -34,7 +34,7 @@ describe('parts.yaml hardware fields', () => {
       expect(p.lead_time ?? null, p.id).toBeNull();
       expect(p.datasheet_url ?? null, p.id).toBeNull();
     }
-    expect(data.derived.hardware).toMatchObject({ priced: 0, to_price: 22, budget_cad: 700 });
+    expect(data.derived.hardware).toMatchObject({ priced: 0, to_price: 24, budget_cad: 700 });
   });
 });
 
@@ -72,15 +72,15 @@ describe('hardware lint rules', () => {
 
 describe('hardware page', () => {
   const data = loadSite();
-  it('renders all 18 station hotspots at their stored coordinates', () => {
+  it('renders all 19 station hotspots at their stored coordinates', () => {
     const html = renderHardware(ctxFor(data), null);
     const station = data.parts.filter((p) => p.hotspot?.view === 'station');
-    expect(station.length).toBe(18);
+    expect(station.length).toBe(19);
     for (const p of station) {
       const { x, y } = p.hotspot as { x: number; y: number };
       expect(html, p.id).toContain(`style="left:${x - 16}px;top:${y - 16}px" data-hw-part="${p.id}"`);
     }
-    expect((html.match(/class="hs hs-/g) ?? []).length).toBe(18);
+    expect((html.match(/class="hs hs-/g) ?? []).length).toBe(19);
   });
   it('defaults to the first blocked part and shows its blocked box', () => {
     const html = renderHardware(ctxFor(data), null);
@@ -132,7 +132,7 @@ describe('software section', () => {
   it('F is not in the lanes or the "not on this view" list, and lane totals are unchanged', () => {
     expect(html).not.toContain('data-hw-part="F"');
     expect(html).not.toMatch(/Not on this view yet[^<]*<a href="#\/s\/ground">F</);
-    expect(data.parts.filter((p) => p.track === 'core' && p.availability).length).toBe(23);
+    expect(data.parts.filter((p) => p.track === 'core' && p.availability).length).toBe(25);
   });
 });
 

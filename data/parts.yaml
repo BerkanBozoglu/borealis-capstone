@@ -41,6 +41,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: A2
   name: Collimating optic (narrow beam, 60 mrad)
@@ -77,6 +86,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: A3
   name: Engineered diffuser (wide beam, 200 mrad) — C2
@@ -112,6 +130,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: A4
   name: Laser driver, campus
@@ -149,6 +176,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: A5
   name: "Transmitter mechanical: sight, mount, carrier"
@@ -182,6 +218,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: A6
   name: Calibrated attenuator stage (C3 and all short-range tests)
@@ -217,6 +262,50 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
+- id: A7
+  name: Transmitter microcontroller board
+  subsystem: firmware
+  track: core
+  cite: new · not in 02 yet
+  role: Packs the stored test image into packets and switches the laser driver on and off 100,000 times a second, with hardware timing.
+  status: candidate
+  chosen_part: TBD
+  candidates: ""
+  downstream: ""
+  gotchas: ""
+  fields: []
+  in_02: false
+  availability: candidate
+  flag: NOT IN 02
+  owner_display: Batu (proposed)
+  short: "Board choice: see open choice mcu"
+  what_it_does: Packs the stored test image into packets and switches the laser driver on and off 100,000 times a second, with hardware timing.
+  touches: [ SYS-01, I-01, I-12 ]
+  source: buy new
+  aliases: [ tx board, transmitter board, tx mcu, transmitter microcontroller ]
+  hotspot: { view: station, x: 40, y: 234 }
+  doc_ref: new · not in 02 yet
+  est_cost_cad: null
+  lead_time: null
+  datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 # ---------- B. Receiver, campus (02 B) ----------
 - id: B1
@@ -255,6 +344,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: B2
   name: Transimpedance amplifier
@@ -293,6 +391,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: B3
   name: Post-amp, AC coupling, comparator/slicer
@@ -323,6 +430,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: B4
   name: Receiver PCB
@@ -355,9 +471,18 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: B5
-  name: RX microcontroller and decode path
+  name: Receiver microcontroller board
   subsystem: receiver
   track: core
   cite: 02 B5
@@ -371,13 +496,13 @@
     - { name: Board, value: TBD }
     - { name: Firmware repo, value: TBD }
   availability: candidate
-  owner_display: Bilal · Batu
-  short: STM32H743 (WeAct or Nucleo)
-  model_line: STM32H743 (WeAct or Nucleo) or STM32F4-class
+  owner_display: Bilal (02) · Batu (proposed)
+  short: "Leading: NUCLEO-H753ZI (proposed)"
   what_it_does: Captures the chips, recovers the clock, decodes packets and sends them to the laptop over USB.
   need_to_know:
     - Hardware-timed capture, no bit-banging (04 §6)
     - Packet format to the laptop is interface I-07, still missing
+    - 02 lists "STM32H743 (WeAct or Nucleo)"; the Nucleo board for that chip (NUCLEO-H743ZI2) is obsolete, so the register entry must be replaced
   touches: [ SYS-01, I-06, I-07 ]
   source: buy new
   aliases: [ stm32h743, stm32, weact, nucleo, stm32f4, mcu, microcontroller ]
@@ -386,6 +511,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 # ---------- C. Optical front end and mount (02 C) ----------
 - id: C1
@@ -423,6 +557,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: C2
   name: Field stop and detector mount
@@ -453,6 +596,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: C3
   name: Bandpass filter
@@ -486,6 +638,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: C4
   name: Mount
@@ -521,6 +682,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: C5
   name: Guide scope
@@ -553,6 +723,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: C6
   name: Guide camera
@@ -587,6 +766,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: C7
   name: Dew control, adapters, tripod power
@@ -618,6 +806,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 # ---------- D. Receiver, flight (02 D) ----------
 - id: D1
@@ -643,6 +840,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: false
 
 - id: D2
   name: Bias supply
@@ -662,6 +868,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: false
 
 # ---------- E. Flight payload (02 E) ----------
 - id: E1
@@ -682,6 +897,16 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  model_line: WeAct MiniSTM32H743 (proposed, deferred)
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: false
 
 - id: E2
   name: Camera
@@ -701,6 +926,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: false
 
 - id: E3
   name: GNSS
@@ -722,6 +956,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: false
 
 - id: E4
   name: RF link
@@ -743,6 +986,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: false
 
 - id: E5
   name: Sensors
@@ -762,6 +1014,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: false
 
 - id: E6
   name: Flight laser diode (2 W)
@@ -783,6 +1044,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: false
 
 - id: E7
   name: Flight laser driver
@@ -802,6 +1072,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: false
 
 - id: E8
   name: Gimbal (pan/tilt)
@@ -821,6 +1100,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: false
 
 - id: E9
   name: Power
@@ -841,6 +1129,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: false
 
 - id: E10
   name: Structure and thermal
@@ -861,6 +1158,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: false
 
 # ---------- F. Ground software (02 F) ----------
 - id: F
@@ -877,6 +1183,15 @@
   fields:
     - { name: Repo, value: TBD }
     - { name: Framework, value: TBD }
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: false
 
 # ---------- G. RF ground station (02 G) ----------
 - id: G
@@ -896,6 +1211,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: false
 
 # ---------- H. Test equipment (02 H) ----------
 - id: H1
@@ -929,6 +1253,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: H2
   name: Oscilloscope ≥100 MHz
@@ -958,6 +1291,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: false
 
 - id: H3
   name: Bench supplies with current limit
@@ -987,6 +1329,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: H4
   name: SDR/spectrum analyzer (RF link)
@@ -1000,6 +1351,15 @@
   downstream: ""
   gotchas: ""
   fields: []
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: H5
   name: Absorptive ND filter set (OD 1–3) + calibrated fiber attenuator for 90 dB flight tests
@@ -1013,6 +1373,32 @@
   downstream: ""
   gotchas: ""
   fields: []
+  availability: choosing
+  flag: MUST BUY
+  owner_display: Berky
+  short: Department has no ND filters
+  model_line: Absorptive ND filter set, OD 1–3 (02 H5)
+  what_it_does: Test-bench ND filters for dimming the beam during bench and corridor tests.
+  need_to_know:
+    - Department has no ND filters (coordinator).
+    - The 90 dB fiber attenuator part is flight-only.
+  touches: [ TX-09 ]
+  source: buy new
+  aliases: [ nd filter set, nd filters, od 1-3, fiber attenuator ]
+  hotspot: { view: bench }
+  doc_ref: 02 H5
+  est_cost_cad: null
+  lead_time: null
+  datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: H6
   name: Beam profiler or camera-on-screen method for far-field measurement
@@ -1042,6 +1428,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: H7
   name: Laser eyewear OD 4+ at 800–900 nm ×3; beam stops, signage, key switch
@@ -1072,6 +1467,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: true
 
 - id: H8
   name: Dry ice cooler / vacuum chamber access (E-track)
@@ -1090,6 +1494,15 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: false
 
 # ---------- I. Balloon operations (02 I) ----------
 - id: I
@@ -1112,3 +1525,12 @@
   est_cost_cad: null
   lead_time: null
   datasheet_url: null
+  manufacturer: null
+  mpn: null
+  supplier: null
+  supplier_pn: null
+  unit_cost: null
+  currency: null
+  qty: null
+  ece_stock: unknown
+  bom_include: false

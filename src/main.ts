@@ -10,6 +10,8 @@ import { renderInbox, renderInterfaces, renderRegister, renderRegisterTable, reg
 import { parseSandbox, presetValues, sandboxHash } from './sandbox.ts';
 import { renderHardware, hardwareFilters, hardwareHash } from './render/hardware.ts';
 import { renderDocs } from './render/docs.ts';
+import { renderBom, bomFor } from './render/bom.ts';
+import { bomCsv } from './bom.ts';
 import { initSearch, openSearch, isOpen } from './searchui.ts';
 import type { DocPage } from './types.ts';
 
@@ -95,7 +97,8 @@ function render() {
       html = renderInbox(ctxFor(r), person);
       break;
     }
-    case 'hardware': html = renderHardware(ctxFor(r), arg ?? null); break;
+    case 'hardware': html = arg === 'choice' ? renderHardware(ctxFor(r), null, r.path[2] ?? null) : renderHardware(ctxFor(r), arg ?? null); break;
+    case 'bom': html = renderBom(ctxFor(r)); break;
     case 'docs':
       if (!docs) { loadDocs(); html = '<section class="card"><p class="muted">Loading docs…</p></section>'; }
       else html = renderDocs(docs, arg);
@@ -117,7 +120,7 @@ function render() {
   if (focus) {
     if (!r.anchor) focus.classList.add('flash');
     focus.scrollIntoView({ block: r.anchor ? 'start' : 'center' });
-  } else if (page !== 'sandbox' && page !== 'register' && page !== 'hardware') {
+  } else if (page !== 'sandbox' && page !== 'register' && page !== 'hardware' && page !== 'bom') {
     window.scrollTo(0, 0);
   }
 }
@@ -152,6 +155,16 @@ document.addEventListener('click', (e) => {
     }
     return;
   }
+  if (t.closest('[data-bom-export]')) {
+    const bom = bomFor(ctxFor(route()));
+    const blob = new Blob([bomCsv(bom)], { type: 'text/csv;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `borealis-bom-${bom.header.date}.csv`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    return;
+  }
   const part = t.closest<HTMLElement>('[data-hw-part]');
   if (part) {
     const r = route();
@@ -183,6 +196,7 @@ document.addEventListener('change', (e) => {
   }
   if (t.matches('input[type=range][data-sb-param]')) { sandboxSet(t.dataset.sbParam!, Number(t.value), true); return; }
   if (t.matches('select[data-reg-filter]')) { updateRegisterFilters(); return; }
+  if (t.matches('select[data-bom-subsystem]')) { location.hash = t.value ? `#/bom?subsystem=${encodeURIComponent(t.value)}` : '#/bom'; return; }
   if (t.matches('select[data-inbox-person]')) {
     if (t.value) { store.set('borealis:me', t.value); location.hash = `#/inbox/${t.value}`; }
   }

@@ -3,8 +3,18 @@ source: coordinator review, 2026-09
 
 budget_cad: 700            # revised campus budget, approximate (register BUD-01)
 
+# Getting parts (shown as the "Getting parts" card on the Hardware page).
+# Each rule: {text, status, source}. The site never presents these as its own.
 procurement_rules:
-  - No used parts from eBay, Kijiji or Facebook Marketplace (coordinator, Sep 2026)
+  - {status: DECIDED, source: "Capstone Manual 2026 pp. 22–25", text: "Materials only after the complete design is approved (Technical Coordinator or Supervisor; explicit, documented, BOM attached)."}
+  - {status: DECIDED, source: "Capstone Manual 2026 pp. 22–25", text: "Check ECE stock first (op-amps, LEDs, transistors, standard R/C, parts from past capstones)."}
+  - {status: DECIDED, source: "Capstone Manual 2026 pp. 22–25", text: "Initial BOM due the Friday before Phase 2 presentations week (2026-11-27 this year)."}
+  - {status: DECIDED, source: "Capstone Manual 2026 pp. 22–25", text: "Under $1,000: Digi-Key, Mouser, Newark, Electrosonic, AliExpress (only sellers offering 14-day delivery). Technical Coordinator signs the BOM; supervisor signature optional."}
+  - {status: DECIDED, source: "Capstone Manual 2026 pp. 22–25", text: "Over $1,000: two quotes (valid 30+ days) and a university purchase order; 4–5+ weeks."}
+  - {status: DECIDED, source: "Capstone Manual 2026 pp. 22–25", text: "No personal purchases: never reimbursed."}
+  - {status: DECIDED, source: "Capstone Manual 2026 pp. 22–25", text: "BOM not approved by 2027-01-22 17:00: materials may not arrive in time; no rush shipping."}
+  - {status: DECIDED, source: "coordinator review, 2026-09", text: "No used parts from eBay, Kijiji or Facebook Marketplace."}
+procurement_source: Capstone Manual 2026 pp. 22–25
 
 department_has:
   - oscilloscopes

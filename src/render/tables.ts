@@ -1,6 +1,8 @@
 // Interfaces, register and inbox pages.
 import { INTERFACE_STATUSES, TAGS, type RegisterRow } from '../types.ts';
 import { recheckBox } from './subsystem.ts';
+import { choiceList } from './choices.ts';
+import { dueWithin } from '../choices.ts';
 import {
   type Ctx, editLink, esc, gh, historyFor, ifaceEnds, ifaceMark, mark, personLink, personName, rowLink,
   staleReason, subsystemName, tagChip, trackAttr, valueText, visible, daysUntil,
@@ -124,5 +126,6 @@ export function renderInbox(ctx: Ctx, person: string | null): string {
   return `<section class="card"><h1>Inbox: ${esc(p.name)}</h1><div>${picker}</div><p class="small muted">${esc(p.role)}</p></section>
     <section class="card"><h2>Stale rows you own <span class="muted small">${stale.length}</span></h2>${staleHtml}</section>
     <section class="card"><h2>Your interfaces not yet agreed <span class="muted small">${ifaces.length}</span></h2>${ifaceHtml}</section>
+    <section class="card"><h2>Your open choices due within 30 days</h2>${choiceList(ctx, data.choices.filter((c) => c.owner === p.id && dueWithin(c, ctx.now, 30)))}</section>
     <section class="card"><h2>GitHub issues for you <span class="muted small">labels proposal, re-check</span></h2>${issuesHtml}</section>`;
 }

@@ -1,6 +1,7 @@
 // Builds the list of searchable documents from site data + doc sections.
 import type { DocPage, SiteData } from '../../src/types.ts';
 import { compact, type SearchDoc } from '../../src/search.ts';
+import { activeOption, partView, statementStatus, statementText } from '../../src/choices.ts';
 
 const name = (data: SiteData, id: string) => data.people.find((p) => p.id === id)?.name ?? id;
 
@@ -26,16 +27,64 @@ export function searchDocs(data: SiteData, docs: DocPage[]): SearchDoc[] {
     out.push({
       ...blank,
       id: `part:${p.id}`, kind: 'part', ref: p.id, title: p.name,
-      model_line: p.model_line ?? '',
+      model_line: partView(data.choices, p).model_line,
       aliases: aliases.join(' | '),
-      body: [p.short, p.what_it_does, p.role, p.candidates, p.downstream, p.gotchas, ...(p.need_to_know ?? []),
+      body: [p.short, p.what_it_does, p.role, p.candidates, p.downstream, p.gotchas, ...(p.need_to_know ?? []).map(statementText),
         ...p.fields.map((f) => `${f.name}: ${f.value}`)].filter(Boolean).join(' · '),
       owner: p.owner_display ?? '',
-      status: p.availability ?? p.status,
+      status: `${p.availability ?? p.status}${partView(data.choices, p).proposed ? ' · proposed' : ''}`,
       source: p.doc_ref ?? p.cite,
       link: `#/hardware/${p.id}`,
       compact: compactField(p.id, aliases, p.name, p.model_line),
       track: p.track,
+    });
+  }
+  // open choices, their options and the documents they list
+  for (const c of data.choices) {
+    const lead = activeOption(c);
+    const names = c.options.flatMap((o) => [o.name, o.mpn ?? '']).filter(Boolean);
+    const link = c.options.length ? `#/hardware/choice/${c.id}` : `#/hardware/${c.parts[0]}`;
+    out.push({
+      ...blank,
+      id: `choice:${c.id}`, kind: 'choice', ref: c.id, title: c.title,
+      model_line: lead ? `${lead.name}${c.decided ? '' : ' (proposed)'}` : '',
+      aliases: [...names, ...c.parts].join(' | '),
+      body: [c.summary, ...(c.roles ?? []).map((r) => `${r.name}: ${r.need}`), ...c.facts.map((f) => `${statementStatus(f) ?? ''} ${statementText(f)}`)].join(' · '),
+      owner: name(data, c.owner),
+      status: c.stage === 'proposed' || !c.decided ? `${c.stage}${c.stage === 'proposed' ? '' : ' · open'}` : 'decided',
+      source: 'choices.yaml', link,
+      compact: compactField(c.id, names, c.title),
+    });
+    for (const o of c.options) {
+      out.push({
+        ...blank,
+        id: `option:${c.id}:${compact(o.name)}`, kind: 'option', ref: o.name, title: `${o.chip ?? ''} · option in "${c.title}"`,
+        model_line: [o.manufacturer, o.mpn].filter(Boolean).join(' '),
+        aliases: [o.mpn ?? '', o.chip ?? ''].filter(Boolean).join(' | '),
+        body: [o.notes, o.supplier && `supplier ${o.supplier}`, typeof o.unit_price === 'number' && `${o.currency} ${o.unit_price} (${o.price_source}${o.price_checked ? `, ${o.price_checked}` : ''})`].filter(Boolean).join(' · '),
+        owner: name(data, c.owner),
+        status: `${o.status}${c.decided ? '' : ' · proposed'}`,
+        source: o.price_source ?? 'choices.yaml', link: `#/hardware/choice/${c.id}`,
+        compact: compactField(o.name, o.mpn ?? ''),
+      });
+    }
+    for (const d of c.docs ?? []) {
+      out.push({
+        ...blank,
+        id: `ref:${d.id}`, kind: 'ref', ref: d.id, title: d.title, body: `Listed for the ${c.title} choice.`,
+        source: 'choices.yaml', link, compact: compactField(d.id),
+      });
+    }
+  }
+  // procurement rules (Getting parts card)
+  {
+    const k = data.constraints;
+    out.push({
+      ...blank,
+      id: 'rule:procurement', kind: 'rule', ref: 'Getting parts', title: `How to order parts · ${k.procurement_source}`,
+      aliases: 'order parts | ordering | purchase | procurement | buy parts | bom | bill of materials | digi-key | mouser',
+      body: k.procurement_rules.map(statementText).join(' · '),
+      source: k.procurement_source, link: '#/hardware', compact: compactField('procurement', 'bom'),
     });
   }
   for (const r of data.register) {

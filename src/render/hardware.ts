@@ -2,14 +2,16 @@
 import { firstNumber } from '../model.ts';
 import type { Part } from '../types.ts';
 import { BEAM_LABEL, SCHEMATIC_H, SCHEMATIC_SVG, SCHEMATIC_W } from './schematic.ts';
-import { type Ctx, cite, esc, gh, subsystemName, trackAttr } from './util.ts';
+import { type Ctx, cite, esc, gh, statement, subsystemName, trackAttr } from './util.ts';
+import { partView } from '../choices.ts';
+import { choicesStrip, money, partChoiceBox, renderDecisionPanel } from './choices.ts';
 
 export interface HardwareFilters { group: string; owner: string; flightOpen: boolean }
 
 export const hardwareFilters = (q: URLSearchParams): HardwareFilters =>
   ({ group: q.get('group') ?? '', owner: q.get('owner') ?? '', flightOpen: q.get('flight') === '1' });
 
-const owners = (p: Part) => String(p.owner_display ?? '').split('·').map((s) => s.trim()).filter(Boolean);
+const owners = (p: Part) => [...new Set(String(p.owner_display ?? '').split('·').map((s) => s.replace(/\(.*?\)/g, '').trim()).filter(Boolean))];
 
 export function laneLabel(ctx: Ctx, availability: string | undefined): string {
   if (availability === 'flight') return 'Flight track';
@@ -80,19 +82,22 @@ export function renderPartDetail(ctx: Ctx, p: Part | undefined): string {
     v === null || v === undefined || v === '' ? add(label) : esc(fmt ? fmt(v) : v);
   const avail = p.availability ?? '';
   const group = groupOf(ctx, p);
+  const view = partView(data.choices, p);
   return `<div class="hw-detail-inner" data-detail="${esc(p.id)}">
     <div class="small muted"><span class="id">${esc(p.id)}</span> · ${cite(p.doc_ref ?? p.cite)} <span class="achip achip-${esc(avail)}">${esc(laneLabel(ctx, p.availability))}</span>${p.flag ? ` <span class="flag">${esc(p.flag)}</span>` : ''}</div>
     <h2>${esc(p.name)}</h2>
-    ${p.model_line ? `<div class="mono small">${esc(p.model_line)}</div>` : ''}
+    ${view.model_line ? `<div class="mono small">${esc(view.model_line)}</div>` : ''}
+    ${p.in_02 === false ? '<span class="notin02">not in 02</span>' : ''}
     <div class="small muted">Owner ${esc(p.owner_display ?? '—')}${group ? ` · ${esc(group.label)}` : ''} · status ${esc(p.status)}</div>
     ${p.what_it_does ? `<p>${esc(p.what_it_does)}</p>` : `<p>${esc(p.role)}</p>`}
+    ${partChoiceBox(ctx, p.id)}
     ${p.blocked_reason ? `<div class="box box-bad"><b>Why we can't use it as-is</b><div>${esc(p.blocked_reason)}</div></div>` : ''}
     ${p.class2_note ? `<div class="box box-warn"><b>Class 2 change (Sep 24)</b><div>${esc(p.class2_note)}</div></div>` : ''}
-    ${p.need_to_know?.length ? `<h3 class="caps">Need to know</h3><ul class="ntk">${p.need_to_know.map((n) => `<li>${esc(n)}</li>`).join('')}</ul>` : ''}
+    ${p.need_to_know?.length ? `<h3 class="caps">Need to know</h3><ul class="ntk">${p.need_to_know.map((n) => `<li>${statement(n)}</li>`).join('')}</ul>` : ''}
     ${p.touches?.length ? `<h3 class="caps">Changing it touches</h3><div class="chips">${p.touches.map((t) => touchLink(ctx, t)).join('')}</div>` : ''}
     <div class="facts">
       <div><div class="small muted">Source</div>${val(p.source, 'source')}</div>
-      <div><div class="small muted">Est. cost</div>${val(p.est_cost_cad, 'est_cost_cad', (x) => `$${x} CAD`)}</div>
+      <div><div class="small muted">Est. cost</div>${view.proposed && typeof view.unit_cost === 'number' ? `${esc(money(view.unit_cost, view.currency))} <span class="small muted">(proposed)</span>` : val(p.est_cost_cad, 'est_cost_cad', (x) => `$${x} CAD`)}</div>
       <div><div class="small muted">Lead time</div>${val(p.lead_time, 'lead_time')}</div>
       <div><div class="small muted">Datasheet</div>${p.datasheet_url ? `<a href="${esc(p.datasheet_url)}" target="_blank" rel="noopener">open</a>` : add('datasheet_url')}</div>
     </div>
@@ -127,7 +132,22 @@ export function renderSoftware(ctx: Ctx): string {
   </section>`;
 }
 
-export function renderHardware(ctx: Ctx, selectedId: string | null): string {
+function gettingParts(ctx: Ctx): string {
+  const c = ctx.data.constraints;
+  return `<section class="card getting-parts"><div class="caps small muted">Getting parts · ${esc(c.procurement_source)}</div>
+    <ol class="small">${c.procurement_rules.map((r) => `<li>${statement(r)}</li>`).join('')}</ol>
+    <div class="small muted">Department has: ${esc(c.department_has.join(', '))}. Lacks: ${esc(c.department_lacks.join('; '))}. Class 2 baseline: ${esc(c.class2.wavelength_nm)} nm, ≤${esc(c.class2.max_power_mw)} mW. ${esc(c.class2.note)}. ${cite(c.source)}</div>
+  </section>`;
+}
+
+export function clashBox(ctx: Ctx): string {
+  const cl = ctx.data.derived.schedule_clashes;
+  if (!cl.length) return '';
+  return `<section class="box box-bad clash"><b>Schedule clash</b>${cl.map((c) => `<div>Rung ${c.rung} (${esc(c.name)}, planned ${esc(c.planned)}) needs parts that can't be ordered until after design approval: ${c.parts.map((id) => `<a class="chip" href="#/hardware/${esc(id)}">${esc(id)}</a>`).join(' ')}</div>`).join('')}
+    <div class="small">The fix is data: mark a part <code>ece_stock: yes</code> if ECE stock has it, or set its <code>source</code> to borrow… in data/parts.yaml; or move the rung's <code>planned</code> month in data/milestones.yaml.</div></section>`;
+}
+
+export function renderHardware(ctx: Ctx, selectedId: string | null, choiceId: string | null = null): string {
   const { data } = ctx;
   const f = hardwareFilters(ctx.query);
   const hw = data.derived.hardware;
@@ -136,7 +156,8 @@ export function renderHardware(ctx: Ctx, selectedId: string | null): string {
   const unclassified = data.parts.filter((p) => !p.availability && p.id !== data.software?.part);
   const firstBlocked = core.find((p) => p.availability === 'blocked');
   const selected = data.parts.find((p) => p.id === selectedId) ?? firstBlocked;
-  const sel = selected?.id ?? '';
+  const choice = choiceId ? data.choices.find((x) => x.id === choiceId) : undefined;
+  const sel = choice ? '' : selected?.id ?? '';
   const c = data.constraints;
 
   const tiles = data.site.hardware.lanes.map((l) =>
@@ -163,20 +184,17 @@ export function renderHardware(ctx: Ctx, selectedId: string | null): string {
     return `<div class="lane lane-col-${esc(l.availability)}"><h3>${esc(l.label)} <span class="muted num">${list.length}</span></h3>${shown.map((p) => card(p, sel)).join('') || '<p class="muted small">none match</p>'}</div>`;
   }).join('');
 
-  const rules = [
-    ...c.procurement_rules.map((r) => `<li>${esc(r)}</li>`),
-    `<li>Department has: ${esc(c.department_has.join(', '))}. Lacks: ${esc(c.department_lacks.join('; '))}.</li>`,
-    `<li>Class 2 baseline: ${esc(c.class2.wavelength_nm)} nm, ≤${esc(c.class2.max_power_mw)} mW. ${esc(c.class2.note)}.</li>`,
-  ].join('');
 
   return `<section class="card hw-top">
     <a href="#/" class="small">← Map</a>
     <div class="section-head"><div><h1>Hardware</h1><p class="muted">Every physical part, where it sits, and whether we can actually use it.</p></div>
-      <button class="btn search-btn" data-open-search>Search parts, numbers, docs… <kbd>/</kbd></button></div>
+      <div class="tools"><button class="btn search-btn" data-open-search>Search parts, numbers, docs… <kbd>/</kbd></button>
+        <a class="btn" href="#/bom">BOM</a><button class="btn" data-bom-export>Export BOM (CSV)</button></div></div>
     <div class="tiles tiles-5">${tiles}${budget}</div>
-    <ul class="small rules-list">${rules}</ul><div class="small muted">${cite(c.source)}</div>
     <div class="filters-row"><div class="pills">${groupPills}</div><div class="pills"><span class="small muted">Owner</span>${ownerChips}</div></div>
+    ${choicesStrip(ctx, choice?.id ?? null)}
   </section>
+  ${clashBox(ctx)}
   <div class="hw-grid">
     <div class="hw-left">
       <section class="card schematic-card">
@@ -194,7 +212,8 @@ export function renderHardware(ctx: Ctx, selectedId: string | null): string {
         ${f.flightOpen ? `<div class="flight-list">${flight.map((p) => card(p, sel)).join('')}</div>` : ''}
       </section>
     </div>
-    <aside class="card hw-detail" id="hw-detail">${renderPartDetail(ctx, selected)}</aside>
-  </div>`;
+    <aside class="card hw-detail" id="hw-detail">${choice ? renderDecisionPanel(ctx, choice) : renderPartDetail(ctx, selected)}</aside>
+  </div>
+  ${gettingParts(ctx)}`;
 }
 

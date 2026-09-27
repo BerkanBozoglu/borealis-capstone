@@ -1,4 +1,5 @@
 import { icon } from '../icons.ts';
+import { choiceList } from './choices.ts';
 import { modelIds } from '../sandbox.ts';
 import { PART_STATUSES, type Part, type RegisterRow } from '../types.ts';
 import {
@@ -190,6 +191,7 @@ export function renderSubsystem(ctx: Ctx, id: string): string {
   </section>
 
   <section class="card"><div class="section-head"><h2>Parts <span class="muted small">${partList.length} from 02</span></h2><a class="btn" href="#/hardware${partList.find((p) => p.availability && p.availability !== 'flight') ? `/${esc(partList.find((p) => p.availability && p.availability !== 'flight')!.id)}` : ''}">See on hardware view</a></div>${parts(ctx, partList)}</section>
+  <section class="card"><h2>Open choices</h2>${choiceList(ctx, data.choices.filter((c) => c.parts.some((pid) => partList.some((p) => p.id === pid))))}</section>
   <section class="card"><h2>Interfaces</h2>${interfaces(ctx, d.interfaces)}</section>
   ${approvals(ctx, id)}
   <section class="card"><h2>Open items ${cite('05 §3')}</h2>${openItems(ctx, id)}</section>

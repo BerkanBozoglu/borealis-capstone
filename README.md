@@ -50,6 +50,11 @@ npm run build      # lint + typecheck + production build into dist/
 - **Search** is on every page: press `/` or Ctrl/⌘+K. It covers parts (and their `aliases`), shared numbers,
   interfaces, open items, decisions, people, a glossary and every heading of docs 01, 02, 04 and 05.
   If search misses a name the team uses, add it to that part's `aliases` or to `data/synonyms.yaml`.
+- **Open choices** (`data/choices.yaml`): things narrowed down but not picked. To decide one: log it in 05
+  and `data/decisions.yaml`, then set `stage: decided` and `decided: {date, option, log_ref: "<date> · <area>"}`.
+  The build copies the chosen option into the parts and refuses to build if the log entry isn't there.
+- **BOM** (`#/bom`): the Capstone Manual's columns, exported as CSV. Fill `manufacturer`, `mpn`, `supplier`,
+  `unit_cost`, `currency` and `qty` in `data/parts.yaml`; blanks export blank and show amber.
 - Coordinator rules the site enforces live in `data/constraints.yaml` (no used-market parts, ~$700 budget,
   Class 2 at 660 nm).
 

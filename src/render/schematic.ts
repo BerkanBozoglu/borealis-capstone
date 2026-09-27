@@ -1,4 +1,4 @@
-// The station schematic from the 08 brief, verbatim except the beam label,
+// The station schematic from the 08 brief (plus the TX board from 09), verbatim except the beam label,
 // which is filled from the register at render time (TX-01, TX-06).
 // A schematic, not to scale; the Newtonian focuser sits near the open front end on purpose.
 export const SCHEMATIC_W = 820;
@@ -24,6 +24,7 @@ export const SCHEMATIC_SVG = `<svg width="820" height="400" viewBox="0 0 820 400
 <path d="M116 266 C 124 250 124 242 125 230"/>
 <rect x="160" y="262" width="50" height="30" rx="3"/>
 <path d="M172 277h8M176 273v8M192 277h8"/>
+<rect x="16" y="220" width="48" height="28" rx="3"/><rect x="28" y="228" width="16" height="12" stroke="#4A5B80"/><path d="M40 248V300"/><path d="M64 238 C 72 244 74 250 76 258" stroke="#4A5B80"/>
 <text x="40" y="382" fill="#8E9CB8" stroke="none" font-family="IBM Plex Sans, sans-serif" font-size="12">Transmitter on cart</text>
 <rect x="530" y="170" width="180" height="48" rx="6"/>
 <ellipse cx="530" cy="194" rx="6" ry="24"/>

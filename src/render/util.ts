@@ -160,3 +160,12 @@ export function daysUntil(now: Date, iso: string): number {
   const n = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
   return Math.round((d - n) / 86_400_000);
 }
+
+// ---------- provenance on statements ----------
+import type { Statement as _Statement } from '../types.ts';
+/** A fact or note with its provenance chip (PROPOSED is never shown as a plain fact). */
+export function statement(s: _Statement): string {
+  if (typeof s === 'string') return esc(s);
+  const src = s.source ? ` <span class="cite">${esc(s.source)}</span>` : '';
+  return `<span class="prov prov-${esc(s.status)}" title="${esc(s.status.toLowerCase())}">${esc(s.status)}</span> ${esc(s.text)}${src}`;
+}
