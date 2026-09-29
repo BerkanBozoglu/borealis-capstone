@@ -136,7 +136,7 @@
   value: TBD
   unit: mA
   tag: TBD
-  owner: shabazz
+  owner: sbaz
   feeds_into: [ PWR-02 ]
   source: 02 A4
   track: core
@@ -150,7 +150,7 @@
   value: <1
   unit: µs
   tag: TARGET
-  owner: shabazz
+  owner: sbaz
   feeds_into: [ RX-03 ]
   source: 02 A4
   track: core
@@ -458,7 +458,7 @@
   value: walking (0.27°/s at 300 m)
   unit: "-"
   tag: DECIDED
-  owner: shabazz
+  owner: sbaz
   feeds_into: [ TRK-02, TRK-03 ]
   source: 01 §3.1
   track: core
@@ -472,7 +472,7 @@
   value: TBD
   unit: W
   tag: TBD
-  owner: shabazz
+  owner: sbaz
   feeds_into: []
   source: 02 C7
   track: core
@@ -654,7 +654,7 @@
   value: 860 of 1100
   unit: g
   tag: MODELED
-  owner: shabazz
+  owner: sbaz
   feeds_into: []
   source: 05 §4
   track: flight

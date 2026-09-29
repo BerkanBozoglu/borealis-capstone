@@ -17,8 +17,8 @@
   github: BatuErata
   subsystems: [firmware]
 
-- id: shabazz
-  name: Shabazz
+- id: sbaz
+  name: Sbaz
   role: Power, structures, field (R4)
   github: Sbaz-Khan
   subsystems: [power]

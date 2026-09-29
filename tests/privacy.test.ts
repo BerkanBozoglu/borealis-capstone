@@ -54,7 +54,7 @@ describe('GitHub usernames never reach the front end', () => {
     expect(pub.site.repo).toEqual({ slug: data.site.repo.slug, branch: 'main' });
   });
   it('team members appear by first name', () => {
-    expect(pub.people.map((p) => p.name)).toEqual(['Berky', 'Bilal', 'Batu', 'Shabazz', 'Matei', 'Arnav']);
+    expect(pub.people.map((p) => p.name)).toEqual(['Berky', 'Bilal', 'Batu', 'Sbaz', 'Matei', 'Arnav']);
   });
   it('git authors become first names', () => {
     const owner = data.people.find((p) => p.id === 'berky')!.github!;

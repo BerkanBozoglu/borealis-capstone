@@ -34,7 +34,7 @@
 - 2026-09-09 · flight · **Flight 0 (drone/tether 50–120 m) is optional** pending CAR 901.43/SFOC determination and aircraft/site · 60-business-day standard · TC guidance · outreach 1.3 · Berkan
 - 2026-09-10 · outreach · **MDA via Bilal's manager; MPBC via supervisor intro; asks sequenced small→large** · warm intros outperform cold · outreach package · Berkan/Bilal
 - 2026-09-11 · claims · **No "first"; differentiation = range + autonomous acquisition/tracking; IEEE Lumentum project is a resource** · UBCO, FHNW, DLR, Loon, IEEE precedents · positioning · Berkan
-- 2026-09-11 · team · **Berkan owns optics/link + PM; Shabazz power/structures; Matei controls; software seat open (Aryan candidate)** · match to recruited skills · proposal task distribution · Berkan
+- 2026-09-11 · team · **Berkan owns optics/link + PM; Sbaz power/structures; Matei controls; software seat open (Aryan candidate)** · match to recruited skills · proposal task distribution · Berkan
 - 2026-09-11 · proposal · **Submitted 2026-09-14 with five names, one open seat; qualification moved to extended track; balloon intent stated** · form text in Appendix A · Berkan
 
 ---
@@ -46,7 +46,7 @@
 | 1 | Sixth member (ground software) | C4 quality; acceptance panel | Aryan yes/no; else Batu+Matei minimal app | Berkan | 09-18 |
 | 2 | EHS registration + LSO; C3 room plan | blocks Rung 2 and the graded demo | file; meet LSO | Berkan | Sept |
 | 3 | TC 601.21 / 901.43 / 602.42 letter | flight gate G5; rooftop assessment | send | Berkan | Sept |
-| 4 | ≥1 km site pair (primary + backup) with access | C1 | survey, permissions, site package | Berkan/Shabazz | Sept |
+| 4 | ≥1 km site pair (primary + backup) with access | C1 | survey, permissions, site package | Berkan/Sbaz | Sept |
 | 5 | Coordinator agreement on acceptance criteria and evidence | grading contract | Phase 1 sign-off | Berkan | Oct 4 |
 | 6 | AZ-GTi rate-mode command proof (latency, residual, backlash) | C2 feasibility; car test decision | Rung 5 | Matei | Oct |
 | 7 | PIN receiver sensitivity, stability, angular acceptance | link budget placeholders | 04 §2.2 | Bilal | Oct |
@@ -59,7 +59,7 @@
 | 14 | t_acq / t_reacq targets | acceptance | propose after Rung 5/6 | Matei | Nov |
 | 15 | CAN-SBX dates + laser policy | Flight 2 | email the CAN-SBX program | Berkan | Sept |
 | 16 | Co-supervisor (controls) | tracking review | ask the Supervisor for intro | Berkan | Sept |
-| 17 | Thermal model + L91 cold capacity (E-track) | G3 | model; test | Shabazz | Dec |
+| 17 | Thermal model + L91 cold capacity (E-track) | G3 | model; test | Sbaz | Dec |
 | 18 | APD part selection with 850 nm curves (E-track) | G2 | choose; order one | Bilal | Sept/Nov |
 | 19 | University insurance/field-ops for any flight | G5 | inquire | Berkan | Oct |
 | 20 | MDA / MPBC / UBCO / IEEE / Space Concordia outreach | mentorship, gear, chamber | send per 03 | Berkan/Bilal | after 09-14 |
@@ -109,7 +109,7 @@
 ## APPENDIX A — Proposal form as submitted (2026-09-14), for reference
 
 **Title:** Borealis: Free-space Optical Data Link with Autonomous Tracking
-**Students:** Berkan, Bilal, Batu, Shabazz, Matei (+1 open)
+**Students:** Berkan, Bilal, Batu, Sbaz, Matei (+1 open)
 **Supervisor:** the Supervisor, ECE Photonics Research Group (agreed)
 
 **Description (summary):** industry moving to laser comms; problem is closing an optical link between a moving airborne platform and a ground receiver with affordable hardware: aiming from a swinging platform, collecting light through a telescope at distance, recovering clean bits from photocurrent, staying pointed at a moving target; stratospheric environment and laser/aviation regulation. Two review rounds; UBCO precedent; independent design emphasizing transmitter payload and receiver electronics. Core (graded) C1 stationary 1 km link; C2 autonomous tracking on a fixtured carrier with wide beam and shutter blackouts; C3 in-lab attenuated demo; C4 ground software with acceptance panel; C5 documentation and safety file. Extended (gated): E1 payload; E2 APD receiver; E3 qualification; E4 low-altitude airborne test; E5 balloon after G1–G5; CAN-SBX uncommitted. "The balloon flight is the goal we are building toward, and we intend to attempt it. The gates exist so that our grade does not depend on weather or on Transport Canada's response times, not to hedge the ambition."

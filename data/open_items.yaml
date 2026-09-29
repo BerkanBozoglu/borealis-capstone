@@ -38,7 +38,7 @@
   item: ≥1 km site pair (primary + backup) with access
   why: C1
   closing_action: survey, permissions, site package
-  owners: [ berky, shabazz ]
+  owners: [ berky, sbaz ]
   due: Sept
   subsystem: power
   track: core
@@ -182,7 +182,7 @@
   item: Thermal model + L91 cold capacity (E-track)
   why: G3
   closing_action: model; test
-  owners: [ shabazz ]
+  owners: [ sbaz ]
   due: Dec
   subsystem: flight
   track: flight

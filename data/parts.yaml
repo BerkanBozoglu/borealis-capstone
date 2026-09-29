@@ -159,7 +159,7 @@
     - { name: Overshoot, value: TBD % }
   superseded_by: [ TX-02, TX-04 ]
   availability: choosing
-  owner_display: Shabazz
+  owner_display: Sbaz
   short: Current source, switched 100,000×/s
   model_line: "Topology TBD: op-amp + MOSFET current sink, or iC-Haus iC-HG class"
   what_it_does: Constant-current source that turns the laser on and off 100,000 times a second from the firmware’s signal.
@@ -203,7 +203,7 @@
     - { name: Shutter, value: TBD }
   superseded_by: [ TX-01 ]
   availability: choosing
-  owner_display: Shabazz
+  owner_display: Sbaz
   short: Aiming, carrying, and the interruption demo
   model_line: TBD
   what_it_does: Aims the transmitter repeatably, carries it for the moving test, and the shutter drives the interruption demo.
@@ -790,7 +790,7 @@
   fields:
     - { name: Fields, value: TBD }
   availability: choosing
-  owner_display: Shabazz
+  owner_display: Sbaz
   short: Keeps everything running outdoors
   model_line: Dew heater strip + shield, adapters, batteries · TBD
   what_it_does: Dew heater, adapters, and batteries for the mount, laptop, camera and transmitter outdoors.
@@ -1314,7 +1314,7 @@
   gotchas: ""
   fields: []
   availability: choosing
-  owner_display: Shabazz
+  owner_display: Sbaz
   short: With current limit
   model_line: Bench power supplies with current limit · availability TBD
   what_it_does: Powers boards safely during testing. The current limit is what protects the laser.
