@@ -185,7 +185,7 @@ Horizon depression at 28 km = 5.36°; payload is sunlit until station sun elevat
 | R1 | Optics, link, project lead | Berkan | collimation, diffuser, far-field measurement, receiver optical layout, focus/boresight, attenuation calibration, link budget validation; acceptance criteria, schedule, EHS/LSO, TC/NAV CANADA filings (front-loaded Sep–Nov) |
 | R2 | Receiver, RF, PCB | Bilal | PIN receiver board, APD receiver + bias (extended), LoRa link, sensitivity/background measurements |
 | R3 | Embedded, flight SW | Batu | STM32 firmware, FreeRTOS, camera/SSDV, RS, Manchester, clock recovery, interlocks, GNSS config readback, logging |
-| R4 | Power, structures, field | Shabazz | laser driver board (buck), field power, carrier fixture, enclosures, site logistics; flight energy/thermal/battery qual |
+| R4 | Power, structures, field | Sbaz | laser driver board (buck), field power, carrier fixture, enclosures, site logistics; flight energy/thermal/battery qual |
 | R5 | Controls, tracking | Matei | centroid detection, rate-mode mount control, feed-forward, backlash, state machine, re-acquisition tests, moving-target demos; flight gimbal |
 | R6 | Ground software | open (Aryan?) | real-time app, telemetry, mount interface, decoding, image rebuild, acceptance panel, logging |
 

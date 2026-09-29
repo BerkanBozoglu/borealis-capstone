@@ -38,7 +38,7 @@ function parseCsv(text: string): string[][] {
 
 // CSV owner names -> people.yaml ids
 const OWNER: Record<string, string> = {
-  Berky: 'berky', Bilal: 'bilal', Batu: 'batu', Shabazz: 'shabazz', Matei: 'matei', 'R6 (open)': 'open',
+  Berky: 'berky', Bilal: 'bilal', Batu: 'batu', Sbaz: 'sbaz', Matei: 'matei', 'R6 (open)': 'open',
 };
 
 // CSV subsystem column -> subsystems.yaml id. "System", "Link" and "Project"

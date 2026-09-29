@@ -8,8 +8,8 @@ SYS-06,C3 indoor demo range,System,50-80,m,DECIDED,Berky,TX-09,01 §3.1,OK,2026-
 TX-01,Campus laser wavelength,Transmitter,660 (was 850),nm,DECIDED,Berky,"OPT-03, OPT-06, RX-01, SAF-02, TX-03, TX-09, FLT-01",coordinator review 2026-09-24,CHANGED,2026-09-24,Class 2 baseline; not yet in 01/02/05
 TX-02,Campus laser on-state power,Transmitter,<=1 (was <=200),mW,DECIDED,Berky,"LNK-01, TX-04, SAF-01, RX-04",coordinator review 2026-09-24,CHANGED,2026-09-24,Confirm with EHS whether the Class 2 limit applies to on-state or average power under Manchester (3 dB difference)
 TX-03,Diode wavelength drift,Transmitter,0.3,nm/K,ASSUMED,Berky,OPT-03,02 A1,RE-CHECK,2026-09-12,Value was for 850 nm diodes; take from the chosen 660 nm datasheet
-TX-04,Laser driver set current,Transmitter,TBD,mA,TBD,Shabazz,PWR-02,02 A4,RE-CHECK,2026-09-12,A 1 mW diode needs far less current than a 200 mW one; driver topology may simplify
-TX-05,Driver rise/fall time,Transmitter,<1,µs,TARGET,Shabazz,RX-03,02 A4,OK,2026-09-12,Measure with fast photodiode
+TX-04,Laser driver set current,Transmitter,TBD,mA,TBD,Sbaz,PWR-02,02 A4,RE-CHECK,2026-09-12,A 1 mW diode needs far less current than a 200 mW one; driver topology may simplify
+TX-05,Driver rise/fall time,Transmitter,<1,µs,TARGET,Sbaz,RX-03,02 A4,OK,2026-09-12,Measure with fast photodiode
 TX-06,Narrow beam divergence (full angle),Transmitter,60 (±1.72°),mrad,TARGET,Berky,"LNK-01, TRK-05",01 §4,RE-CHECK,2026-09-08,Narrowing the beam is one way to recover margin but shrinks pointing tolerance
 TX-07,Wide beam divergence (full angle),Transmitter,200 (±5.73°),mrad,TARGET,Berky,"LNK-03, PWR-01",01 §4,OK,2026-09-08,
 TX-08,Diffuser insertion loss,Transmitter,0,dB,ASSUMED,Berky,LNK-03,05 §4,OK,2026-09-12,Measure before/after; directly cuts C2 margin
@@ -31,8 +31,8 @@ TRK-02,Mount command latency,Tracking,<150,ms,TARGET,Matei,TRK-03,05 §4,OK,2026
 TRK-03,Residual tracking error @0.3°/s,Tracking,<2,mrad,TARGET,Matei,"OPT-05, GS-01",05 §4,OK,2026-09-12,Must stay inside receiver FOV
 TRK-04,Guide loop rate,Tracking,10,Hz,DECIDED,Matei,GS-01,01 §3.1,OK,2026-09-08,
 TRK-05,Acquisition seed error,Tracking,±2,deg,DECIDED,Matei,TRK-04,01 §3.1,OK,2026-09-08,Guide field ~3°
-PWR-01,C2 carrier speed,Power & field,walking (0.27°/s at 300 m),-,DECIDED,Shabazz,"TRK-02, TRK-03",01 §3.1,OK,2026-09-08,C3 indoor: 0.2 m/s over ±0.5 m
-PWR-02,Campus field power,Power & field,TBD,W,TBD,Shabazz,-,02 C7,OK,2026-09-12,Mount + laptop + camera + TX
+PWR-01,C2 carrier speed,Power & field,walking (0.27°/s at 300 m),-,DECIDED,Sbaz,"TRK-02, TRK-03",01 §3.1,OK,2026-09-08,C3 indoor: 0.2 m/s over ±0.5 m
+PWR-02,Campus field power,Power & field,TBD,W,TBD,Sbaz,-,02 C7,OK,2026-09-12,Mount + laptop + camera + TX
 LNK-01,C1 received power at 1 km (on-state),Link,-58.8 (was -35.8),dBm,MODELED,Berky,LNK-02,01 §5.1 minus 23 dB,CHANGED,2026-09-25,Same beam and losses; 1 mW is 23 dB below 200 mW
 LNK-02,C1 margin at 1 km,Link,≈ -9 (was ~+14),dB,MODELED,Berky,SYS-04,01 §5.1,CHANGED,2026-09-25,Link does not close on paper; worse once lower 660 nm responsivity is included
 LNK-03,C2 margin at 300 m / 200 mrad,Link,≈ -9 (was ~+14) minus diffuser loss,dB,MODELED,Berky,SYS-05,01 §5.2,CHANGED,2026-09-25,Same spot size as C1 so same on-axis power
@@ -45,4 +45,4 @@ GS-01,Acceptance panel metrics,Ground software,pre/post-FEC BER; loss; goodput; 
 GS-02,C1 acceptance BER,Ground software,<=1e-5 post-FEC over >=1e7 bits,-,DECIDED,R6 (open),-,01 §14,OK,2026-09-08,
 FLT-01,Flight laser (E-track),Flight,2 W / 850 nm / Class 4,-,DECIDED,Berky,"FLT-02, OPT-03",01 §5.4,RE-CHECK,2026-09-07,Campus now 660 nm and flight 850 nm: filter and detector work will not transfer directly
 FLT-02,APD sensitivity @50 / 5 kbps (E-track),Flight,-60 / -65,dBm,TARGET,Bilal,-,05 §4,OK,2026-09-07,
-FLT-03,Payload mass (E-track),Flight,860 of 1100,g,MODELED,Shabazz,-,05 §4,OK,2026-09-07,
+FLT-03,Payload mass (E-track),Flight,860 of 1100,g,MODELED,Sbaz,-,05 §4,OK,2026-09-07,

@@ -9,7 +9,7 @@
   from: firmware
   to: transmitter
   what: TTL gate line, 100 kchip/s Manchester, 3.3 V logic, rise/fall <1 µs, idle = laser off.
-  owners: [batu, shabazz]
+  owners: [batu, sbaz]
   status: draft
   spec_hash: ""
   gap: ""
@@ -19,7 +19,7 @@
   from: power
   to: transmitter
   what: Driver set current, compliance voltage, overshoot limit, key switch in supply path.
-  owners: [shabazz, berky]
+  owners: [sbaz, berky]
   status: draft
   spec_hash: ""
   gap: ""
@@ -109,7 +109,7 @@
   from: power
   to: [tracking, ground, transmitter]
   what: "All outdoor equipment: voltages, connectors, run time for mount, laptop, camera, transmitter."
-  owners: [shabazz]
+  owners: [sbaz]
   status: missing
   spec_hash: ""
   gap: ""

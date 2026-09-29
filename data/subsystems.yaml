@@ -182,7 +182,7 @@
 
 - id: power
   name: Power & field
-  owner: shabazz
+  owner: sbaz
   icon: battery
   track: core
   intro:

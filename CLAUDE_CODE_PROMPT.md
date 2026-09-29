@@ -27,7 +27,7 @@ data/open_items.yaml — the 20 rows of 05 §3 verbatim: n, item, why, closing_a
 
 data/decisions.yaml — every bullet of 05 §2 as {date, area, decision, reason, evidence, changes, owner, subsystems (list, your mapping)}. Subsystem pages show the decisions mapped to them.
 
-data/people.yaml — id, name, role, github (handle), subsystems (list). Seed: berky (Berkan; optics/link, systems, safety, PM), bilal (receiver, RF, PCB), batu (embedded/firmware), shabazz (power, structures, field), matei (controls/tracking), open (ground software seat, unassigned).
+data/people.yaml — id, name, role, github (handle), subsystems (list). Seed: berky (Berkan; optics/link, systems, safety, PM), bilal (receiver, RF, PCB), batu (embedded/firmware), sbaz (power, structures, field), matei (controls/tracking), open (ground software seat, unassigned).
 
 data/register.yaml — list of parameters. Each:
   id (e.g. TX-02), name, subsystem, value (number or string), unit, tag (MEASURED | VERIFIED | MODELED | ASSUMED | TARGET | DECIDED | TBD), owner, feeds_into (list of ids), source (free text), track (core | flight), changed (date), checked (date), note, conditions (only when tag is MEASURED: range_m, power_dbm, attenuation_db, bandwidth_khz, temperature_c, evidence (path under evidence/)).
@@ -36,8 +36,8 @@ data/register.yaml — list of parameters. Each:
 data/interfaces.yaml — list of:
   id (I-01…), from (subsystem id), to (subsystem id), what (one-line spec), owners (list of person ids), status (agreed | draft | missing), spec_hash (computed at build: sha1 of `what`; if status is agreed and the stored spec_hash differs from the computed one, the build downgrades status to draft and warns), gap (what is missing), blocks (free text, e.g. "October parallel work").
   Seed these twelve:
-  I-01 firmware→transmitter: TTL gate line, 100 kchip/s Manchester, 3.3 V logic, rise/fall <1 µs, idle = laser off. owners batu, shabazz. draft.
-  I-02 power→transmitter: driver set current, compliance voltage, overshoot limit, key switch in supply path. shabazz, berky. draft.
+  I-01 firmware→transmitter: TTL gate line, 100 kchip/s Manchester, 3.3 V logic, rise/fall <1 µs, idle = laser off. owners batu, sbaz. draft.
+  I-02 power→transmitter: driver set current, compliance voltage, overshoot limit, key switch in supply path. sbaz, berky. draft.
   I-03 transmitter→optics (through air): wavelength, divergence, on-state power — the link budget. berky. draft (was agreed at Rev D.2; reopened by Class 2 change).
   I-04 optics→receiver: detector at focal plane, filter and field stop in front, focus travel for 50 m to 1 km. berky, bilal. missing.
   I-05 receiver internal: photodiode capacitance at chosen bias, bias voltage, lead length. bilal. draft.
@@ -46,7 +46,7 @@ data/interfaces.yaml — list of:
   I-08 tracking→ground: guide camera USB frames ≥10 fps, mono, exposure control from software. matei, open. draft.
   I-09 ground→tracking: rate-mode mount commands over SynScan/INDI, command latency, backlash. matei, open. draft (protocol proof due October).
   I-10 optics→tracking: total mass ≤3.5 kg, dovetail, boresight rigid between tubes. berky, matei. draft.
-  I-11 power→all outdoor: voltages, connectors, run time for mount, laptop, camera, transmitter. shabazz. missing.
+  I-11 power→all outdoor: voltages, connectors, run time for mount, laptop, camera, transmitter. sbaz. missing.
   I-12 ground→transmitter: command channel for shutter demo and TX on/off. open, berky. missing.
 
 data/milestones.yaml — fixed dates: 2026-10-04 Phase 1 report; 2026-11-27 final design approval; 2026-11-29 Phase 2 report; 2027-02-15 (week of) in-lab pre-demo; 2027-03-22 (week of) in-lab final demo; 2027-04-02 final report. Test ladder rungs: 1 bench through filters; 2 corridor 50–80 m; 3 mount tracks a moving LED; 4 outdoor 200–300 m; 5 ≥1 km; 6 flight gates G1–G5 (track: flight). Each rung: status (not_started | in_progress | passed) and blocked_by (list of register or interface ids). Seed rung 1 as not_started, blocked_by [BUD-01, OPT-03].
