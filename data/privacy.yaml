@@ -20,7 +20,6 @@ blocked_sha256:
   - e814db162565e716fd8b0d90213fd17a2be196132b84e1cb9b78bde5ca773a26
   - 84e278fed7a3a6ada4e6d7b6ab84f12f2e4409d8f08b95f8695b13ad4ec3df4c
   - bee50308fae739c9192c279887bfdf600b20ff8a5982b57f185427119d33795b
-  - 47a6245d9effb01c6b67db10b5d9aaa83baf01ea8b852b62f4b1429811febb88
 # Strings removed before scanning. The repository's own address contains the
 # owner's account name; it can't be avoided in Edit-on-GitHub links until the
 # repo moves to an organisation.
