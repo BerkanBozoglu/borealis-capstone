@@ -329,3 +329,41 @@ a.add { color: var(--warn); font-family: var(--mono); }
 table.bom td.missing { background: rgba(245,182,66,.12); color: var(--warn); }
 table.bom tr.proposed td:first-child { box-shadow: inset 3px 0 0 #9DBBFF; }
 .bom-totals { margin-top: .6rem; }
+
+/* ---------- 3D model (#/model) ---------- */
+.m3-bar { display: flex; flex-wrap: wrap; gap: .6rem 1.2rem; align-items: center; }
+.m3-grp { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; }
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; }
+.seg button { font: .82rem var(--mono); background: #0d1628; color: var(--muted); border: 0; border-right: 1px solid var(--border); padding: .2em .8em; cursor: pointer; }
+.seg button:last-child { border-right: 0; }
+.seg button.on { background: var(--accent); color: #0A1120; }
+#m3-explode { accent-color: var(--accent); width: 130px; }
+.m3-grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 1rem; align-items: start; }
+@media (max-width: 1050px) { .m3-grid { grid-template-columns: 1fr; } }
+.m3-view { position: relative; padding: 0; height: calc(100vh - 230px); min-height: 440px; overflow: hidden; }
+.m3-view canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+.m3-view canvas:active { cursor: grabbing; }
+.m3-views { position: absolute; left: 10px; top: 10px; display: flex; flex-wrap: wrap; gap: .3rem; max-width: calc(100% - 20px); z-index: 1; }
+.m3-views button { font: .78rem var(--body); background: rgba(16,26,47,.92); color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: .2em .7em; cursor: pointer; }
+.m3-views button:hover { color: var(--text); border-color: var(--accent); }
+.m3-hint { position: absolute; left: 10px; bottom: 8px; background: rgba(10,17,32,.8); border-radius: 6px; padding: .2em .5em; color: var(--muted); pointer-events: none; font-family: var(--mono); }
+.m3-legend { position: absolute; right: 10px; bottom: 8px; background: rgba(10,17,32,.85); border-radius: 6px; padding: .25em .6em; display: flex; gap: .7rem; flex-wrap: wrap; justify-content: flex-end; max-width: 60%; }
+.m3-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: .3em; vertical-align: -1px; }
+.m3-legend .lane-available { background: #4FD1A5; } .m3-legend .lane-candidate { background: #9DBBFF; } .m3-legend .lane-choosing { background: #8E9CB8; } .m3-legend .lane-blocked { background: #FF7C86; } .m3-legend .lane-alt { background: #B597F5; }
+.m3-tip { position: absolute; pointer-events: none; background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: .15em .5em; font-size: .8rem; transform: translate(12px, 12px); white-space: nowrap; z-index: 2; }
+.m3-loading { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; }
+.m3-side { position: sticky; top: 110px; max-height: calc(100vh - 130px); overflow-y: auto; }
+.m3-side h2 { margin-top: .2em; }
+.m3-kv { display: grid; grid-template-columns: auto 1fr; gap: .25rem .8rem; font-size: .86rem; margin: .7rem 0; }
+.m3-kv dt { color: var(--muted); } .m3-kv dd { margin: 0; font-family: var(--mono); font-size: .82rem; min-width: 0; overflow-wrap: anywhere; }
+.m3-tag { font: .62rem var(--mono); border: 1px solid; border-radius: 4px; padding: 0 .35em; margin-left: .3em; white-space: nowrap; }
+.m3-tag-source { color: var(--ok); } .m3-tag-derived { color: #9DBBFF; } .m3-tag-estimate { color: var(--warn); }
+.m3-part { border: 1px solid var(--border); border-radius: 6px; padding: .45rem .6rem; margin: .5rem 0; background: #0d1628; }
+.m3-part-also { opacity: .85; }
+.chip-stale { border-color: var(--warn); color: var(--warn); }
+.m3-srcs { padding-left: 1.2rem; color: var(--muted); } .m3-srcs a { overflow-wrap: anywhere; }
+.m3-list { border-top: 1px solid var(--border); margin-top: .8rem; padding-top: .3rem; }
+.m3-list h3 { font-size: .8rem; color: var(--muted); margin: .8rem 0 .2rem; }
+.m3-item { all: unset; box-sizing: border-box; display: flex; justify-content: space-between; gap: .5rem; width: 100%; padding: .28rem .4rem; border-radius: 6px; cursor: pointer; font-size: .86rem; }
+.m3-item:hover { background: #0d1628; } .m3-item.sel { background: #0d1628; box-shadow: inset 3px 0 0 var(--accent); }
+.m3-item:focus-visible { outline: 2px solid var(--accent); }

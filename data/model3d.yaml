@@ -1,0 +1,519 @@
+# 3D hardware model (#/model). Geometry lives in src/hw3d/scene.ts; every FACT lives here.
+#
+# Each object is one clickable piece of the model.
+#   part:    the parts.yaml id it belongs to. The inspector shows that part's LIVE
+#            availability, status, owner, chosen part and "changing it touches" chips,
+#            so editing parts.yaml updates the 3D model on the next build.
+#   alt_of:  set instead of part when the object is a Phase 1 alternative that has no
+#            parts.yaml row of its own yet (e.g. the Fresnel lens, alternative to C1).
+#            Lint warns until it gets a row.
+#   config:  when it is drawn. rxA = telescope + GoTo mount, rxB = Fresnel + pan-tilt,
+#            rx = both receivers, C1 / C2 / C3 = transmitter setups, tx = all three,
+#            bench = power meter toggle.
+#   dims:    [label, value, tag]. tag: source (datasheet/retailer, cite it in sources),
+#            derived (calculated from other numbers), estimate (sized by eye for the model).
+#   sources: keys of the sources map below.
+# Names here are first names only (privacy check).
+
+sources:
+  phase1: {title: "Phase 1 Report, Team 24 (October 2026), project file"}
+  p130: {title: "Robtics · Sky-Watcher Explorer-130P specs (615 mm tube, Ø160 mm, 3.66 kg, 34.5 mm secondary)", url: "https://www.robtics.nl/en/reflector/sky-watcher-explorer-130p-51-f-650-newtonian-reflector-telescope"}
+  p130ps: {title: "Astroshop · Explorer-130PS on AZ-GTi (1.25-inch rack-and-pinion focuser, Vixen dovetail, 2.70 kg tube)", url: "https://www.astroshop.eu/telescopes/skywatcher-telescope-n-130-650-explorer-130ps-az-gti-goto-wifi/p,55180"}
+  azgti: {title: "Robtics · AZ-GTi head (1.3 kg, 45 mm Vixen-type saddle, 5 kg payload)", url: "https://www.robtics.nl/es/alt-azimuth-az/sky-watcher-az-gti-wifi-go-to-alt-azimuth-mount-head"}
+  aztri: {title: "Telescopes Canada · AZ-GTi tripod (803–1519 mm, legs ≈1.2 in)", url: "https://telescopescanada.ca/products/sky-watcher-az-gti-mount-s21110"}
+  bpw34: {title: "Vishay BPW34 datasheet (5.4 × 4.3 × 3.2 mm, 7.5 mm²)", url: "https://www.vishay.com/docs/81521/bpw34.pdf"}
+  nema: {title: "17HS4401 datasheet (42 × 42 × 40 mm, Ø5 mm shaft)", url: "https://www.datasheetcafe.com/17hs4401-datasheet-stepper-motor/"}
+  nema2: {title: "Joy-IT NEMA17-01 datasheet (42.3 mm face, 47 mm body)", url: "https://www.joy-it.net/files/files/Produkte/NEMA17-01/NEMA17-01_Datasheet_2025-11-24.pdf"}
+  tmc: {title: "BIGTREETECH TMC2209 V1.2 manual (15.24 × 20.32 mm)", url: "https://www.mikrocontroller.net/attachment/558584/TMC2209-V1.2-manual.pdf"}
+  comar: {title: "Comar 152 FQ 203 Fresnel lens (220 mm square, 203 mm effective, f = 152.4 mm, 2 mm)", url: "https://www.comaroptics.com/pdf/152%C2%A0FQ%C2%A0203.pdf"}
+  laser: {title: "Lasermate LTG-T series datasheet (Ø12.7 × 50.8 mm, Class II, TTL DC–100 kHz, 5 V)", url: "https://lasermate.com/wp-content/uploads/2025/08/ltg-t-series-datasheet.pdf"}
+  filt: {title: "Edmund Optics 25 mm hard-coated bandpass (Ø25 mm, 5.0 mm mount, 21 mm clear aperture)", url: "https://www.edmundoptics.com/p/925nm-cwl-25mm-dia-hard-coated-od-4-25nm-bandpass-filter/30088/"}
+  f660: {title: "Edmund Optics 660 nm CWL, 10 nm FWHM filter #67-836", url: "https://www.edmundoptics.com/p/660nm-cwl-10nm-fwhm-25mm-mounted-diameter/22503/"}
+  asi: {title: "Agena · ZWO ASI120MM-S (Ø62 × 28 mm, 100 g)", url: "https://agenaastro.com/zwo-asi120mm-cmos-monochrome-super-speed-astronomy-imaging-camera.html"}
+  sv106: {title: "Telescopes Canada · Svbony SV106 50 mm guide scope (f = 190 mm, 240 mm long, Ø54.5 mm)", url: "https://telescopescanada.ca/products/svbony-sv106-guide-scope-helical-focuser"}
+  ep: {title: "Wikipedia · Eyepiece (1.25-inch barrel = 31.75 mm)", url: "https://en.wikipedia.org/wiki/Eyepiece"}
+  s120c: {title: "Thorlabs S120C spec sheet (Ø30.5 × 12.7 mm, Ø9.5 mm aperture)", url: "https://azimp.ru/upload/pdf-static/Thorlabs/Photodiode%20Power%20Sensors/S120C-SpecSheet.pdf"}
+  pmusb: {title: "Thorlabs PM100USB manual (95 × 63.5 × 32.5 mm)", url: "https://dcc-lho.ligo.org/public/0126/T1600205/001/19570-D02%20%20PM100USB%20User%20Manual%20Rev%20C.pdf"}
+  manf: {title: "Vistek · Manfrotto MT055XPRO3 (max 1700 mm, closed 610 mm, 2.5 kg, 9 kg load)", url: "https://www.vistek.ca/store/274456/manfrotto-mt055xpro3-aluminum-3-section-tripod"}
+  um2407: {title: "ST UM2407 Nucleo-144 user manual (board outline is a drawing, Fig. 6; not read numerically)", url: "https://www.st.com/resource/en/user_manual/um2407-stm32h7-nucleo144-boards-mb1363-stmicroelectronics.pdf"}
+  nucleo: {title: "ST · NUCLEO-H753ZI product page", url: "https://www.st.com/en/evaluation-tools/nucleo-h753zi.html"}
+  opa: {title: "TI OPA657 datasheet", url: "https://www.ti.com/lit/gpn/OPA657"}
+  tlv: {title: "TI TLV3501 product page", url: "https://www.ti.com/product/TLV3501"}
+
+objects:
+  # ---------------- Receiver A: borrowed telescope + GoTo mount ----------------
+  - id: rxA_tripod
+    part: C4
+    name: Mount tripod (steel)
+    group: Receiver · telescope option
+    config: [rxA]
+    what: Holds the mount and telescope. Stiffness matters more than height; every millimetre of wobble at the top is pointing error.
+    dims: [[Height range, 803–1519 mm, source], [Leg diameter, ≈ 30 mm, source], [Height shown, 950 mm to the head, estimate]]
+    sources: [aztri]
+    budget: Borrowed with the GoTo mount · $0
+  - id: rxA_mount
+    part: C4
+    name: GoTo mount head (AZ-GTi class)
+    group: Receiver · telescope option
+    config: [rxA]
+    what: Motorised alt-azimuth head. The laptop sends it speed (rate) commands over Wi-Fi so the telescope follows the moving transmitter.
+    dims: [[Head mass, 1.3 kg, source], [Saddle, 45 mm Vixen-type, source], [Payload limit, 5 kg, source], [Body shape and size, not published; modelled, estimate]]
+    sources: [azgti]
+    budget: "Phase 1: borrowed GoTo mount, not bought. Buying mount + telescope ($690–730) exceeds the budget."
+    note: Wi-Fi control means no cable to the laptop. Command latency and gear backlash are unproven until test T2.
+  - id: rxA_tube
+    part: C1
+    name: Telescope tube (130 mm f/5 Newtonian)
+    group: Receiver · telescope option
+    config: [rxA]
+    shell: true
+    what: The light bucket. Its 130 mm opening catches a small patch of the beam; the mirrors inside squeeze that light onto the photodiode.
+    dims: [[Tube length, 615 mm, source], [Tube outer diameter, 160 mm, source], [Mass, 3.66 kg (130P) · 2.70 kg (130PS), source], [Aperture / focal length, 130 mm / 650 mm (f/5), source]]
+    sources: [p130, p130ps]
+    budget: "Phase 1: borrowed 130 mm telescope · $0"
+    note: Turn on Cut open or X-ray to see the mirrors and the light path inside.
+  - id: rxA_dovetail
+    part: C1
+    name: Dovetail bar and tube rings
+    group: Receiver · telescope option
+    config: [rxA]
+    what: Clamps the tube to the mount's saddle. Sliding the bar in the saddle balances the tube so the motors are not fighting gravity.
+    dims: [[Dovetail, Vixen-style (fits the 45 mm saddle), source], [Bar length and rings, modelled, estimate]]
+    sources: [p130ps, azgti]
+    budget: Comes with the telescope
+  - id: rxA_primary
+    part: C1
+    name: Primary mirror
+    group: Receiver · telescope option
+    config: [rxA]
+    what: A 130 mm parabolic mirror at the back of the tube. It reflects the incoming light forward into a converging cone.
+    dims: [[Diameter, 130 mm, source], [Focal length, 650 mm, source], [Thickness and cell, modelled, estimate]]
+    sources: [p130]
+    budget: Part of the telescope
+    note: At 200 m with a 60 mrad beam the spot is 12 m wide; this mirror catches (0.13 / 12)² of it, −39.3 dB.
+  - id: rxA_secondary
+    part: C1
+    name: Secondary (diagonal) mirror and spider
+    group: Receiver · telescope option
+    config: [rxA]
+    what: A small flat mirror at 45° near the front. It turns the converging cone 90° out through the side of the tube to the focuser.
+    dims: [[Mirror size, 34.5 mm, source], [Distance from primary, ≈ 520 mm, derived], [Spider vanes, modelled, estimate]]
+    sources: [p130]
+    budget: Part of the telescope
+    note: "520 mm is derived: 650 mm focal length minus the 130 mm path up to a focus 50 mm above the tube. It also blocks a few percent of the aperture (part of the 4.5 dB loss line)."
+  - id: rxA_focuser
+    part: C1
+    name: Focuser (1.25-inch)
+    group: Receiver · telescope option
+    config: [rxA]
+    shell: true
+    what: A sliding tube that moves the detector in and out to sit exactly at the focus. Focus shifts with range, so it is set at every test distance.
+    dims: [[Drawtube bore, 31.75 mm (1.25 in), source], [Type (130PS), rack-and-pinion, source], ["Focus shift, 50 m vs ∞", ≈ 8.6 mm at f = 650 mm, derived]]
+    sources: [ep, p130ps]
+    budget: Part of the telescope
+  - id: rxA_guide
+    part: C5
+    name: Guide scope (50 mm class)
+    group: Receiver · telescope option
+    config: [rxA]
+    what: A small telescope bolted parallel to the main one. Its ~3° view is wide enough to find the transmitter even when the main receiver is not yet pointed at it.
+    dims: [[Aperture / focal length, 50 mm / 190 mm, source], [Length × tube Ø, 240 × 54.5 mm, source], [Axis offset from main tube, ≈ 143 mm as modelled, estimate]]
+    sources: [sv106]
+    budget: Not a separate Phase 1 line; the budget has "USB guide camera with small lens" ($150 new / $50 with stock)
+    note: Budget gap if a guide scope is used with the telescope option. The axis offset causes a boresight shift between 50 m and 200 m that is re-calibrated per range.
+  - id: rxA_cam
+    part: C6
+    name: Guide camera (ASI120MM-S class)
+    group: Receiver · tracking
+    config: [rxA]
+    what: Monochrome USB camera that sees the laser as a bright dot, 10 frames per second. The laptop finds the dot's centre and steers the mount.
+    dims: [[Body, Ø62 × 28 mm, source], [Mass, 100 g, source]]
+    sources: [asi]
+    budget: $150 new / $50 with stock (Phase 1)
+    note: It sees the laser's average brightness only; it cannot read the 100 kHz data.
+
+  # ---------------- Detector stack (drawn for both receivers) ----------------
+  - id: det_filter
+    part: C3
+    name: 660 nm bandpass filter
+    group: Detector stack
+    config: [rx]
+    what: Coated glass that passes only a narrow band around the laser's colour and reflects the rest, so sky and room light are mostly stopped.
+    dims: [[Diameter, 25 mm, source], [Mount thickness, 5.0 mm, source], [Clear aperture, 21 mm, source], [Passband (example), 660 nm centre / 10 nm wide, source]]
+    sources: [filt, f660]
+    budget: $120 (Phase 1). Buy after measuring the laser's real wavelength.
+    note: Sits in the converging light just before the focus.
+  - id: det_stop
+    part: C2
+    name: Field stop
+    group: Detector stack
+    config: [rx]
+    what: A thin plate with a small hole exactly at the focus. Light from the transmitter's direction passes the hole; light from other directions lands beside it.
+    dims: [[Hole, ≈ 3 mm (sized to the photodiode), estimate], [Plate, Ø25 mm × 1.5 mm, estimate]]
+    sources: []
+    budget: Fixtures line (3D printed)
+  - id: det_pd
+    part: B1
+    name: Photodiode (Vishay BPW34)
+    group: Detector stack
+    config: [rx]
+    what: Turns the focused light into a tiny current, about 0.42 A per watt at 660 nm. At 200 m that is roughly 14 nA while the laser is on.
+    dims: [[Package, 5.4 × 4.3 × 3.2 mm, source], [Active area, 7.5 mm² (≈ 2.65 mm square), source], [Field of view (telescope), 2.65 / 650 ≈ 4.1 mrad, derived]]
+    sources: [bpw34]
+    budget: ECE stock first (photodiodes, op-amps, passives $50 / $0)
+    note: Its capacitance (70 pF at 0 V, 25 pF at 3 V) sets how the amplifier must be designed.
+  - id: det_carrier
+    part: B4
+    name: Photodiode carrier board
+    group: Detector stack
+    config: [rx]
+    what: A tiny round board that holds the photodiode at the focus and carries its two leads to the amplifier with the shortest possible wires.
+    dims: [[Size, Ø30 mm, estimate]]
+    sources: []
+    budget: Receiver and driver PCBs, 3 boards $60 (Phase 1)
+  - id: det_housing
+    part: C2
+    name: Detector housing (3D printed)
+    group: Detector stack
+    config: [rx]
+    shell: true
+    what: Holds filter, field stop and photodiode in line and keeps stray light out. In the telescope it slides into the focuser like an eyepiece.
+    dims: [[Nosepiece, 31.75 mm (fits the focuser), source], [Body, modelled, estimate]]
+    sources: [ep]
+    budget: Fixtures line
+    note: No drawing exists yet (interface I-04).
+  - id: det_board
+    part: B4
+    name: Receiver board
+    group: Detector stack
+    config: [rx]
+    what: Carries the amplifier, the AC-coupling capacitor and the comparator, mounted right on the housing so the sensitive input stays short.
+    dims: [[Board, ≈ 60 × 45 mm, estimate]]
+    sources: []
+    budget: Receiver and driver PCBs, 3 boards $60 (Phase 1)
+    note: Its output to the STM32 is interface I-06, not yet written down.
+  - id: det_tia
+    part: B2
+    name: Transimpedance amplifier (OPA657)
+    group: Detector stack
+    config: [rx]
+    what: Turns the photodiode's nanoamps into millivolts through a 120 kΩ feedback resistor. The stage where noise is won or lost.
+    dims: [[Part, OPA657 (candidate), source], [Package on the model, SOT-23 class, estimate]]
+    sources: [opa]
+    budget: ECE stock first
+  - id: det_comp
+    part: B3
+    name: Comparator (TLV3501)
+    group: Detector stack
+    config: [rx]
+    what: Slices the amplified waveform into clean 0 / 3.3 V edges for the STM32's timer.
+    dims: [[Part, TLV3501 class (candidate), source], [Package on the model, SOT-23 class, estimate]]
+    sources: [tlv]
+    budget: ECE stock first
+
+  # ---------------- Receiver B: Fresnel lens + team-built pan-tilt ----------------
+  - id: rxB_tripod
+    alt_of: C4
+    name: Heavy photo tripod (Manfrotto 055 class)
+    group: Receiver · Fresnel option
+    config: [rxB]
+    what: Holds the team-built pan-tilt and the Fresnel lens box.
+    dims: [[Max height, 1700 mm (1400 mm column down), source], [Closed length, 610 mm, source], [Mass / load, 2.5 kg / 9 kg, source]]
+    sources: [manf]
+    budget: $100 new / $0 borrowed (Phase 1). Stiffness is the main risk.
+  - id: rxB_pan
+    alt_of: C4
+    name: "Pan stage: NEMA 17 + 10:1 belt"
+    group: Receiver · Fresnel option
+    config: [rxB]
+    what: A stepper motor turns a small pulley; a belt drives a pulley ten times bigger, which turns the whole receiver left and right in fine steps.
+    dims: [[Motor, "42.3 mm square × 40–47 mm, Ø5 mm shaft", source], [Belt ratio, ≈ 10:1, source], [Pulleys and plate, modelled, estimate]]
+    sources: [nema, nema2]
+    budget: NEMA 17 + TMC2209, 2 sets $70; belts, pulleys, frame $80 (Phase 1)
+  - id: rxB_drivers
+    alt_of: C4
+    name: Stepper drivers (TMC2209)
+    group: Receiver · Fresnel option
+    config: [rxB]
+    what: Turn step and direction pulses into motor currents, quietly and in fine microsteps.
+    dims: [[Module, 15.24 × 20.32 mm, source]]
+    sources: [tmc]
+    budget: In the $70 motor sets
+    note: Something must generate the step pulses, and the Phase 1 design does not say what (the spare NUCLEO, a small extra board, or the RX board). Decide and write the interface.
+  - id: rxB_fork
+    alt_of: C4
+    name: Tilt fork (printed / extrusion)
+    group: Receiver · Fresnel option
+    config: [rxB]
+    what: A U-shaped frame on the pan stage that holds the lens box on a horizontal axle so it can tilt up and down.
+    dims: [[Frame, modelled, estimate]]
+    sources: []
+    budget: Pan-tilt mechanics line, $80
+  - id: rxB_tilt
+    alt_of: C4
+    name: "Tilt motor: NEMA 17 + belt"
+    group: Receiver · Fresnel option
+    config: [rxB]
+    what: Second stepper motor that tilts the lens box through a belt.
+    dims: [[Motor, 42.3 mm square × 40–47 mm, source]]
+    sources: [nema, nema2]
+    budget: In the 2 motor sets
+  - id: rxB_lens
+    alt_of: C1
+    name: Fresnel lens (≈ 200 mm)
+    group: Receiver · Fresnel option
+    config: [rxB]
+    what: A flat plastic lens with concentric grooves that focuses light like a thick glass lens. Bigger than the telescope (more light) but blurrier.
+    dims: [[Example product, Comar 152 FQ 203, source], [Size / effective Ø, 220 mm square / 203 mm, source], [Focal length / thickness, 152.4 mm / 2 mm, source], [Capture vs 130 mm, +3.9 dB (by area), derived]]
+    sources: [comar]
+    budget: $40 (Phase 1, "200 mm plastic Fresnel lens")
+    note: With f = 152 mm the photodiode sees 2.65 / 152 ≈ 17 mrad, four times wider than with the telescope. Tracking gets easier; sky background goes up. Recompute the link budget if this option is used.
+  - id: rxB_box
+    alt_of: C1
+    name: Light-tight lens box
+    group: Receiver · Fresnel option
+    config: [rxB]
+    shell: true
+    what: Holds the Fresnel at the front and the detector at its focus, and keeps side light out.
+    dims: [[Box, 220 × 230 × 185 mm, estimate]]
+    sources: []
+    budget: Fixtures line
+  - id: rxB_cam
+    part: C6
+    name: USB guide camera with small lens
+    group: Receiver · tracking
+    config: [rxB]
+    what: A board camera beside the lens that sees the laser as a dot and feeds the tracking loop.
+    dims: [[Board + M12 lens, modelled (≈ 38 mm board), estimate]]
+    sources: []
+    budget: "$150 new / $50 with stock (Phase 1: mono global-shutter preferred)"
+
+  # ---------------- Ground station (both receivers) ----------------
+  - id: rx_nucleo
+    part: B5
+    name: "STM32 board #2 (RX) · NUCLEO-H753ZI"
+    group: Ground station
+    config: [rx]
+    what: Timestamps every edge from the comparator, decodes Manchester, checks and repairs SSDV packets, and sends them to the laptop over USB.
+    dims: [[Board outline, ≈ 133 × 70 mm, estimate]]
+    sources: [nucleo, um2407]
+    budget: 3 × NUCLEO-H753ZI, $120 total (TX, RX, spare)
+    note: "Outline is an estimate: ST gives it only as a drawing (UM2407 Fig. 6). Read it before designing the case."
+  - id: rx_case
+    part: null
+    name: RX electronics case
+    group: Ground station
+    config: [rx]
+    shell: true
+    what: Protects the NUCLEO on the field table and holds the cable from the receiver board.
+    dims: [[Case, 170 × 100 × 40 mm, estimate]]
+    sources: []
+    budget: Fixtures line
+  - id: rx_laptop
+    part: F
+    name: Ground laptop
+    group: Ground station
+    config: [rx]
+    what: Runs the Python ground software. It rebuilds the image, runs the guide-camera tracking loop, commands the mount and shows the live acceptance panel.
+    dims: [[Size, typical 13-inch laptop, estimate]]
+    sources: []
+    budget: Team laptop + a backup
+    note: The screen in the model is a mock-up, not real data.
+  - id: rx_table
+    part: null
+    name: Field table
+    group: Ground station
+    config: [rx]
+    what: A folding table for the laptop and the RX electronics.
+    dims: [[Size, modelled, estimate]]
+    sources: []
+    budget: Borrowed
+  - id: rx_power
+    part: C7
+    name: Portable power station
+    group: Ground station
+    config: [rx]
+    what: Battery for the laptop, mount and electronics outdoors.
+    dims: [[Size, modelled, estimate]]
+    sources: []
+    budget: Phase 1 §7.8 scored a portable power station highest; run time is spec row 13, still TBD
+    note: No field power budget exists yet (interface I-11).
+
+  # ---------------- Transmitter ----------------
+  - id: tx_tripod
+    part: A5
+    name: Transmitter tripod
+    group: Transmitter
+    config: [C1]
+    what: Holds the transmitter still for the stationary C1 link.
+    dims: [[Max height, 1700 mm, source], [Mass / load, 2.5 kg / 9 kg, source]]
+    sources: [manf]
+    budget: Borrowed
+  - id: tx_cart
+    part: A5
+    name: Fixtured cart with mast
+    group: Transmitter
+    config: [C2, C3]
+    what: "Carries the transmitter along a marked straight path: walking pace outdoors for C2 (≤ 1.3 m/s, ±3 m), ±0.5 m at 0.2 m/s indoors for C3."
+    dims: [[Cart and mast, modelled, estimate], [Motion, "≤ 1.3 m/s, ±3 m (C2)", source]]
+    sources: [phase1]
+    budget: Cart fixture in the fixtures line
+  - id: tx_head
+    part: A5
+    name: Tripod head
+    group: Transmitter
+    config: [tx]
+    what: Lets the transmitter be aimed, then locked. At 60 mrad the aim must stay within ±1.72°.
+    dims: [[Size, modelled, estimate]]
+    sources: []
+    budget: Borrowed with the tripod
+  - id: tx_plate
+    part: A5
+    name: Transmitter plate (team-built)
+    group: Transmitter
+    config: [tx]
+    what: Rigid plate that carries the laser, the front optics, the sight and the key switch in fixed alignment.
+    dims: [[Plate, 260 × 120 mm, estimate]]
+    sources: []
+    budget: Fixtures line
+  - id: tx_vblock
+    part: A5
+    name: Laser V-block holder
+    group: Transmitter
+    config: [tx]
+    what: Clamps the round module so it points the same way every time it is installed.
+    dims: [[Block, modelled, estimate]]
+    sources: []
+    budget: Fixtures line
+  - id: tx_laser
+    part: A1
+    also: [A2, A4]
+    name: Class 2 laser module with TTL input
+    group: Transmitter
+    config: [tx]
+    what: Diode, collimating lens and driver in one tube. Its logic input switches the light on and off 100,000 times a second from the STM32.
+    dims: [[Housing, "Ø12.7 × 50.8 mm, 35 g", source], [Example, "Lasermate LTG6501A5-T: 650 nm, 0.5–0.99 mW, Class II", source], [Modulation, "TTL, DC to 100 kHz, 5 V", source]]
+    sources: [laser]
+    budget: 2 modules, $80 (Phase 1)
+    note: A module contains A1 (diode), A2 (collimator) and A4 (driver) in one tube. Its "up to 100 kHz" rating is right at our chip rate, so measure rise and fall times. A 650 nm module needs a filter centred on its measured wavelength, not on 660.
+  - id: tx_nd
+    part: A6
+    name: ND attenuator (C3 indoor only)
+    group: Transmitter
+    config: [C3]
+    what: Grey glass that absorbs a known fraction of the light so that at 65 m indoors the receiver sees what it would at 200–300 m outdoors.
+    dims: [[Filter, Ø25 mm in a plate holder, estimate], [Strength needed, OD ≈ 1.0 (to mimic 200 m at 65 m), derived]]
+    sources: []
+    budget: ND set $90 new / $0 borrowed from the supervisor's lab
+    note: Calibrate on the day with the power meter to within ±1 dB (Phase 1 C3).
+  - id: tx_diff
+    part: A3
+    name: Diffuser (C2 moving link only)
+    group: Transmitter
+    config: [C2]
+    what: Spreads the beam to about 100 mrad (±2.86°) so the moving cart's aim errors stay inside the beam.
+    dims: [[Optic, Ø25.4 mm engineered diffuser, estimate], [Target spread, 100 mrad full angle, source]]
+    sources: [phase1]
+    budget: $90 new / $30 (Phase 1)
+    note: Its loss comes straight off the C2 margin; measure before and after.
+  - id: tx_shutter
+    part: A5
+    name: Shutter
+    group: Transmitter
+    config: [tx]
+    what: Flips down to block the beam for the scripted 1, 5 and 15 s blackouts.
+    dims: [[Flap, modelled, estimate]]
+    sources: []
+    budget: Fixtures line
+  - id: tx_sight
+    part: A5
+    name: Aiming sight
+    group: Transmitter
+    config: [tx]
+    what: A tube aligned with the laser to aim the transmitter at the receiver.
+    dims: [[Sight, modelled, estimate]]
+    sources: []
+    budget: Fixtures line
+    note: If C1 moves to a 20 mrad beam (file 10), this sight must hold ±0.57°.
+  - id: tx_led
+    part: A5
+    name: Locator LED
+    group: Transmitter
+    config: [tx]
+    what: Shows people where the transmitter is.
+    dims: [[LED, 5 mm, estimate]]
+    sources: []
+    budget: ECE stock
+    note: If the guide camera uses it as a beacon, the transmitter shutter must cover it too, or the blackout test proves nothing.
+  - id: tx_key
+    part: A5
+    name: Key switch box
+    group: Transmitter
+    config: [tx]
+    what: The laser cannot be powered without the key (Phase 1 safety rule NF1).
+    dims: [[Box, modelled, estimate]]
+    sources: []
+    budget: Fixtures line
+  - id: tx_nucleo
+    part: A7
+    name: "STM32 board #1 (TX) · NUCLEO-H753ZI"
+    group: Transmitter
+    config: [tx]
+    what: Holds the stored JPEG, runs the SSDV packetizer, and toggles the laser's input pin with a hardware timer.
+    dims: [[Board outline, ≈ 133 × 70 mm, estimate]]
+    sources: [nucleo, um2407]
+    budget: 3 × NUCLEO-H753ZI, $120 total
+    note: "No camera on campus: the picture is a file in the board's memory."
+  - id: tx_case
+    part: null
+    name: TX electronics case
+    group: Transmitter
+    config: [tx]
+    shell: true
+    what: Holds the TX NUCLEO and the power bank; one cable runs up to the laser.
+    dims: [[Case, 170 × 100 × 40 mm, estimate]]
+    sources: []
+    budget: Fixtures line
+  - id: tx_batt
+    part: C7
+    name: 5 V power bank
+    group: Transmitter
+    config: [tx]
+    what: Powers the NUCLEO and the 5 V laser module.
+    dims: [[Pack, modelled, estimate]]
+    sources: []
+    budget: Fixtures / battery line
+
+  # ---------------- Test instruments ----------------
+  - id: bench_sensor
+    part: H1
+    name: Power meter sensor (Thorlabs S120C class)
+    group: Test instruments
+    config: [bench]
+    what: A calibrated photodiode head. Placed in the beam, it reads the true optical power. Every link-budget number depends on it.
+    dims: [[Head, Ø30.5 × 12.7 mm, source], [Aperture, Ø9.5 mm, source]]
+    sources: [s120c]
+    budget: "$0, must be borrowed (Phase 1). Not funded if the loan fails."
+    note: Used for test rows 1 (≤ 1 mW check), 7 (indoor attenuation) and 8 (sensitivity).
+  - id: bench_console
+    part: H1
+    name: Power meter console (PM100USB class)
+    group: Test instruments
+    config: [bench]
+    what: Reads the sensor and reports watts to a laptop over USB.
+    dims: [[Console, 95 × 63.5 × 32.5 mm, source]]
+    sources: [pmusb]
+    budget: Borrowed with the sensor
+
+  # ---------------- Light ----------------
+  - id: beam
+    part: null
+    kind: light
+    name: The beam (Path B)
+    group: Light
+    config: [tx]
+    what: 660 nm red light switched on and off 100,000 times a second. It spreads in a cone; the receiver catches a small patch of it.
+    dims: [[Power (on-state), ≤ 1 mW (Class 2), source], [Real range, "150–300 m; drawn at ~4 m", estimate]]
+    sources: [phase1]
+    budget: "—"
+    note: The cone's angle is read live from the register (TX-06 for C1/C3, TX-07 for C2), but the distance is compressed so both stations fit on screen. At 200 m the spot would be 12 m wide, not the ~23 cm shown.
