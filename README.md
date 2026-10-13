@@ -57,6 +57,13 @@ npm run build      # lint + typecheck + production build into dist/
   `unit_cost`, `currency` and `qty` in `data/parts.yaml`; blanks export blank and show amber.
 - Coordinator rules the site enforces live in `data/constraints.yaml` (no used-market parts, ~$700 budget,
   Class 2 at 660 nm).
+- **3D model** (`#/model`): both stations to scale, rotate/zoom/explode/cut open, click any piece. Facts
+  (dimensions, sources, Phase 1 budget line) live in `data/model3d.yaml`; each piece points at a
+  `parts.yaml` id with `part:`, so its inspector shows that part's **live** lane, owner, chosen part and the
+  register rows it touches (stale ones in amber). *Colour by status* paints every piece by its lane. The beam
+  angle is read from TX-06 / TX-07. To change a fact, edit `data/model3d.yaml`; to change a shape, edit
+  `src/hw3d/scene.ts` (a test fails if the two drift apart). Every dimension is tagged `source`, `derived`
+  or `estimate`. three.js loads only on this page.
 
 ## What is where
 

@@ -165,6 +165,18 @@ export interface SiteConfig {
 }
 
 /** Everything read from data/*.yaml, before derivation. */
+// ---------- 3D hardware model (data/model3d.yaml) ----------
+export const DIM_TAGS = ['source', 'derived', 'estimate'] as const;
+export type DimTag = (typeof DIM_TAGS)[number];
+export const MODEL3D_CONFIGS = ['rxA', 'rxB', 'rx', 'C1', 'C2', 'C3', 'tx', 'bench'] as const;
+export interface Model3dObject {
+  id: string; part?: string | null; alt_of?: string; also?: string[]; kind?: 'light';
+  name: string; group: string; config: string[]; shell?: boolean;
+  what: string; dims: [string, string, DimTag][]; sources: string[];
+  budget?: string; note?: string;
+}
+export interface Model3d { sources: Record<string, { title: string; url?: string }>; objects: Model3dObject[] }
+
 export interface RawData {
   site: SiteConfig;
   people: Person[];
@@ -183,6 +195,7 @@ export interface RawData {
   glossary: GlossaryTerm[];
   software: Software;
   choices: Choice[];
+  model3d: Model3d;
   /** line number of each "- id:" in register.yaml, parts.yaml, interfaces.yaml */
   lines: Record<string, Record<string, number>>;
   /** evidence files present under evidence/ (relative paths) */

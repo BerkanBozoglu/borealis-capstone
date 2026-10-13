@@ -5,6 +5,7 @@ import { BEAM_LABEL, SCHEMATIC_H, SCHEMATIC_SVG, SCHEMATIC_W } from './schematic
 import { type Ctx, cite, esc, gh, statement, subsystemName, trackAttr } from './util.ts';
 import { partView } from '../choices.ts';
 import { choicesStrip, money, partChoiceBox, renderDecisionPanel } from './choices.ts';
+import { objectForPart } from './model3d.ts';
 
 export interface HardwareFilters { group: string; owner: string; flightOpen: boolean }
 
@@ -64,7 +65,7 @@ function card(p: Part, selected: string): string {
   </button>`;
 }
 
-function touchLink(ctx: Ctx, id: string): string {
+export function touchLink(ctx: Ctx, id: string): string {
   const isRow = ctx.data.register.some((r) => r.id === id);
   const href = isRow ? `#/register?id=${encodeURIComponent(id)}` : `#/interfaces?id=${encodeURIComponent(id)}`;
   const row = ctx.data.register.find((r) => r.id === id);
@@ -104,6 +105,7 @@ export function renderPartDetail(ctx: Ctx, p: Part | undefined): string {
     <div class="actions-row wrap">
       <a class="btn" href="${esc(edit)}" target="_blank" rel="noopener" title="data/parts.yaml${line ? ` line ${line}` : ''}">Edit on GitHub</a>
       <a class="btn" href="#/s/${esc(p.subsystem)}">${esc(subsystemName(data, p.subsystem))} page</a>
+      ${(() => { const o = objectForPart(ctx, p.id); return o ? `<a class="btn" href="#/model/${esc(o.id)}">See it in 3D</a>` : ''; })()}
       <a class="btn" href="${esc(data.site.project_assistant_url)}" target="_blank" rel="noopener">Ask the project assistant</a>
     </div>
   </div>`;
@@ -189,7 +191,7 @@ export function renderHardware(ctx: Ctx, selectedId: string | null, choiceId: st
     <a href="#/" class="small">← Map</a>
     <div class="section-head"><div><h1>Hardware</h1><p class="muted">Every physical part, where it sits, and whether we can actually use it.</p></div>
       <div class="tools"><button class="btn search-btn" data-open-search>Search parts, numbers, docs… <kbd>/</kbd></button>
-        <a class="btn" href="#/bom">BOM</a><button class="btn" data-bom-export>Export BOM (CSV)</button></div></div>
+        <a class="btn" href="#/model">3D model</a><a class="btn" href="#/bom">BOM</a><button class="btn" data-bom-export>Export BOM (CSV)</button></div></div>
     <div class="tiles tiles-5">${tiles}${budget}</div>
     <div class="filters-row"><div class="pills">${groupPills}</div><div class="pills"><span class="small muted">Owner</span>${ownerChips}</div></div>
     ${choicesStrip(ctx, choice?.id ?? null)}

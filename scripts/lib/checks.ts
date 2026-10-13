@@ -2,7 +2,7 @@
 import type { Finding, InterfaceDerived, RawData, RowDerived, Statement } from '../../src/types.ts';
 import { partView, scheduleClashes } from '../../src/choices.ts';
 import {
-  APPROVAL_STATUSES, AVAILABILITIES, CHOICE_STAGES, CONDITION_FIELDS, OPTION_STATUSES, STATEMENT_STATUSES, INTERFACE_STATUSES, PART_STATUSES, RUNG_STATUSES, TAGS, TRACKS,
+  APPROVAL_STATUSES, AVAILABILITIES, CHOICE_STAGES, DIM_TAGS, MODEL3D_CONFIGS, CONDITION_FIELDS, OPTION_STATUSES, STATEMENT_STATUSES, INTERFACE_STATUSES, PART_STATUSES, RUNG_STATUSES, TAGS, TRACKS,
 } from '../../src/types.ts';
 import { constantsFrom, evaluate, inputsFrom, passband, firstNumber } from '../../src/model.ts';
 
@@ -308,6 +308,41 @@ export function runChecks(raw: RawData, ctx: Ctx): Finding[] {
       }
     }
     for (const c of sw.choices) checkEnum(`software.yaml choice ${c.name}`, 'stage', c.stage, ['exploring', 'narrowing', 'decided'], []);
+  }
+
+  // ---- model3d.yaml (3D hardware model) ----
+  const m3 = raw.model3d;
+  if (m3) {
+    const partIds = new Set(raw.parts.map((p) => p.id));
+    dupCheck('model3d.yaml', m3.objects.map((o) => o.id));
+    const alts: Record<string, string[]> = {};
+    const covered = new Set<string>();
+    for (const o of m3.objects) {
+      const w = `model3d.yaml ${o.id}`;
+      if (o.part && !partIds.has(o.part)) err('unknown-id', `${w}: part "${o.part}" is not in parts.yaml`, [o.id]);
+      if (o.alt_of && !partIds.has(o.alt_of)) err('unknown-id', `${w}: alt_of "${o.alt_of}" is not in parts.yaml`, [o.id]);
+      for (const a of o.also ?? []) { if (!partIds.has(a)) err('unknown-id', `${w}: also "${a}" is not in parts.yaml`, [o.id]); covered.add(a); }
+      if (o.part) covered.add(o.part);
+      if (o.alt_of) (alts[o.alt_of] ??= []).push(o.id);
+      for (const c of o.config ?? []) checkEnum(w, 'config', c, MODEL3D_CONFIGS, [o.id]);
+      if (!o.config?.length) err('model3d-config', `${w}: config is empty, so it is never drawn`, [o.id]);
+      if (!String(o.what ?? '').trim()) err('model3d-what', `${w}: no "what" line`, [o.id]);
+      for (const d of o.dims ?? []) {
+        if (!Array.isArray(d) || d.length !== 3) { err('model3d-dims', `${w}: each dims row must be [label, value, tag]; quote values that contain commas`, [o.id]); continue; }
+        checkEnum(w, 'dims tag', d[2], DIM_TAGS, [o.id]);
+      }
+      const hasSourceDim = (o.dims ?? []).some((d) => d[2] === 'source');
+      for (const k of o.sources ?? []) if (!m3.sources[k]) err('unknown-id', `${w}: source "${k}" is not in the sources map`, [o.id]);
+      if (hasSourceDim && !(o.sources ?? []).length) {
+        warn('model3d-uncited', `${w}: a dimension is tagged source but no source is listed`, [o.id]);
+      }
+    }
+    const altList = Object.entries(alts);
+    if (altList.length) {
+      warn('model3d-no-part', `3D model: ${altList.reduce((n, [, v]) => n + v.length, 0)} objects are Phase 1 alternatives with no parts.yaml row of their own (${altList.map(([p, v]) => `alternatives to ${p}: ${v.join(', ')}`).join('; ')})`, altList.flatMap(([p]) => [p]));
+    }
+    const missing = raw.parts.filter((p) => p.track === 'core' && p.hotspot?.view === 'station' && !covered.has(p.id)).map((p) => p.id);
+    if (missing.length) warn('model3d-coverage', `3D model: station parts not drawn yet: ${missing.join(', ')}`, missing);
   }
 
   // ---- open items ----

@@ -10,6 +10,8 @@ import { renderInbox, renderInterfaces, renderRegister, renderRegisterTable, reg
 import { parseSandbox, presetValues, sandboxHash } from './sandbox.ts';
 import { renderHardware, hardwareFilters, hardwareHash } from './render/hardware.ts';
 import { renderDocs } from './render/docs.ts';
+import { beamAngles, renderInspector, renderModel3d } from './render/model3d.ts';
+import type { Viewer, ViewState } from './hw3d/scene.ts';
 import { renderBom, bomFor } from './render/bom.ts';
 import { bomCsv } from './bom.ts';
 import { initSearch, openSearch, isOpen } from './searchui.ts';
@@ -27,6 +29,8 @@ const store = {
 let showFlight = store.get('borealis:showFlight') === '1';
 let issues: GhIssue[] | null = null;
 let currentSubsystem: string | null = null;
+let viewer: Viewer | null = null;
+let viewerToken = 0;
 
 // ---------- routing ----------
 interface Route { path: string[]; query: URLSearchParams; anchor: string }
@@ -84,6 +88,8 @@ function render() {
   document.body.classList.toggle('hide-flight', !showFlight && sub?.track !== 'flight');
   renderHeader(r);
 
+  if (viewer) { viewer.dispose(); viewer = null; }
+  viewerToken++;
   let html = '';
   switch (page) {
     case undefined: html = renderMap(ctxFor(r)); break;
@@ -99,6 +105,7 @@ function render() {
     }
     case 'hardware': html = arg === 'choice' ? renderHardware(ctxFor(r), null, r.path[2] ?? null) : renderHardware(ctxFor(r), arg ?? null); break;
     case 'bom': html = renderBom(ctxFor(r)); break;
+    case 'model': html = renderModel3d(ctxFor(r), arg ?? null); break;
     case 'docs':
       if (!docs) { loadDocs(); html = '<section class="card"><p class="muted">Loading docs…</p></section>'; }
       else html = renderDocs(docs, arg);
@@ -110,6 +117,7 @@ function render() {
   currentSubsystem = nextSubsystem;
 
   if (page === 'search' && !isOpen()) openSearch(r.query.get('q') ?? '');
+  if (page === 'model') mountModel(r, arg ?? null);
 
   const focusRow = r.query.get('row') ?? r.query.get('i') ?? r.query.get('id');
   const focus = focusRow
@@ -120,9 +128,64 @@ function render() {
   if (focus) {
     if (!r.anchor) focus.classList.add('flash');
     focus.scrollIntoView({ block: r.anchor ? 'start' : 'center' });
-  } else if (page !== 'sandbox' && page !== 'register' && page !== 'hardware' && page !== 'bom') {
+  } else if (page !== 'sandbox' && page !== 'register' && page !== 'hardware' && page !== 'bom' && page !== 'model') {
     window.scrollTo(0, 0);
   }
+}
+
+// ---------- 3D model (three.js is loaded only on this page) ----------
+function mountModel(r: Route, selected: string | null) {
+  const token = viewerToken;
+  const box = document.getElementById('m3-view');
+  if (!box) return;
+  const ctx = ctxFor(r);
+  const lane = (o: { part?: string | null; alt_of?: string }) =>
+    o.part ? (data.parts.find((p) => p.id === o.part)?.availability ?? null) : o.alt_of ? 'alt' : null;
+  const objects = (data.model3d?.objects ?? []).map((o) => ({ id: o.id, name: o.name, config: o.config, shell: !!o.shell, lane: lane(o) }));
+  const tip = document.getElementById('m3-tip')!;
+  const show = (id: string | null, focus: boolean) => {
+    document.getElementById('m3-inspector')!.innerHTML = renderInspector(ctx, id);
+    document.querySelector('.m3-side')?.scrollTo({ top: 0 });
+    document.querySelectorAll<HTMLElement>('[data-m3-pick]').forEach((b) => b.classList.toggle('sel', b.dataset.m3Pick === id));
+    window.history.replaceState(null, '', id ? `#/model/${encodeURIComponent(id)}` : '#/model');
+    if (focus) viewer?.select(id);
+  };
+  void import('./hw3d/scene.ts').then((m) => {
+    if (token !== viewerToken) return; // the user already left the page
+    document.getElementById('m3-loading')?.remove();
+    viewer = m.mountScene({
+      container: box, objects, beam: beamAngles(ctx),
+      onSelect: (id) => show(id, false),
+      onHover: (id, name, x, y) => { tip.hidden = !id; if (id) { tip.textContent = name; tip.style.left = `${x}px`; tip.style.top = `${y}px`; } },
+    });
+    if (selected) { const o = data.model3d.objects.find((x) => x.id === selected); if (o) { pickConfigFor(o.config); viewer.select(selected); } }
+  }).catch(() => { const l = document.getElementById('m3-loading'); if (l) l.textContent = 'The 3D view could not start (WebGL unavailable?). The parts list and inspector still work.'; });
+
+  // toolbar
+  const segOn = (name: string, v: string) => document.querySelectorAll<HTMLButtonElement>(`[data-m3-seg="${name}"] button`).forEach((b) => b.classList.toggle('on', b.dataset.v === v));
+  function pickConfigFor(cfg: string[]) {
+    const s: Partial<ViewState> = {};
+    if (cfg.includes('rxB') && !cfg.includes('rxA')) { s.rx = 'B'; segOn('rx', 'B'); }
+    const tx = cfg.find((c) => c === 'C1' || c === 'C2' || c === 'C3') as ViewState['tx'] | undefined;
+    if (tx && !cfg.includes('tx')) { s.tx = tx; segOn('tx', tx); }
+    if (cfg.includes('bench')) { s.bench = true; document.querySelector('[data-m3-tog="bench"]')?.classList.add('active'); }
+    viewer?.set(s);
+  }
+  document.querySelectorAll<HTMLElement>('[data-m3-seg]').forEach((seg) => seg.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-v]'); if (!b) return;
+    segOn(seg.dataset.m3Seg!, b.dataset.v!); viewer?.set({ [seg.dataset.m3Seg!]: b.dataset.v } as Partial<ViewState>);
+  }));
+  document.getElementById('m3-explode')?.addEventListener('input', (e) => viewer?.set({ explode: parseFloat((e.target as HTMLInputElement).value) }));
+  document.querySelectorAll<HTMLButtonElement>('[data-m3-tog]').forEach((b) => b.addEventListener('click', () => {
+    const on = !b.classList.contains('active'); b.classList.toggle('active', on); b.setAttribute('aria-pressed', String(on));
+    viewer?.set({ [b.dataset.m3Tog!]: on } as Partial<ViewState>);
+    if (b.dataset.m3Tog === 'status') document.getElementById('m3-legend')!.hidden = !on;
+  }));
+  document.querySelectorAll<HTMLButtonElement>('[data-m3-view]').forEach((b) => b.addEventListener('click', () => viewer?.view(b.dataset.m3View!)));
+  document.querySelectorAll<HTMLButtonElement>('[data-m3-pick]').forEach((b) => b.addEventListener('click', () => {
+    const o = data.model3d.objects.find((x) => x.id === b.dataset.m3Pick); if (!o) return;
+    pickConfigFor(o.config); show(o.id, true);
+  }));
 }
 
 // ---------- sandbox ----------
