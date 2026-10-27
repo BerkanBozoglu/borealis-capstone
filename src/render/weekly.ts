@@ -71,7 +71,7 @@ function strip(ctx: Ctx, weeks: Week[], sel: number, cur: number): string {
     return `<li><a class="${cls}" href="#/week/${w.n}" title="${esc(title)}" aria-label="${esc(title)}"${i === sel ? ' aria-current="true"' : ''}>${w.n}</a></li>`;
   }).join('');
   return `<ol class="wk-strip">${pips}</ol>
-    <div class="wk-legend small muted"><span><i class="pip-k is-break"></i>exam / break</span><span><i class="pip-k load-light"></i>light week</span><span><i class="pip-k has-ms"></i>fixed milestone</span><span><i class="pip-k current"></i>this week</span></div>`;
+    <div class="wk-legend small muted"><span><i class="pip-k is-break"></i>exam / break / off</span><span><i class="pip-k load-light"></i>light week</span><span><i class="pip-k has-ms"></i>fixed milestone</span><span><i class="pip-k current"></i>this week</span></div>`;
 }
 
 export function weekPostFor(ctx: Ctx, week: Week, ref: string) {

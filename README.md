@@ -103,10 +103,9 @@ The build fails, with the reason in the Actions log, on: an unknown person id, a
 `todo | done | carried | blocked`, a week missing a cell for someone, a status file not named after a
 Monday in the plan, or two weeks with the same number.
 
-*Getting the real plan in:* `data/plan.yaml` is a placeholder until `seed/plan.json` is uploaded to
-`seed/`. While it says `placeholder: true`, the build converts the seed (ids like `berkan` map to `berky`
-via `aliases` in `data/people.yaml`); run `npm run data` once and commit `data/plan.yaml` so later edits
-happen in the YAML.
+*Where the plan came from:* `data/plan.yaml` was converted from `seed/plan.json` (ids like `berkan` map to
+`berky` via `aliases` in `data/people.yaml`). The seed is the original import only; edit `data/plan.yaml`.
+Staff names and email addresses in the seed were replaced by roles, per the privacy rule above.
 
 ## What is where
 

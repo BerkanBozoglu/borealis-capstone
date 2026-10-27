@@ -124,7 +124,7 @@
    "load": "full",
    "cells": {
     "berkan": {
-     "d": "Demo Level 0: get the open-source SSDV tool (fsphil/ssdv on GitHub) running with Claude Code \u2014 a photo broken into packets and rebuilt, then rebuilt again with some packets deleted (grey squares, not a broken image); script and before/after photos in the repo for Arnav. Loan requests to Zhang in writing (telescope, mount, power meter, ND filters, 650\u2013670 nm filter, LED + photodiode, any STM32 board). Email to the laser safety officer (Gurnam Manku) for one written line that Class 2 needs no permit. Transport Canada Form 26-0754E started. One-page demo script: what the audience sees, in order, at the Phase 2 presentation.",
+     "d": "Demo Level 0: get the open-source SSDV tool (fsphil/ssdv on GitHub) running with Claude Code \u2014 a photo broken into packets and rebuilt, then rebuilt again with some packets deleted (grey squares, not a broken image); script and before/after photos in the repo for Arnav. Loan requests to the Supervisor in writing (telescope, mount, power meter, ND filters, 650\u2013670 nm filter, LED + photodiode, any STM32 board). Email to the laser safety officer for one written line that Class 2 needs no permit. Transport Canada Form 26-0754E started. One-page demo script: what the audience sees, in order, at the Phase 2 presentation.",
      "l": "SSDV: how a photo becomes independent packets, and why a lost packet is a grey square.",
      "q": "Did the loan requests go out? They decide the budget."
     },
@@ -144,7 +144,7 @@
      "q": "Which simulator will you use?"
     },
     "matei": {
-     "d": "A Python script (OpenCV) using any webcam that finds a flashlight dot on a wall and prints its distance from the frame centre, 10 times a second, while you move the light. That distance is the pointing error the mount will correct. And a yes / no / maybe on borrowing a Sky-Watcher AZ-GTi mount (astronomy club, Zhang's lab, anyone).",
+     "d": "A Python script (OpenCV) using any webcam that finds a flashlight dot on a wall and prints its distance from the frame centre, 10 times a second, while you move the light. That distance is the pointing error the mount will correct. And a yes / no / maybe on borrowing a Sky-Watcher AZ-GTi mount (astronomy club, the Supervisor's lab, anyone).",
      "l": "Centroid of a bright blob; pixels to angle.",
      "q": "Any lead on a mount?"
     },
@@ -206,7 +206,7 @@
    "load": "full",
    "cells": {
     "berkan": {
-     "d": "TC form sent to aviation.que@tc.gc.ca; collector decided from the loan answers (130 mm vs Fresnel); BOM v1 with mouser.ca cart prices and Thorlabs prices read in a browser; 660/20 filter + diode binning in the BOM; freeze recorded in 05.",
+     "d": "TC form sent to the Transport Canada aviation inbox; collector decided from the loan answers (130 mm vs Fresnel); BOM v1 with mouser.ca cart prices and Thorlabs prices read in a browser; 660/20 filter + diode binning in the BOM; freeze recorded in 05.",
      "l": "Nothing new; decision week.",
      "q": ""
     },
@@ -283,7 +283,7 @@
    "mon": "2026-11-23",
    "phase": "Phase 2 \u00b7 design",
    "milestone": "Design approval Nov 27 \u00b7 report assembled \u00b7 two rehearsals",
-   "brief": "Mon\u2013Wed: report assembled and sent to Zhang for approval with the BOM attached. Thu\u2013Fri: demo rehearsed twice, wire path and optical stretch both tried. Contribution summaries, LLL forms, ELSEE 1 in the appendix.",
+   "brief": "Mon\u2013Wed: report assembled and sent to the Supervisor for approval with the BOM attached. Thu\u2013Fri: demo rehearsed twice, wire path and optical stretch both tried. Contribution summaries, LLL forms, ELSEE 1 in the appendix.",
    "teach": "No teach-back; rehearsal.",
    "load": "full",
    "cells": {
@@ -739,7 +739,7 @@
    "load": "full",
    "cells": {
     "berkan": {
-     "d": "Rehearsals run from the written procedure; demo slot booked with Zhang available.",
+     "d": "Rehearsals run from the written procedure; demo slot booked with the Supervisor available.",
      "l": "\u2014",
      "q": ""
     },

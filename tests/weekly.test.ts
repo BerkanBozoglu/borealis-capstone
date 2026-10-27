@@ -32,6 +32,8 @@ describe('weekly plan data', () => {
   const raw = loadRawData();
   it('the plan has 25 weeks, every week a cell for each of the six people, and passes the checks', () => {
     expect(raw.plan.weeks).toHaveLength(25);
+    expect(raw.plan.placeholder).toBeFalsy();
+    expect(raw.plan.weeks.map((w) => w.n)).toEqual(Array.from({ length: 25 }, (_, i) => i + 1));
     expect(raw.people.map((p) => p.id)).toEqual(['berky', 'bilal', 'batu', 'sbaz', 'matei', 'arnav']);
     for (const w of raw.plan.weeks) expect(Object.keys(w.cells).sort()).toEqual(raw.people.map((p) => p.id).sort());
     const errors = errorsOf(buildSiteData(raw, NOW).derived.findings);
@@ -76,18 +78,20 @@ describe('#/week', () => {
   });
   it('carried twice raises "Re-plan with <lead>"; an off week carries nothing', () => {
     const raw = withStatus({});
-    raw.status['2026-10-19'] = { ...allTodo(raw), batu: entry('blocked') };
-    raw.status['2026-10-26'] = { ...allTodo(raw), batu: entry('carried') };
-    raw.status['2026-11-02'] = allTodo(raw);
-    const data = buildSiteData(raw, '2026-11-03');
-    expect(data.derived.weekly.weeks[3].cells.batu.carried_twice).toBe(true);
-    expect(renderWeek(ctxFor(data, '2026-11-03'), '4')).toContain('Re-plan with Berky');
-    // weeks 11 and 12 are off: week 12 and 13 carry nothing from them
-    raw.status['2026-12-21'] = allTodo(raw);
+    raw.status['2026-10-26'] = { ...allTodo(raw), batu: entry('blocked') };
+    raw.status['2026-11-02'] = { ...allTodo(raw), batu: entry('carried') };
+    raw.status['2026-11-09'] = allTodo(raw);
+    const data = buildSiteData(raw, '2026-11-10');
+    expect(data.derived.weekly.weeks[4].cells.batu.carried_twice).toBe(true);
+    expect(renderWeek(ctxFor(data, '2026-11-10'), '5')).toContain('Re-plan with Berky');
+    // weeks 1-2 and 9-12 are off: the week after an off week carries nothing
+    raw.status['2026-10-19'] = allTodo(raw);
     raw.status['2026-12-28'] = allTodo(raw);
     raw.status['2027-01-04'] = allTodo(raw);
     const later = buildSiteData(raw, '2027-01-05');
-    expect(later.derived.weekly.weeks[11].cells.batu.carried_from).toBeNull();
+    expect(raw.plan.weeks[1].load).toBe('off');
+    expect(raw.plan.weeks[11].load).toBe('off');
+    expect(later.derived.weekly.weeks[2].cells.batu.carried_from).toBeNull();
     expect(later.derived.weekly.weeks[12].cells.batu.carried_from).toBeNull();
   });
   it('a week without a status file carries nothing (tracking started mid-plan)', () => {
@@ -98,13 +102,16 @@ describe('#/week', () => {
   });
   it('stale banner: last week still todo after its meeting date, else after its Sunday', () => {
     const raw = withStatus({});
-    raw.status['2026-10-19'] = { ...allTodo(raw), berky: entry('done'), bilal: entry('done'), sbaz: entry('done'), matei: entry('done'), arnav: entry('blocked') };
-    raw.status['2026-10-26'] = allTodo(raw);
-    expect(renderWeek(ctxFor(buildSiteData(raw, NOW)), '3')).toContain('Week 2 not updated: Batu');
-    // meeting moved to this Wednesday: no banner until it has passed
-    raw.plan.weeks[1].meeting = '2026-10-28';
+    raw.status['2026-10-26'] = { ...allTodo(raw), berky: entry('done'), bilal: entry('done'), sbaz: entry('done'), matei: entry('done'), arnav: entry('blocked') };
+    raw.status['2026-11-02'] = allTodo(raw);
+    expect(renderWeek(ctxFor(buildSiteData(raw, '2026-11-03'), '2026-11-03'), '4')).toContain('Week 3 not updated: Batu');
+    // meeting moved to next Wednesday: no banner until it has passed
+    raw.plan.weeks[2].meeting = '2026-11-04';
+    expect(buildSiteData(raw, '2026-11-03').derived.weekly.weeks[3].stale).toBeNull();
+    expect(buildSiteData(raw, '2026-11-05').derived.weekly.weeks[3].stale?.names).toEqual(['Batu']);
+    // an off week is never reported as not updated
+    raw.status['2026-10-19'] = allTodo(raw);
     expect(buildSiteData(raw, NOW).derived.weekly.weeks[2].stale).toBeNull();
-    expect(buildSiteData(raw, '2026-10-29').derived.weekly.weeks[2].stale?.names).toEqual(['Batu']);
   });
   it('a status file the build created but nobody committed yet opens GitHub\'s new-file page, pre-filled', () => {
     const raw = withStatus({});
