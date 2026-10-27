@@ -1,0 +1,1061 @@
+{
+ "people": [
+  {
+   "id": "berkan",
+   "name": "Berkan",
+   "role": "Optics, link, systems, safety, PM"
+  },
+  {
+   "id": "bilal",
+   "name": "Bilal",
+   "role": "Custom STM32 board, I-06, RF"
+  },
+  {
+   "id": "batu",
+   "name": "Batu",
+   "role": "Embedded firmware TX/RX"
+  },
+  {
+   "id": "sbaz",
+   "name": "Sbaz",
+   "role": "Driver, receiver front end, power, field"
+  },
+  {
+   "id": "matei",
+   "name": "Matei",
+   "role": "Controls and tracking"
+  },
+  {
+   "id": "arnav",
+   "name": "Arnav",
+   "role": "Ground-control software"
+  }
+ ],
+ "weeks": [
+  {
+   "n": 1,
+   "mon": "2026-10-12",
+   "phase": "Phase 2 \u00b7 design",
+   "milestone": "Not executed",
+   "brief": "Planned as the owner-card week. Nothing was delivered. Folded into week 3 at the Oct 23 reset.",
+   "teach": "\u2014",
+   "load": "off",
+   "cells": {
+    "berkan": {
+     "d": "\u2014 rolled into week 3",
+     "l": "",
+     "q": ""
+    },
+    "bilal": {
+     "d": "\u2014 rolled into week 3",
+     "l": "",
+     "q": ""
+    },
+    "batu": {
+     "d": "\u2014 rolled into week 3",
+     "l": "",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "\u2014 rolled into week 3",
+     "l": "",
+     "q": ""
+    },
+    "matei": {
+     "d": "\u2014 rolled into week 3",
+     "l": "",
+     "q": ""
+    },
+    "arnav": {
+     "d": "\u2014 rolled into week 3",
+     "l": "",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 2,
+   "mon": "2026-10-19",
+   "phase": "Phase 2 \u00b7 design",
+   "milestone": "Not executed \u00b7 reset Fri Oct 23",
+   "brief": "Nothing delivered by the team. Berkan produced the link/receiver model (13), the digital-chain reference (14), the regulatory facts (15) and BOM v0 (16); the decision log was backfilled. First team call Fri Oct 23: cadence, owner cards, five decisions, week-3 commitments.",
+   "teach": "\u2014",
+   "load": "off",
+   "cells": {
+    "berkan": {
+     "d": "Files 13\u201316; decision log current; reset meeting held.",
+     "l": "",
+     "q": ""
+    },
+    "bilal": {
+     "d": "\u2014 rolled into week 3",
+     "l": "",
+     "q": ""
+    },
+    "batu": {
+     "d": "\u2014 rolled into week 3",
+     "l": "",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "\u2014 rolled into week 3",
+     "l": "",
+     "q": ""
+    },
+    "matei": {
+     "d": "\u2014 rolled into week 3",
+     "l": "",
+     "q": ""
+    },
+    "arnav": {
+     "d": "\u2014 rolled into week 3",
+     "l": "",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 3,
+   "mon": "2026-10-26",
+   "phase": "Phase 2 \u00b7 design",
+   "milestone": "RESET WEEK \u00b7 5 weeks to design approval",
+   "brief": "Weeks 1 and 2 collapse into this one. Every item is something you can show at the next team meeting. Berkan's design notes (files 13\u201316 in the shared folder) are drafts: read the one that touches your part, check it, and say what's wrong. You are the one who decides whether it's right.",
+   "teach": "Berkan: the requirements chain in 10 minutes \u2014 why 660 nm, why 1 mW, why 100,000 pulses a second, why a 20 mrad beam.",
+   "load": "full",
+   "cells": {
+    "berkan": {
+     "d": "Demo Level 0: get the open-source SSDV tool (fsphil/ssdv on GitHub) running with Claude Code \u2014 a photo broken into packets and rebuilt, then rebuilt again with some packets deleted (grey squares, not a broken image); script and before/after photos in the repo for Arnav. Loan requests to Zhang in writing (telescope, mount, power meter, ND filters, 650\u2013670 nm filter, LED + photodiode, any STM32 board). Email to the laser safety officer (Gurnam Manku) for one written line that Class 2 needs no permit. Transport Canada Form 26-0754E started. One-page demo script: what the audience sees, in order, at the Phase 2 presentation.",
+     "l": "SSDV: how a photo becomes independent packets, and why a lost packet is a grey square.",
+     "q": "Did the loan requests go out? They decide the budget."
+    },
+    "bilal": {
+     "d": "The receiver-to-board agreement (interface I-06), one page: the receiver turns laser light into a wire that switches high/low; that wire plugs into your STM32 board. Write down, for that wire: voltage of high and low (proposed 3.3 V / 0 V), what it does when the laser is off (proposed low), which STM32 pin reads it (must be a timer input-capture pin, which timestamps each change), how fast it changes (every 10 or 20 \u00b5s), the connector and pinout, and how both sides test it with a function generator. Start from the proposed values in file 14; Batu and Sbaz sign it. Plus a block diagram of your board: STM32, power, USB, debug port, I-06 connector, laser-driver connector.",
+     "l": "STM32 timer input capture; read 01 \u00a76.1 and owner card page 1.",
+     "q": "Is it clear the board and I-06 are yours, not the receiver electronics?"
+    },
+    "batu": {
+     "d": "An STM32 board outputting our data signal: a repeating test pattern in Manchester code (each bit sent as two half-bits, off-on or on-off, so there is always a change mid-bit) at 100,000 half-bits per second, i.e. 10 \u00b5s pulses, captured on a scope. Board: ask the team first (Bilal, Sbaz), then the ECE project rooms (H-857, H-803) via the Engineer in Residence, then buy a Nucleo (CAD 25\u201350). No board by Wednesday: firmware written and compiling, timer settings worked out. Also read the decoder approach in file 14 and say whether you agree.",
+     "l": "Timer + DMA output on STM32; why Manchester lets the receiver find its own timing.",
+     "q": "Do you have a board and a scope?"
+    },
+    "sbaz": {
+     "d": "Choose the laser driver and draw it. The driver switches the laser on and off 100,000 times a second and sets its current; the hardware must make it impossible to exceed 1 mW even if software fails \u2014 that limit is our safety argument. Two options in file 16 \u00a73: the iC-Haus iC-NZN chip (~CAD 10, current limit set by one resistor) or a discrete op-amp + transistor circuit (~CAD 5). Write a short recommendation (safety limit, switching speed, cost, ease of soldering), then the schematic and a simulation showing clean switching and the current never exceeding the limit (~12 mA for 1 mW on the proposed diode). Also read file 13's receiver numbers and flag anything that looks wrong.",
+     "l": "Laser diode current vs light output; why the limit must be in hardware.",
+     "q": "Which simulator will you use?"
+    },
+    "matei": {
+     "d": "A Python script (OpenCV) using any webcam that finds a flashlight dot on a wall and prints its distance from the frame centre, 10 times a second, while you move the light. That distance is the pointing error the mount will correct. And a yes / no / maybe on borrowing a Sky-Watcher AZ-GTi mount (astronomy club, Zhang's lab, anyone).",
+     "l": "Centroid of a bright blob; pixels to angle.",
+     "q": "Any lead on a mount?"
+    },
+    "arnav": {
+     "d": "The GitHub repository for all laptop software: created, whole team invited, folders laid out for decoder, image rebuild, stats panel, mount control, logging (02 \u00a7F). And the one-page agreement with Batu (interface I-07) on exactly what his board sends over USB; proposed format in file 14. Next week you build the screen around Berkan's Level 0 photo demo.",
+     "l": "SSDV packet format; what the stats panel must show (01 \u00a714).",
+     "q": "What do you need from Batu or Berkan?"
+    }
+   }
+  },
+  {
+   "n": 4,
+   "mon": "2026-11-02",
+   "phase": "Phase 2 \u00b7 design",
+   "milestone": "Demo path on Nucleo \u00b7 interfaces signed \u00b7 report outline",
+   "brief": "The Phase 2 demo is locked: JPEG \u2192 Batu's TX \u2192 wire \u2192 RX \u2192 USB \u2192 Arnav's decoder and panel; webcam tracking beside it. This week the interfaces get signed so nobody waits on anybody. Report outline goes out at the team meeting with a section owner per subsystem; each person writes their own, Berkan edits.",
+   "teach": "Bilal: what signal arrives at the STM32, and why input-capture rather than the ADC.",
+   "load": "full",
+   "cells": {
+    "berkan": {
+     "d": "I-06, I-07 signed (chase, don't write); supplier-list question to the coordinator (Edmund, Thorlabs, telescope shops); report outline with section owners; spec table rewritten from the chain with the 13 \u00a71 margins; APD yes/no proposal for the BOM.",
+     "l": "Weighted-score alternatives format the coordinator expects.",
+     "q": ""
+    },
+    "bilal": {
+     "d": "I-06 agreed and bench-tested: function-generator 100 kHz square wave captured by the Nucleo timer through the I-06 connector. KiCad schematic started (MCU, power, USB, SWD).",
+     "l": "H7 power sequencing; decoupling.",
+     "q": ""
+    },
+    "batu": {
+     "d": "RX loopback: TX pin wired to the capture pin; DPLL decoder ported; recovered pattern matches sent. I-06 and I-07 signed with Bilal and Arnav.",
+     "l": "Clock recovery from edges; where sync can slip.",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "TIA schematic v1 per file 13: OPA140 (or OPA814), Rf 330 k\u03a9, Cf \u2248 4.8 pF, S1223 at 3 V, \u2264150 kHz low-pass before the comparator; stability and noise simulation showing ~100 kHz, no peaking.",
+     "l": "Noise gain of a TIA; why the post-filter is worth 14 dB (13 \u00a72).",
+     "q": ""
+    },
+    "matei": {
+     "d": "Centroid with false-source rejection; controller v0 against a plant model (rate command \u2192 angle with latency and backlash parameters). If a mount arrived: pysynscan talks to it.",
+     "l": "Feed-forward: command the target rate, correct the residual.",
+     "q": ""
+    },
+    "arnav": {
+     "d": "Serial ingest over USB from Batu's Nucleo into the decoder; live log; I-07 signed. Panel v0: packet count, pre/post-FEC BER with denominator, goodput.",
+     "l": "pyserial in a thread; back-pressure.",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 5,
+   "mon": "2026-11-09",
+   "phase": "Phase 2 \u00b7 design",
+   "milestone": "Design freeze Fri Nov 13 \u00b7 TC form sent \u00b7 collector decision Nov 15",
+   "brief": "Anything undecided at the design freeze goes into the report as an alternative, not a choice. TC Form 26-0754E goes out this week (30-day clock before any outdoor run). Loan answers in writing by Nov 15 decide the collector.",
+   "teach": "Matei: why a guide camera and not RF, and how a silicon camera sees an invisible beam.",
+   "load": "full",
+   "cells": {
+    "berkan": {
+     "d": "TC form sent to aviation.que@tc.gc.ca; collector decided from the loan answers (130 mm vs Fresnel); BOM v1 with mouser.ca cart prices and Thorlabs prices read in a browser; 660/20 filter + diode binning in the BOM; freeze recorded in 05.",
+     "l": "Nothing new; decision week.",
+     "q": ""
+    },
+    "bilal": {
+     "d": "KiCad schematic complete; reviewed by Sbaz (power) and Batu (pin map); review notes filed.",
+     "l": "ERC; a reusable review checklist.",
+     "q": ""
+    },
+    "batu": {
+     "d": "SSDV packetizer on TX (stored JPEG \u2192 packets \u2192 air frames with lead-in); frame sync on RX; a JPEG crosses the wire and reaches Arnav's decoder.",
+     "l": "SSDV sync word and header.",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "Field power budget (mount, laptop, camera, TX, 3 h at \u221210 \u00b0C); carrier fixture sketch with dimensions; power review of Bilal's schematic.",
+     "l": "Lithium capacity vs temperature.",
+     "q": ""
+    },
+    "matei": {
+     "d": "State machine (IDLE/SLEW/SEARCH/TRACK/COAST) as a diagram with every transition condition; search tiling recomputed for the 1.45\u00b0 field or a lens change proposed. T2 first run if a mount is in hand.",
+     "l": "Testing a state machine with scripted events.",
+     "q": ""
+    },
+    "arnav": {
+     "d": "Error-injection harness: panel reports exactly the BER and packet loss injected, with the right denominator; PRBS mode wired to Batu's test packets.",
+     "l": "Why 3\u00d710\u2075 clean bits only bounds BER at 1e-5.",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 6,
+   "mon": "2026-11-16",
+   "phase": "Phase 2 \u00b7 design",
+   "milestone": "Report section drafts due Sun Nov 22",
+   "brief": "Every section draft lands by Sunday. Each person also starts the 1\u20132 page contribution summary and the Life-Long Learning form (both go in the appendix). Demo rehearsal plan written.",
+   "teach": "Batu: why Manchester \u2014 what it buys the receiver and the decoder, and what it costs.",
+   "load": "full",
+   "cells": {
+    "berkan": {
+     "d": "Report \u00a71\u20133 drafted (spec review, design review, alternatives with the wavelength/detector/divergence tables); schedule update explaining the two lost weeks and the compressed plan; Class 3B go/no-go recorded in 05.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "bilal": {
+     "d": "Layout 70 %; custom-board section drafted; contribution summary.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "batu": {
+     "d": "End-to-end: a JPEG appears on Arnav's screen through the wire; scope capture of chip timing for the report; firmware section drafted.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "Driver + receiver section with simulation plots; 1 m optical hop attempted on a breadboard if the LED/photodiode loan came through; contribution summary.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "matei": {
+     "d": "Tracking section with T2 data or the plant-model results; webcam demo recorded on video as backup.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "arnav": {
+     "d": "Panel v1; demo script; software architecture figure; contribution summary.",
+     "l": "\u2014",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 7,
+   "mon": "2026-11-23",
+   "phase": "Phase 2 \u00b7 design",
+   "milestone": "Design approval Nov 27 \u00b7 report assembled \u00b7 two rehearsals",
+   "brief": "Mon\u2013Wed: report assembled and sent to Zhang for approval with the BOM attached. Thu\u2013Fri: demo rehearsed twice, wire path and optical stretch both tried. Contribution summaries, LLL forms, ELSEE 1 in the appendix.",
+   "teach": "No teach-back; rehearsal.",
+   "load": "full",
+   "cells": {
+    "berkan": {
+     "d": "Report integrated and submitted for approval with BOM; deck built in the file-10 \u00a75 slide order; 05 current.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "bilal": {
+     "d": "Layout frozen pending approval; Gerbers generated and checked.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "batu": {
+     "d": "Demo firmware tagged; wire path stable through two rehearsals.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "Demo breadboard boxed and powered; tested twice.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "matei": {
+     "d": "Live webcam tracking at the demo table; mount following if available.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "arnav": {
+     "d": "Image rebuild + panel at the demo table; two full rehearsals.",
+     "l": "\u2014",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 8,
+   "mon": "2026-11-30",
+   "phase": "Phase 2 \u00b7 presentation",
+   "milestone": "Report Nov 29 \u00b7 presentation this week \u00b7 parts ordered",
+   "brief": "Report submitted Nov 29. Presentation: those who did not present Phase 1 present now; 20 min talk, 15 min questions, demo running. Day after approval: parts order through procurement; PCB fab order the same day.",
+   "teach": "\u2014",
+   "load": "full",
+   "cells": {
+    "berkan": {
+     "d": "Parts order submitted the day after approval; retro line in 05: what changed since Phase 1 and why.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "bilal": {
+     "d": "PCB fab order placed; lead time recorded.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "batu": {
+     "d": "Firmware presented; repo README and build instructions.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "Hardware presented; parts list to Berkan.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "matei": {
+     "d": "Tracking presented; mount purchase or loan finalized.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "arnav": {
+     "d": "Software presented; log format frozen.",
+     "l": "\u2014",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 9,
+   "mon": "2026-12-07",
+   "phase": "Exams",
+   "milestone": "Exams",
+   "brief": "Exam weeks. No deliverables are expected from anyone except tracking the order.",
+   "teach": "\u2014",
+   "load": "off",
+   "cells": {
+    "berkan": {
+     "d": "Track order status; nothing else.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "bilal": {
+     "d": "Exams.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "batu": {
+     "d": "Exams.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "Exams.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "matei": {
+     "d": "Exams.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "arnav": {
+     "d": "Exams.",
+     "l": "\u2014",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 10,
+   "mon": "2026-12-14",
+   "phase": "Exams",
+   "milestone": "Parts begin arriving",
+   "brief": "Still exams. Parts should start arriving around now (K3: hardware in hand ~mid-December). Berkan inventories as they land and sets register status to received.",
+   "teach": "\u2014",
+   "load": "off",
+   "cells": {
+    "berkan": {
+     "d": "Inventory arriving parts; 02 status \u2192 received; flag anything missing for the Jan 22 BOM deadline.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "bilal": {
+     "d": "Exams; note PCB fab ETA.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "batu": {
+     "d": "Exams.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "Exams.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "matei": {
+     "d": "Exams.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "arnav": {
+     "d": "Exams.",
+     "l": "\u2014",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 11,
+   "mon": "2026-12-21",
+   "phase": "Break",
+   "milestone": "Optional bench",
+   "brief": "Holiday. Optional only: if Berkan and Sbaz are in town and the diode and filter arrived, measure diode wavelength against the filter (open item 9). Nothing else.",
+   "teach": "\u2014",
+   "load": "off",
+   "cells": {
+    "berkan": {
+     "d": "Optional: diode wavelength vs filter transmission with the borrowed power meter.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "bilal": {
+     "d": "Break.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "batu": {
+     "d": "Break.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "Optional: with Berkan, the diode/filter check.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "matei": {
+     "d": "Break.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "arnav": {
+     "d": "Break.",
+     "l": "\u2014",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 12,
+   "mon": "2026-12-28",
+   "phase": "Break",
+   "milestone": "\u2014",
+   "brief": "Holiday.",
+   "teach": "\u2014",
+   "load": "off",
+   "cells": {
+    "berkan": {
+     "d": "Break.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "bilal": {
+     "d": "Break.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "batu": {
+     "d": "Break.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "Break.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "matei": {
+     "d": "Break.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "arnav": {
+     "d": "Break.",
+     "l": "\u2014",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 13,
+   "mon": "2027-01-04",
+   "phase": "Phase 3 \u00b7 build",
+   "milestone": "Bench week (if in town)",
+   "brief": "Pre-term bench week for whoever is in Montr\u00e9al. Target: Rung 1 \u2014 the real transmitter diode, driver and receiver board rev A on one table, link closed through ND filters.",
+   "teach": "\u2014",
+   "load": "light",
+   "cells": {
+    "berkan": {
+     "d": "Bench layout; attenuator stage assembled; far-field divergence measured on a wall at a known distance (camera-on-screen method, 04 \u00a72.3).",
+     "l": "Far-field measurement method.",
+     "q": ""
+    },
+    "bilal": {
+     "d": "PCB received? Bring-up checklist step 1: rails and clock.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "batu": {
+     "d": "Firmware on the Nucleo talks to the receiver board rev A through I-06.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "Driver board built; diodes binned by wavelength against the 660/20 filter; clamp set at the measured 1 mW point (meter reading = the Class 2 record); TIA board rev A (OPA140, 330 k\u03a9, S1223) built.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "matei": {
+     "d": "Mount on the bench; pysynscan `:G`/`:I`/`:J` rate commands driving it (protocol confirmed in file 16 \u00a75).",
+     "l": "\u2014",
+     "q": ""
+    },
+    "arnav": {
+     "d": "App runs against the live bench stream; logging on.",
+     "l": "\u2014",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 14,
+   "mon": "2027-01-11",
+   "phase": "Phase 3 \u00b7 build",
+   "milestone": "Winter term starts \u00b7 T1 bench",
+   "brief": "Term starts. T1 is the week's job: BER vs received power through the calibrated attenuator, the first MEASURED sensitivity number. Conditions recorded with every point.",
+   "teach": "Sbaz: what we measured on the receiver and how it compares to the \u221250 dBm target.",
+   "load": "full",
+   "cells": {
+    "berkan": {
+     "d": "T1 run plan executed; received-power calibration with the meter; first MEASURED rows in 05 \u00a74.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "bilal": {
+     "d": "Board bring-up: USB, SWD, test points; I-06 connector verified on the real board.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "batu": {
+     "d": "PRBS BER harness running; pre/post-FEC numbers out over I-07.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "TIA transfer function and noise measured; overload recovery time measured; BER-vs-power curve with Berkan.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "matei": {
+     "d": "T2: command latency, residual error at 3 rates, backlash az/el, on a moving LED.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "arnav": {
+     "d": "Panel shows live BER from the harness; run files saved per test.",
+     "l": "\u2014",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 15,
+   "mon": "2027-01-18",
+   "phase": "Phase 3 \u00b7 build",
+   "milestone": "Jan 22: last BOM approval for timely delivery",
+   "brief": "Anything missing or broken must be in the last BOM by Jan 22, 17:00. Spares for the diode, photodiode and op-amp go in now.",
+   "teach": "Matei: T2 results \u2014 can the mount track 0.37\u00b0/s, and what latency did we measure?",
+   "load": "full",
+   "cells": {
+    "berkan": {
+     "d": "Spares and gaps ordered by Jan 22; receiver angular acceptance scan planned; boresight and focus jigs designed.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "bilal": {
+     "d": "Firmware ported to the custom board with Batu; swap-in decision based on the capture test.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "batu": {
+     "d": "Firmware on both boards; release tagged.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "Field power kit assembled; runtime test at room temperature.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "matei": {
+     "d": "Controller with feed-forward running on the real mount; T2 report written with the go/no-go for C2.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "arnav": {
+     "d": "Mount and camera interfaces integrated into the app (I-08, I-09).",
+     "l": "\u2014",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 16,
+   "mon": "2027-01-25",
+   "phase": "Phase 3 \u00b7 build",
+   "milestone": "T3 corridor 50\u201380 m",
+   "brief": "First link at distance: corridor at the C1-equivalent attenuation, calibrated on the day. The room-specific plan (Class 2, key switch, beam stop, two-person rule) is followed even though no permit is needed.",
+   "teach": "Arnav: what the acceptance panel shows and why PRBS mode is the only BER evidence.",
+   "load": "full",
+   "cells": {
+    "berkan": {
+     "d": "T3 run: image received at 50\u201380 m through the attenuator; receiver FOV measured in two axes; boresight set.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "bilal": {
+     "d": "Custom board in the loop if proven, else Nucleo; LoRa question closed (needed or not).",
+     "l": "\u2014",
+     "q": ""
+    },
+    "batu": {
+     "d": "Fixes from T3; logging of outages.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "Carrier fixture built; transmitter mounted and aimed; shutter mechanism for the demo.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "matei": {
+     "d": "Guide loop closed on the real transmitter in the corridor (stationary).",
+     "l": "\u2014",
+     "q": ""
+    },
+    "arnav": {
+     "d": "Full panel live at T3; re-acquisition timer implemented.",
+     "l": "\u2014",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 17,
+   "mon": "2027-02-01",
+   "phase": "Phase 3 \u00b7 build",
+   "milestone": "T4 indoor acquisition and blackouts",
+   "brief": "The C3 script, end to end: seeded acquisition, slow carrier (\u00b10.5 m at 0.2 m/s), shutter at receiver, shutter at transmitter, 1/5/15 s blackouts, recovery times logged.",
+   "teach": "Arnav: what the acceptance panel showed on the first C3 run.",
+   "load": "full",
+   "cells": {
+    "berkan": {
+     "d": "C3 script run and logged; fix list ranked.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "bilal": {
+     "d": "Board stable through a full run; fixes.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "batu": {
+     "d": "Fixes; firmware frozen for pre-demo.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "Carrier runs repeatably; power holds a full session.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "matei": {
+     "d": "Acquisition and re-acquisition times measured against R5/R6 targets.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "arnav": {
+     "d": "Run logs reproduce every metric in 01 \u00a714.",
+     "l": "\u2014",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 18,
+   "mon": "2027-02-08",
+   "phase": "Phase 3 \u00b7 build",
+   "milestone": "Pre-demo rehearsal",
+   "brief": "Two full rehearsals of the C3 script with someone playing the coordinator and running it from the written procedure. Fix list closed or deferred with a reason.",
+   "teach": "\u2014",
+   "load": "full",
+   "cells": {
+    "berkan": {
+     "d": "Rehearsals run from the written procedure; demo slot booked with Zhang available.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "bilal": {
+     "d": "Rehearsal support; spare board ready.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "batu": {
+     "d": "Rehearsal support; spare firmware image.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "Rehearsal support; spare batteries charged.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "matei": {
+     "d": "Rehearsal support; tracking tuned.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "arnav": {
+     "d": "Rehearsal support; app recovers from a disconnect.",
+     "l": "\u2014",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 19,
+   "mon": "2027-02-15",
+   "phase": "Phase 3 \u00b7 pre-demo",
+   "milestone": "In-lab pre-demo (week of Feb 15)",
+   "brief": "Pre-demo. Record what the coordinators asked and what failed; that list is the plan for the next five weeks.",
+   "teach": "\u2014",
+   "load": "full",
+   "cells": {
+    "berkan": {
+     "d": "Pre-demo delivered; feedback captured in 05 the same day.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "bilal": {
+     "d": "Pre-demo.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "batu": {
+     "d": "Pre-demo.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "Pre-demo.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "matei": {
+     "d": "Pre-demo.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "arnav": {
+     "d": "Pre-demo.",
+     "l": "\u2014",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 20,
+   "mon": "2027-02-22",
+   "phase": "Reading week",
+   "milestone": "Outdoor C1 attempt (if 601.21 answered and weather allows)",
+   "brief": "Reading week. Outdoor C1 at 200\u2013300 m only if the CAR 601.21 answer is in writing and the environment envelope (R7) is met; otherwise it is a 'no test' and the week goes to the fix list.",
+   "teach": "\u2014",
+   "load": "light",
+   "cells": {
+    "berkan": {
+     "d": "Outdoor C1 run logged (or 'no test' with reason); received power vs range table started.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "bilal": {
+     "d": "Fix list.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "batu": {
+     "d": "Fix list.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "Site logistics and field power for the outdoor run.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "matei": {
+     "d": "Outdoor stationary tracking log.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "arnav": {
+     "d": "Outdoor run logging.",
+     "l": "\u2014",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 21,
+   "mon": "2027-03-01",
+   "phase": "Phase 4 \u00b7 final",
+   "milestone": "Outdoor C2 attempt \u00b7 characterization report",
+   "brief": "Outdoor moving-transmitter attempt if conditions allow; receiver characterization report written from the T1/T3 data regardless.",
+   "teach": "Berkan: what the outdoor runs measured against the modeled link budget.",
+   "load": "full",
+   "cells": {
+    "berkan": {
+     "d": "Receiver characterization report; C2 outdoor log or 'no test'.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "bilal": {
+     "d": "Board documentation (schematic, layout, bring-up checklist) for the technical manual.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "batu": {
+     "d": "Firmware documentation for the technical manual.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "Carrier runs outdoors; hardware section of the technical manual.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "matei": {
+     "d": "Tracking report: residual error vs rate, latency, feed-forward on/off.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "arnav": {
+     "d": "User manual for the ground software.",
+     "l": "\u2014",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 22,
+   "mon": "2027-03-08",
+   "phase": "Phase 4 \u00b7 final",
+   "milestone": "Repeatability \u00b7 manuals \u00b7 poster draft",
+   "brief": "Repeat the C3 script three times; every metric must land in the same place. Poster draft started; manuals in progress.",
+   "teach": "\u2014",
+   "load": "full",
+   "cells": {
+    "berkan": {
+     "d": "Three repeat runs logged; poster draft v1; final report outline.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "bilal": {
+     "d": "Manual section done; poster figure.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "batu": {
+     "d": "Manual section done; poster figure.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "Manual section done; poster figure.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "matei": {
+     "d": "Manual section done; poster figure.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "arnav": {
+     "d": "Manual section done; poster figure.",
+     "l": "\u2014",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 23,
+   "mon": "2027-03-15",
+   "phase": "Phase 4 \u00b7 final",
+   "milestone": "Final rehearsal \u00b7 freeze",
+   "brief": "Hardware and software frozen. Final rehearsal run by someone outside the team from the procedure. Poster to the plotter.",
+   "teach": "\u2014",
+   "load": "full",
+   "cells": {
+    "berkan": {
+     "d": "Freeze declared in 05; final rehearsal; poster submitted; demo slot booked.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "bilal": {
+     "d": "Freeze.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "batu": {
+     "d": "Freeze.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "Freeze.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "matei": {
+     "d": "Freeze.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "arnav": {
+     "d": "Freeze.",
+     "l": "\u2014",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 24,
+   "mon": "2027-03-22",
+   "phase": "Phase 4 \u00b7 final demo",
+   "milestone": "In-lab final demo (week of Mar 22)",
+   "brief": "Final demo: supervisor and coordinators run the tests from the script against the Phase 2 specifications. Final report sections due to Berkan by the end of the week.",
+   "teach": "\u2014",
+   "load": "full",
+   "cells": {
+    "berkan": {
+     "d": "Final demo; report integration starts.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "bilal": {
+     "d": "Final demo; report section.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "batu": {
+     "d": "Final demo; report section.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "Final demo; report section.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "matei": {
+     "d": "Final demo; report section.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "arnav": {
+     "d": "Final demo; report section.",
+     "l": "\u2014",
+     "q": ""
+    }
+   }
+  },
+  {
+   "n": 25,
+   "mon": "2027-03-29",
+   "phase": "Phase 4 \u00b7 close",
+   "milestone": "Final report Apr 2 \u00b7 poster session \u00b7 contribution reports",
+   "brief": "Final report (\u226450 pages, manuals as appendices, ELSEE 2 in Appendix A) submitted Apr 2. Poster/demo session; everyone present. Individual contribution reports submitted.",
+   "teach": "\u2014",
+   "load": "full",
+   "cells": {
+    "berkan": {
+     "d": "Final report submitted; poster session; contribution report.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "bilal": {
+     "d": "Poster session; contribution report.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "batu": {
+     "d": "Poster session; contribution report.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "sbaz": {
+     "d": "Poster session; contribution report.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "matei": {
+     "d": "Poster session; contribution report.",
+     "l": "\u2014",
+     "q": ""
+    },
+    "arnav": {
+     "d": "Poster session; contribution report.",
+     "l": "\u2014",
+     "q": ""
+    }
+   }
+  }
+ ]
+}
