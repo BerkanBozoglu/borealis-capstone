@@ -20,6 +20,8 @@ export interface Person {
   github?: string;
   /** shipped instead of github: handleKey(login), for matching issue assignees */
   github_key?: string;
+  /** other ids that mean this person (seed/plan.json, #/person/<alias>) */
+  aliases?: string[];
 }
 
 export interface CitedText { text: string; cite: string; superseded_by?: string[] }
@@ -162,6 +164,8 @@ export interface SiteConfig {
   bom: { team_name: string; project: string; designed_by: string; revision: string };
   workflow_cite: string;
   workflow_rules: { title: string; text: string }[];
+  /** weekly plan: lead = the person who re-plans (people.yaml id) */
+  weekly?: { lead?: string };
 }
 
 /** Everything read from data/*.yaml, before derivation. */
@@ -176,6 +180,26 @@ export interface Model3dObject {
   budget?: string; note?: string;
 }
 export interface Model3d { sources: Record<string, { title: string; url?: string }>; objects: Model3dObject[] }
+
+// ---------- weekly plan (data/plan.yaml, data/status/<monday>.yaml) ----------
+export const WEEK_LOADS = ['full', 'light', 'off'] as const;
+export type WeekLoad = (typeof WEEK_LOADS)[number];
+export const WORK_STATUSES = ['todo', 'done', 'carried', 'blocked'] as const;
+export type WorkStatus = (typeof WORK_STATUSES)[number];
+export interface PlanCell { deliver: string; learn: string; ask: string }
+export interface TeachBack { question: string; presenter: string }
+export interface PlanWeek {
+  n: number; mon: string; meeting?: string; phase: string; milestone: string; load: WeekLoad;
+  brief: string; teach: string | TeachBack; cells: Record<string, PlanCell>;
+}
+export interface PlanMilestone { date: string; name: string; week_of?: boolean }
+export interface Plan {
+  /** true until seed/plan.json has been converted into this file */
+  placeholder?: boolean;
+  milestones: PlanMilestone[];
+  weeks: PlanWeek[];
+}
+export interface StatusEntry { status: WorkStatus; link: string; note: string }
 
 export interface RawData {
   site: SiteConfig;
@@ -196,6 +220,9 @@ export interface RawData {
   software: Software;
   choices: Choice[];
   model3d: Model3d;
+  plan: Plan;
+  /** data/status/<file>.yaml, keyed by file name without .yaml, as written (checked by the build) */
+  status: Record<string, Record<string, unknown>>;
   /** line number of each "- id:" in register.yaml, parts.yaml, interfaces.yaml */
   lines: Record<string, Record<string, number>>;
   /** evidence files present under evidence/ (relative paths) */
@@ -220,8 +247,35 @@ export interface InterfaceDerived {
 }
 export interface Inbox { stale_rows: string[]; interfaces: string[] }
 
+export interface WeekCellDerived {
+  status: WorkStatus; link: string; note: string;
+  /** line of this person's block in the status file */
+  line: number | null;
+  /** week number this person's work carried over from (previous week not done), else null */
+  carried_from: number | null;
+  carried_deliver: string;
+  /** carried this week and last week too: re-plan */
+  carried_twice: boolean;
+}
+export interface WeekDerived {
+  n: number; mon: string; sun: string; file: string; has_file: boolean;
+  /** set when this build created the status file and it is not in the repository yet: its text, for GitHub's new-file page */
+  new_file_text?: string;
+  /** line of "- n:" for this week in plan.yaml */
+  line: number | null;
+  /** dashed pip: load off, or an exam/break phase */
+  is_break: boolean;
+  /** fixed milestones that fall inside this week */
+  milestones: string[];
+  cells: Record<string, WeekCellDerived>;
+  /** people whose previous-week status was still todo after its meeting (or Sunday) */
+  stale: { week: number; names: string[] } | null;
+}
+export interface WeeklyDerived { weeks: WeekDerived[]; status_file_for_today: string | null }
+
 export interface Derived {
   rows: Record<string, RowDerived>;
+  weekly: WeeklyDerived;
   subsystems: Record<string, SubsystemDerived>;
   interfaces: Record<string, InterfaceDerived>;
   inbox: Record<string, Inbox>;

@@ -2,9 +2,10 @@
 import { createHash } from 'node:crypto';
 import type {
   Derived, Finding, HardwareDerived, Inbox, InterfaceDerived, RawData, RegisterRow, RowDerived, SiteData,
-  SubsystemDerived, Tag,
+  SubsystemDerived, Tag, WeekCellDerived, WeekDerived, WeeklyDerived, WorkStatus,
 } from '../../src/types.ts';
-import { TAGS } from '../../src/types.ts';
+import { TAGS, WORK_STATUSES } from '../../src/types.ts';
+import { addDays, sortedWeeks } from '../../src/weekly.ts';
 import { committedValues } from '../../src/model.ts';
 import { runChecks } from './checks.ts';
 import { applyDecisions, scheduleClashes } from '../../src/choices.ts';
@@ -145,6 +146,72 @@ export function computeHardware(raw: RawData): HardwareDerived {
   };
 }
 
+/** A status file entry as written → status (case-insensitive; unknown values count as todo and fail the checks). */
+export function statusOf(v: unknown): WorkStatus {
+  const s = String((v as { status?: unknown } | null)?.status ?? 'todo').trim().toLowerCase();
+  return (WORK_STATUSES as readonly string[]).includes(s) ? (s as WorkStatus) : 'todo';
+}
+const field = (v: unknown, k: 'link' | 'note') => {
+  const x = (v as Record<string, unknown> | null)?.[k];
+  return x === null || x === undefined ? '' : String(x).trim();
+};
+
+/**
+ * Weekly plan state (never typed):
+ * - carried: last week's status was not done and last week was not an off week;
+ * - carried twice: carried this week and last week;
+ * - stale: last week still has todo after its meeting date (or its Sunday).
+ * Weeks that have not started yet (Monday after today) carry nothing, and a
+ * week without a status file has no recorded status, so it carries nothing.
+ */
+export function computeWeekly(raw: Pick<RawData, 'plan' | 'status' | 'people' | 'lines'>, today: string): WeeklyDerived {
+  const weeks = sortedWeeks(raw.plan);
+  const people = raw.people.map((p) => p.id);
+  const names = new Map(raw.people.map((p) => [p.id, p.name]));
+  const milestones = raw.plan.milestones ?? [];
+  const out: WeekDerived[] = [];
+  weeks.forEach((w, i) => {
+    const file = `data/status/${w.mon}.yaml`;
+    const st = raw.status[w.mon];
+    const prev = i > 0 ? weeks[i - 1] : null;
+    const prevSt = prev ? raw.status[prev.mon] : undefined;
+    const prevOut = i > 0 ? out[i - 1] : null;
+    const started = w.mon <= today;
+    const prevCounts = !!(prev && prevSt && prev.load !== 'off' && started);
+    const cells: Record<string, WeekCellDerived> = {};
+    for (const p of people) {
+      const entry = st?.[p];
+      const carried = prevCounts && statusOf(prevSt![p]) !== 'done';
+      cells[p] = {
+        status: st ? statusOf(entry) : 'todo',
+        link: field(entry, 'link'),
+        note: field(entry, 'note'),
+        line: raw.lines?.[`status/${w.mon}`]?.[p] ?? null,
+        carried_from: carried ? prev!.n : null,
+        carried_deliver: carried ? prev!.cells?.[p]?.deliver ?? '' : '',
+        carried_twice: carried && !!prevOut?.cells[p]?.carried_from,
+      };
+    }
+    let stale: WeekDerived['stale'] = null;
+    if (prev && prevSt && prev.load !== 'off') {
+      const deadline = prev.meeting || addDays(prev.mon, 6);
+      const todo = people.filter((p) => statusOf(prevSt[p]) === 'todo');
+      if (today > deadline && todo.length) stale = { week: prev.n, names: todo.map((p) => names.get(p) ?? p) };
+    }
+    const sun = addDays(w.mon, 6);
+    out.push({
+      n: w.n, mon: w.mon, sun, file, has_file: !!st,
+      line: raw.lines?.plan?.[String(w.n)] ?? null,
+      is_break: w.load === 'off' || /exam|break/i.test(w.phase),
+      milestones: milestones.filter((m) => m.date >= w.mon && m.date <= sun).map((m) => m.name),
+      cells,
+      stale,
+    });
+  });
+  const cur = [...weeks].reverse().find((w) => w.mon <= today && today <= addDays(w.mon, 6));
+  return { weeks: out, status_file_for_today: cur ? `data/status/${cur.mon}.yaml` : null };
+}
+
 /** The whole pipeline: raw data → site data with derived state and findings. */
 export function buildSiteData(rawIn: RawData, today: string, builtAt = new Date().toISOString()): SiteData {
   // decided choices copy their chosen option into the parts they decide
@@ -155,6 +222,7 @@ export function buildSiteData(rawIn: RawData, today: string, builtAt = new Date(
   const findings = runChecks(raw, { rows, interfaces, committed, today });
   const derived: Derived = {
     rows,
+    weekly: computeWeekly(raw, today),
     interfaces,
     committed,
     findings,

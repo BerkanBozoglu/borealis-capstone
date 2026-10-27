@@ -2,9 +2,10 @@
 import type { Finding, InterfaceDerived, RawData, RowDerived, Statement } from '../../src/types.ts';
 import { partView, scheduleClashes } from '../../src/choices.ts';
 import {
-  APPROVAL_STATUSES, AVAILABILITIES, CHOICE_STAGES, DIM_TAGS, MODEL3D_CONFIGS, CONDITION_FIELDS, OPTION_STATUSES, STATEMENT_STATUSES, INTERFACE_STATUSES, PART_STATUSES, RUNG_STATUSES, TAGS, TRACKS,
+  WEEK_LOADS, WORK_STATUSES, APPROVAL_STATUSES, AVAILABILITIES, CHOICE_STAGES, DIM_TAGS, MODEL3D_CONFIGS, CONDITION_FIELDS, OPTION_STATUSES, STATEMENT_STATUSES, INTERFACE_STATUSES, PART_STATUSES, RUNG_STATUSES, TAGS, TRACKS,
 } from '../../src/types.ts';
 import { constantsFrom, evaluate, inputsFrom, passband, firstNumber } from '../../src/model.ts';
+import { isMonday } from '../../src/weekly.ts';
 
 interface Ctx {
   rows: Record<string, RowDerived>;
@@ -403,6 +404,9 @@ export function runChecks(raw: RawData, ctx: Ctx): Finding[] {
     if (!DATE.test(String(m.date))) err('bad-date', `milestone ${m.name}: date "${m.date}" is not YYYY-MM-DD`);
   }
 
+  // ---- weekly plan (data/plan.yaml, data/status/*.yaml) ----
+  checkWeekly(raw, err, people);
+
   // ---- presets and model ----
   for (const p of raw.presets) {
     for (const k of Object.keys(p.values ?? {})) {
@@ -441,6 +445,57 @@ export function runChecks(raw: RawData, ctx: Ctx): Finding[] {
   }
 
   return out;
+}
+
+type Report = (code: string, message: string, ids?: string[]) => void;
+
+function checkWeekly(raw: RawData, err: Report, people: Set<string>) {
+  const ids = [...people].join(', ');
+  const plan = raw.plan ?? { milestones: [], weeks: [] };
+  const P = 'data/plan.yaml';
+  const lead = raw.site?.weekly?.lead;
+  if (lead && !people.has(lead)) err('unknown-person', `site.yaml weekly.lead: unknown person id "${lead}" (people.yaml ids: ${ids})`);
+  const seen = new Map<number, string>();
+  const mondays = new Set<string>();
+  for (const m of plan.milestones ?? []) {
+    if (!DATE.test(String(m.date))) err('bad-date', `${P}: milestone "${m.name}" date "${m.date}" is not YYYY-MM-DD`);
+  }
+  for (const w of plan.weeks ?? []) {
+    const where = `${P} week ${w.n}`;
+    if (!Number.isInteger(w.n)) err('bad-week', `${P}: a week has n "${w.n}"; it must be a whole number`);
+    if (seen.has(w.n)) err('duplicate-week', `${P}: week number ${w.n} appears twice (weeks starting ${seen.get(w.n)} and ${w.mon})`);
+    seen.set(w.n, w.mon);
+    if (!isMonday(w.mon)) err('bad-date', `${where}: mon "${w.mon}" is not a Monday in YYYY-MM-DD form`);
+    else if (mondays.has(w.mon)) err('duplicate-week', `${P}: two weeks start on ${w.mon}`);
+    mondays.add(w.mon);
+    if (w.meeting && !DATE.test(w.meeting)) err('bad-date', `${where}: meeting "${w.meeting}" is not YYYY-MM-DD (leave it "" if not set)`);
+    if (!(WEEK_LOADS as readonly string[]).includes(w.load)) err('bad-enum', `${where}: load "${w.load}" is not one of ${WEEK_LOADS.join(' | ')}`);
+    for (const id of Object.keys(w.cells ?? {})) {
+      if (!people.has(id)) err('unknown-person', `${where}: unknown person id "${id}" in cells (people.yaml ids: ${ids})`);
+    }
+    for (const id of people) {
+      if (!w.cells?.[id]) err('missing-cell', `${where}: no cell for "${id}"; every week needs one cell per person (deliver, learn, ask)`);
+    }
+  }
+  for (const [name, entries] of Object.entries(raw.status ?? {})) {
+    const F = `data/status/${name}.yaml`;
+    if (!mondays.has(name)) {
+      err('bad-status-file', `${F}: "${name}" is not the Monday of a week in ${P}; status files are named data/status/<monday>.yaml`);
+    }
+    if (!entries || typeof entries !== 'object' || Array.isArray(entries)) {
+      err('bad-status-file', `${F}: expected one block per person (bilal: then status, link, note)`);
+      continue;
+    }
+    for (const [id, e] of Object.entries(entries)) {
+      if (!people.has(id)) { err('unknown-person', `${F}: unknown person id "${id}" (people.yaml ids: ${ids})`); continue; }
+      if (e === null || e === undefined) continue;
+      if (typeof e !== 'object' || Array.isArray(e)) { err('bad-status-file', `${F}: ${id}: expected status, link and note under it`); continue; }
+      const st = (e as Record<string, unknown>).status;
+      if (st !== undefined && st !== null && !(WORK_STATUSES as readonly string[]).includes(String(st).trim().toLowerCase())) {
+        err('bad-enum', `${F}: ${id}: status "${st}" is not one of ${WORK_STATUSES.join(' | ')}`);
+      }
+    }
+  }
 }
 
 export const errorsOf = (f: Finding[]) => f.filter((x) => x.level === 'error');

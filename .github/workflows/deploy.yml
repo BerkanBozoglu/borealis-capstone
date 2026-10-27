@@ -1,5 +1,7 @@
 # Push to main: lint → test → build → deploy to GitHub Pages.
 # Pull request: lint + test only.
+# Daily (05:17 UTC): rebuild so the weekly plan rolls over to the new week and
+# this week's data/status/<monday>.yaml exists before anyone needs it.
 name: Deploy dashboard
 
 on:
@@ -7,6 +9,8 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+  schedule:
+    - cron: '17 5 * * *'
 
 permissions:
   contents: read
@@ -38,6 +42,10 @@ jobs:
     if: github.event_name != 'pull_request'
     needs: check
     runs-on: ubuntu-latest
+    permissions:
+      contents: write   # commit this week's status file the build creates
+      pages: write
+      id-token: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -48,6 +56,16 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      # The build creates this week's data/status/<monday>.yaml (everyone todo)
+      # if it is missing. Commit it so "Update my status" opens a file that
+      # exists. A failed push never fails the deploy; the next build retries.
+      - name: Save this week's status file
+        run: |
+          git add data/status
+          if git diff --cached --quiet; then echo "nothing new"; exit 0; fi
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -m "status: open this week's status file · build"
+          git push origin HEAD:${{ github.ref_name }} || echo "::warning::could not push the new status file; the next build retries"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

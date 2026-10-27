@@ -65,6 +65,48 @@ npm run build      # lint + typecheck + production build into dist/
   `src/hw3d/scene.ts` (a test fails if the two drift apart). Every dimension is tagged `source`, `derived`
   or `estimate`. three.js loads only on this page.
 
+## Weekly plan
+
+**#/week** (nav: *Weekly plan*) opens on this week: what each person delivers by the team meeting, what
+they are learning, and their status. **#/person/&lt;name&gt;** is one person's whole year, every week's
+status and link: the record for the final individual report. **#/plan** is every week in one table.
+
+**Update your status (under a minute).**
+
+1. On your card press **Update my status**. GitHub opens this week's `data/status/<monday>.yaml`.
+2. In your own block set `status:` to `done`, `carried` or `blocked`, and paste a `link:` to the
+   deliverable (a file in the repo, e.g. under `evidence/`, a Drive file, or a screenshot). Optional
+   one-line `note:`.
+3. **Commit changes** directly to `main` with the message `<name>: <status> · <short note>`,
+   e.g. `Bilal: done · TIA board v1 on the bench`. Your card updates on the next deploy (about two minutes).
+
+**Links, never files.** A deliverable is a link. Files live in the repo (`evidence/`) or the team Google
+Drive; the status file only points at them. No emails in notes (the privacy check fails the build).
+
+**Edit the plan (Berkan).** Press **Edit this week** (it names the line) or open `data/plan.yaml` on GitHub,
+change the text, and commit as `plan: <what changed> · <why>`. Set a week's `meeting:` date when it is
+known. Re-plan only after Phase 2, after the pre-demo, or when someone is carried twice.
+
+**Worked out by the build, never typed:**
+- *Carried*: last week's status was not `done` (and last week was not an `off` week) → the card shows
+  "Carried from week N" with last week's deliver text.
+- *Carried twice* in a row → "Re-plan with Berky" on the card.
+- *Not updated*: someone is still `todo` for last week after last week's meeting (or its Sunday) → banner.
+- Each Monday's status file is created by the build, everyone `todo`. If it is not committed yet, the
+  first **Update my status** opens GitHub's new-file page with it already filled in; just edit your block
+  and commit. Past weeks' files are history; the build never rewrites them.
+
+**Copy week post** puts a Discord-ready summary on the clipboard (under 2000 characters; long deliver texts
+are cut to their first sentence, and the link to the full page is always kept).
+
+The build fails, with the reason in the Actions log, on: an unknown person id, a status other than
+`todo | done | carried | blocked`, a week missing a cell for someone, a status file not named after a
+Monday in the plan, or two weeks with the same number.
+
+*Where the plan came from:* `data/plan.yaml` was converted from `seed/plan.json` (ids like `berkan` map to
+`berky` via `aliases` in `data/people.yaml`). The seed is the original import only; edit `data/plan.yaml`.
+Staff names and email addresses in the seed were replaced by roles, per the privacy rule above.
+
 ## What is where
 
 | Path | What |
@@ -77,6 +119,7 @@ npm run build      # lint + typecheck + production build into dist/
 | `data/milestones.yaml`, `data/approvals.yaml` | fixed dates, test ladder, approvals |
 | `data/presets.yaml`, `data/model.yaml` | sandbox presets, model constants and sandbox controls |
 | `data/people.yaml`, `data/site.yaml` | team, repo settings, the workflow rules above |
+| `data/plan.yaml`, `data/status/<monday>.yaml` | the weekly plan and each week's status (see *Weekly plan*) |
 | `data/constraints.yaml`, `data/synonyms.yaml`, `data/glossary.yaml` | coordinator rules, search shorthand, glossary |
 | `src/model.ts` | the physics (pure functions, tested against 01 §4/§5) |
 | `scripts/build-data.ts` | YAML → `src/generated/data.json` + `history.json` (from `git log`) |

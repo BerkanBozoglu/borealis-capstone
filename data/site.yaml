@@ -47,6 +47,10 @@ workflow_rules:
       To record a measurement, change `tag: MEASURED`, fill `conditions:`, and link the evidence
       file under `evidence/`. Missing conditions = build fails = the change does not go live.
 
+# Weekly plan (#/week). lead: who re-plans with someone carried twice (people.yaml id).
+weekly:
+  lead: berky
+
 # The team's Claude Project (the "Ask the project assistant" buttons use it).
 project_assistant_url: https://claude.ai/project/01a0c1f5-294f-71ea-8e04-1d1bc281ba53
 
