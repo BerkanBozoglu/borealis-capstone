@@ -1,0 +1,948 @@
+# BOREALIS weekly plan: the editable plan behind #/week, #/person/<id> and #/plan.
+# Edit on GitHub (pencil icon), then commit as:  plan: <what changed> · <why>
+# Re-plan only after Phase 2, after the pre-demo, or when someone is carried twice.
+#
+# Each week: n, mon (that Monday, YYYY-MM-DD), meeting (team meeting date, optional),
+# phase, milestone, load (full | light | off), brief (team paragraph), teach (teach-back),
+# and one cell per person: deliver (by the team meeting), learn, ask (one-on-one question).
+# Status does not live here: each week has data/status/<monday>.yaml.
+#
+# PLACEHOLDER: the real plan was not in the repo yet. Upload seed/plan.json and the next
+# build replaces this file with it (keeping any meeting dates set here).
+placeholder: true
+
+# Fixed milestones marked on the week strip (dotted) and counted down in the week header.
+milestones:
+  - { date: 2026-11-27, name: "Design approval" }
+  - { date: 2026-11-29, name: "Phase 2 report" }
+  - { date: 2026-11-30, name: "Phase 2 presentation", week_of: true }
+  - { date: 2027-01-22, name: "Last BOM" }
+  - { date: 2027-02-15, name: "Pre-demo", week_of: true }
+  - { date: 2027-03-22, name: "Final demo", week_of: true }
+  - { date: 2027-04-02, name: "Final report" }
+
+weeks:
+  - n: 1
+    mon: 2026-10-12            # 12 Oct – 18 Oct
+    meeting: ""          # team meeting date, e.g. 2026-10-15
+    phase: "Phase 2: design"
+    milestone: ""
+    load: full
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 2
+    mon: 2026-10-19            # 19 Oct – 25 Oct
+    meeting: ""          # team meeting date, e.g. 2026-10-22
+    phase: "Phase 2: design"
+    milestone: ""
+    load: full
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 3
+    mon: 2026-10-26            # 26 Oct – 1 Nov
+    meeting: ""          # team meeting date, e.g. 2026-10-29
+    phase: "Phase 2: design"
+    milestone: ""
+    load: full
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 4
+    mon: 2026-11-02            # 2 Nov – 8 Nov
+    meeting: ""          # team meeting date, e.g. 2026-11-05
+    phase: "Phase 2: design"
+    milestone: ""
+    load: full
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 5
+    mon: 2026-11-09            # 9 Nov – 15 Nov
+    meeting: ""          # team meeting date, e.g. 2026-11-12
+    phase: "Phase 2: design"
+    milestone: ""
+    load: full
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 6
+    mon: 2026-11-16            # 16 Nov – 22 Nov
+    meeting: ""          # team meeting date, e.g. 2026-11-19
+    phase: "Phase 2: design"
+    milestone: ""
+    load: full
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 7
+    mon: 2026-11-23            # 23 Nov – 29 Nov
+    meeting: ""          # team meeting date, e.g. 2026-11-26
+    phase: "Phase 2: design"
+    milestone: Design approval · Phase 2 report
+    load: full
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 8
+    mon: 2026-11-30            # 30 Nov – 6 Dec
+    meeting: ""          # team meeting date, e.g. 2026-12-03
+    phase: "Phase 2: design"
+    milestone: Phase 2 presentation
+    load: full
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 9
+    mon: 2026-12-07            # 7 Dec – 13 Dec
+    meeting: ""          # team meeting date, e.g. 2026-12-10
+    phase: Exams and break
+    milestone: ""
+    load: light
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 10
+    mon: 2026-12-14            # 14 Dec – 20 Dec
+    meeting: ""          # team meeting date, e.g. 2026-12-17
+    phase: Exams and break
+    milestone: ""
+    load: light
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 11
+    mon: 2026-12-21            # 21 Dec – 27 Dec
+    meeting: ""          # team meeting date, e.g. 2026-12-24
+    phase: Exams and break
+    milestone: ""
+    load: off
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 12
+    mon: 2026-12-28            # 28 Dec – 3 Jan
+    meeting: ""          # team meeting date, e.g. 2026-12-31
+    phase: Exams and break
+    milestone: ""
+    load: off
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 13
+    mon: 2027-01-04            # 4 Jan – 10 Jan
+    meeting: ""          # team meeting date, e.g. 2027-01-07
+    phase: Build and integrate
+    milestone: ""
+    load: full
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 14
+    mon: 2027-01-11            # 11 Jan – 17 Jan
+    meeting: ""          # team meeting date, e.g. 2027-01-14
+    phase: Build and integrate
+    milestone: ""
+    load: full
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 15
+    mon: 2027-01-18            # 18 Jan – 24 Jan
+    meeting: ""          # team meeting date, e.g. 2027-01-21
+    phase: Build and integrate
+    milestone: Last BOM
+    load: full
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 16
+    mon: 2027-01-25            # 25 Jan – 31 Jan
+    meeting: ""          # team meeting date, e.g. 2027-01-28
+    phase: Build and integrate
+    milestone: ""
+    load: full
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 17
+    mon: 2027-02-01            # 1 Feb – 7 Feb
+    meeting: ""          # team meeting date, e.g. 2027-02-04
+    phase: Build and integrate
+    milestone: ""
+    load: full
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 18
+    mon: 2027-02-08            # 8 Feb – 14 Feb
+    meeting: ""          # team meeting date, e.g. 2027-02-11
+    phase: Build and integrate
+    milestone: ""
+    load: full
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 19
+    mon: 2027-02-15            # 15 Feb – 21 Feb
+    meeting: ""          # team meeting date, e.g. 2027-02-18
+    phase: Build and integrate
+    milestone: Pre-demo
+    load: full
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 20
+    mon: 2027-02-22            # 22 Feb – 28 Feb
+    meeting: ""          # team meeting date, e.g. 2027-02-25
+    phase: Test and demo
+    milestone: ""
+    load: light
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 21
+    mon: 2027-03-01            # 1 Mar – 7 Mar
+    meeting: ""          # team meeting date, e.g. 2027-03-04
+    phase: Test and demo
+    milestone: ""
+    load: full
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 22
+    mon: 2027-03-08            # 8 Mar – 14 Mar
+    meeting: ""          # team meeting date, e.g. 2027-03-11
+    phase: Test and demo
+    milestone: ""
+    load: full
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 23
+    mon: 2027-03-15            # 15 Mar – 21 Mar
+    meeting: ""          # team meeting date, e.g. 2027-03-18
+    phase: Test and demo
+    milestone: ""
+    load: full
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 24
+    mon: 2027-03-22            # 22 Mar – 28 Mar
+    meeting: ""          # team meeting date, e.g. 2027-03-25
+    phase: Test and demo
+    milestone: Final demo
+    load: full
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+
+  - n: 25
+    mon: 2027-03-29            # 29 Mar – 4 Apr
+    meeting: ""          # team meeting date, e.g. 2027-04-01
+    phase: Final report
+    milestone: Final report
+    load: full
+    brief: >-
+      Placeholder. The real team brief for this week arrives with seed/plan.json.
+    teach:
+      question: Placeholder teach-back question.
+      presenter: ""
+    cells:
+      berky:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      bilal:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      batu:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      sbaz:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      matei:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""
+      arnav:
+        deliver: To be filled from seed/plan.json.
+        learn: To be filled from seed/plan.json.
+        ask: ""

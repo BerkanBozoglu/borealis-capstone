@@ -15,6 +15,7 @@ import type { Viewer, ViewState } from './hw3d/scene.ts';
 import { renderBom, bomFor } from './render/bom.ts';
 import { bomCsv } from './bom.ts';
 import { initSearch, openSearch, isOpen } from './searchui.ts';
+import { renderPerson, renderPlan, renderWeek } from './render/weekly.ts';
 import type { DocPage } from './types.ts';
 
 const data = dataJson as unknown as SiteData;
@@ -67,8 +68,9 @@ function renderHeader(r: Route) {
   document.getElementById('site-title')!.textContent = data.site.title;
   document.getElementById('countdown')!.innerHTML = renderCountdown(c);
   const page = r.path[0] ?? '';
+  const navPage = page === 'person' || page === 'plan' ? 'week' : page;
   document.querySelectorAll<HTMLAnchorElement>('nav a[data-nav]').forEach((a) => {
-    a.classList.toggle('active', a.dataset.nav === page);
+    a.classList.toggle('active', a.dataset.nav === navPage);
   });
   const toggle = document.getElementById('flight-toggle') as HTMLInputElement;
   toggle.checked = showFlight;
@@ -110,6 +112,9 @@ function render() {
       if (!docs) { loadDocs(); html = '<section class="card"><p class="muted">Loading docs…</p></section>'; }
       else html = renderDocs(docs, arg);
       break;
+    case 'week': html = renderWeek(ctxFor(r), arg ?? null); break;
+    case 'person': html = renderPerson(ctxFor(r), arg ?? null); break;
+    case 'plan': html = renderPlan(ctxFor(r)); break;
     case 'search': html = renderMap(ctxFor(r)); break;
     default: html = `<section class="card"><h1>Not found</h1><p><a href="#/">Back to the map</a></p></section>`;
   }
@@ -218,6 +223,7 @@ document.addEventListener('click', (e) => {
     }
     return;
   }
+  if (t.closest('[data-wk-copy]')) { void copyWeekPost(); return; }
   if (t.closest('[data-bom-export]')) {
     const bom = bomFor(ctxFor(route()));
     const blob = new Blob([bomCsv(bom)], { type: 'text/csv;charset=utf-8' });
@@ -259,6 +265,7 @@ document.addEventListener('change', (e) => {
   }
   if (t.matches('input[type=range][data-sb-param]')) { sandboxSet(t.dataset.sbParam!, Number(t.value), true); return; }
   if (t.matches('select[data-reg-filter]')) { updateRegisterFilters(); return; }
+  if (t.matches('select[data-plan-person]')) { location.hash = t.value ? `#/plan?person=${encodeURIComponent(t.value)}` : '#/plan'; return; }
   if (t.matches('select[data-bom-subsystem]')) { location.hash = t.value ? `#/bom?subsystem=${encodeURIComponent(t.value)}` : '#/bom'; return; }
   if (t.matches('select[data-inbox-person]')) {
     if (t.value) { store.set('borealis:me', t.value); location.hash = `#/inbox/${t.value}`; }
@@ -269,6 +276,22 @@ document.addEventListener('focusin', (e) => {
   const t = e.target as HTMLInputElement;
   if (t.matches('[data-select-all]')) t.select();
 });
+
+// ---------- weekly plan: copy the Discord post; on failure show it selected ----------
+async function copyWeekPost() {
+  const box = document.getElementById('wk-post') as HTMLTextAreaElement | null;
+  if (!box) return;
+  const done = document.getElementById('wk-copied');
+  try {
+    await navigator.clipboard.writeText(box.value);
+    if (done) { done.textContent = 'Copied. Paste it into Discord.'; done.className = 'small ok'; done.hidden = false; }
+  } catch {
+    box.hidden = false;
+    box.focus();
+    box.select();
+    if (done) { done.textContent = 'Copy blocked by the browser: the text is selected below, press Ctrl/⌘+C.'; done.className = 'small warn'; done.hidden = false; }
+  }
+}
 
 function updateRegisterFilters() {
   const q = new URLSearchParams();

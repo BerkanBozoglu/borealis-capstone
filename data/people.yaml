@@ -1,6 +1,8 @@
 # Team (01 §9; Arnav joined as the sixth member, Sep 2026). github: handle used for issue assignment; "" = not known yet.
+# aliases: other ids that mean the same person (seed/plan.json, #/person/<alias>).
 - id: berky
   name: Berky
+  aliases: [berkan]
   role: Optics, link, systems, safety, project lead (R1)
   github: BerkanBozoglu
   subsystems: [optics, transmitter, safety, flight]
